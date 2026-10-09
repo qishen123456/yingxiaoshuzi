@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>研选责任盘 · 营销智能推送系统（Demo v2）</title>
+<!--
+  v2 变更：演示"必选组 + 可选组 + 命中数 + 默认优先级"新模型
+  旧 demo 用 AND 全中模型，v2 替换为 mandatory/optional 双层
+  - 4 条示例规则（渗漏/浴改淋/刷新/价格敏感）
+  - 3 个核心页面：规则配置 / 拨号清单 / 命中解释
+  - mock 8 户房主覆盖所有命中场景
+  视觉规范：禁 emoji、禁紫粉渐变、走 Design Token
+-->
+<style>
+  :root {
+    --color-primary: #1d5a96;
+    --color-primary-hover: #3a73b0;
+    --color-primary-bg: #e8f0f8;
+    --color-success: #389e0d;
+    --color-success-bg: #f6ffed;
+    --color-warning: #d46b08;
+    --color-warning-bg: #fff7e6;
+    --color-error: #cf1322;
+    --color-error-bg: #fff1f0;
+    --color-text: rgba(0, 0, 0, 0.88);
+    --color-text-secondary: rgba(0, 0, 0, 0.65);
+    --color-text-tertiary: rgba(0, 0, 0, 0.45);
+    --color-border: #d9d9d9;
+    --color-border-secondary: #f0f0f0;
+    --color-bg: #f5f5f5;
+    --color-bg-container: #ffffff;
+    --color-bg-muted: #fafafa;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow: 0 1px 2px rgba(0,0,0,0.06), 0 1px 6px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 6px 16px -8px rgba(0,0,0,0.08), 0 9px 28px -12px rgba(0,0,0,0.05);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    --mono: "SF Mono", Consolas, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font); color: var(--color-text); background: var(--color-bg); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+  .app { display: flex; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar { width: 220px; flex: 0 0 220px; background: #001529; color: rgba(255,255,255,0.65); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+  .brand { padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; }
+  .brand .logo { width: 32px; height: 32px; border-radius: var(--radius); background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: #fff; }
+  .brand .title { color: #fff; font-weight: 600; font-size: 15px; }
+  .brand .sub { color: rgba(255,255,255,0.45); font-size: 11px; }
+  .nav { padding: 10px 0; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; color: rgba(255,255,255,0.65); border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .nav-item.active { background: var(--color-primary); color: #fff; border-left-color: #fff; }
+  .nav-item svg { flex: 0 0 16px; }
+  .nav-section { padding: 12px 20px 4px; font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: .04em; text-transform: uppercase; }
+  .sidebar-foot { padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  /* ---------- Main ---------- */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { height: 56px; background: var(--color-bg-container); border-bottom: 1px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 10; }
+  .topbar .crumb { font-size: 15px; font-weight: 600; }
+  .topbar .crumb .sub { font-weight: 400; color: var(--color-text-tertiary); font-size: 12px; margin-left: 8px; }
+  .topbar .right { display: flex; align-items: center; gap: 12px; }
+  .tag-v2 { display: inline-flex; align-items: center; gap: 6px; background: var(--color-primary-bg); color: var(--color-primary); border: 1px solid var(--color-primary); border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 500; }
+
+  .content { padding: 24px; max-width: 1200px; width: 100%; }
+  .page-head { margin-bottom: 20px; }
+  .page-head h2 { margin: 0 0 4px; font-size: 20px; font-weight: 600; }
+  .page-head p { margin: 0; color: var(--color-text-secondary); font-size: 13.5px; }
+
+  /* ---------- Cards ---------- */
+  .card { background: var(--color-bg-container); border: 1px solid var(--color-border-secondary); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 20px; margin-bottom: 16px; }
+  .card .card-title { font-weight: 600; font-size: 15px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card .card-title .meta { margin-left: auto; font-size: 12px; color: var(--color-text-tertiary); font-weight: 400; }
+  .grid { display: grid; gap: 16px; }
+  .grid.cols-2 { grid-template-columns: 380px 1fr; }
+  .grid.kpi { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 920px) { .grid.cols-2, .grid.kpi { grid-template-columns: 1fr; } }
+
+  .kpi { background: var(--color-bg-container); border: 1px solid var(--color-border-secondary); border-radius: var(--radius-lg); padding: 16px; }
+  .kpi .k-label { color: var(--color-text-secondary); font-size: 12.5px; }
+  .kpi .k-value { font-size: 24px; font-weight: 700; margin-top: 6px; letter-spacing: -.01em; }
+  .kpi .k-sub { font-size: 11.5px; color: var(--color-text-tertiary); margin-top: 2px; }
+  .kpi.accent { background: var(--color-primary-bg); border-color: var(--color-primary); }
+  .kpi.accent .k-label { color: var(--color-primary); }
+  .kpi.accent .k-value { color: var(--color-primary); }
+
+  /* ---------- Tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { text-align: left; color: var(--color-text-secondary); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--color-border); background: var(--color-bg-muted); font-size: 12.5px; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--color-border-secondary); vertical-align: middle; }
+  tbody tr:hover { background: var(--color-bg-muted); }
+  tbody tr.selected { background: var(--color-primary-bg); }
+  .row-clickable { cursor: pointer; }
+
+  /* ---------- Badges & Tags ---------- */
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 500; border: 1px solid transparent; }
+  .badge.primary { background: var(--color-primary-bg); color: var(--color-primary); border-color: var(--color-primary); }
+  .badge.success { background: var(--color-success-bg); color: var(--color-success); border-color: #b7eb8f; }
+  .badge.warning { background: var(--color-warning-bg); color: var(--color-warning); border-color: #ffd591; }
+  .badge.error { background: var(--color-error-bg); color: var(--color-error); border-color: #ffa39e; }
+  .badge.neutral { background: var(--color-bg-muted); color: var(--color-text-secondary); border-color: var(--color-border); }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .tag-pill { display: inline-block; padding: 2px 8px; background: var(--color-bg-muted); border: 1px solid var(--color-border); border-radius: 999px; font-size: 11.5px; color: var(--color-text-secondary); margin: 0 4px 4px 0; }
+  .tag-pill.matched { background: var(--color-primary-bg); border-color: var(--color-primary); color: var(--color-primary); }
+  .tag-pill.missed { background: #fff; border-color: var(--color-border); color: var(--color-text-tertiary); text-decoration: line-through; }
+
+  .code { font-family: var(--mono); font-size: 12px; background: var(--color-bg-muted); border: 1px solid var(--color-border-secondary); border-radius: 4px; padding: 1px 6px; color: var(--color-text); }
+
+  /* ---------- Buttons ---------- */
+  .btn { font-family: inherit; font-size: 13px; border: 1px solid var(--color-border); background: #fff; color: var(--color-text); border-radius: var(--radius); padding: 6px 14px; cursor: pointer; transition: all .15s; }
+  .btn:hover { color: var(--color-primary); border-color: var(--color-primary); }
+  .btn.primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+  .btn.primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; }
+  .btn.sm { padding: 3px 10px; font-size: 12px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ---------- Form Controls ---------- */
+  .form-row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--color-border-secondary); }
+  .form-row:last-child { border-bottom: none; }
+  .form-row .fr-label { font-weight: 500; padding-top: 6px; }
+  .form-row .fr-label .hint { display: block; font-weight: 400; color: var(--color-text-tertiary); font-size: 11.5px; margin-top: 2px; }
+  .form-row .fr-control { display: flex; flex-direction: column; gap: 8px; }
+  input[type="number"], input[type="text"], select { font-family: inherit; font-size: 13px; color: var(--color-text); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 5px 10px; background: #fff; min-width: 100px; }
+  input[type="number"]:focus, input[type="text"]:focus, select:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(29, 90, 150, 0.1); }
+  .switch { position: relative; width: 40px; height: 22px; display: inline-block; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch .track { position: absolute; inset: 0; background: var(--color-border); border-radius: 999px; transition: background .2s; cursor: pointer; }
+  .switch .track::before { content: ""; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+  .switch input:checked + .track { background: var(--color-primary); }
+  .switch input:checked + .track::before { transform: translateX(18px); }
+
+  /* ---------- Condition Builder ---------- */
+  .cond-group { border: 1px solid var(--color-border-secondary); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; }
+  .cond-group.mandatory { background: #fff8e6; border-color: #ffe58f; }
+  .cond-group.optional { background: #f0f7ff; border-color: #b5d6f0; }
+  .cond-group-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; font-weight: 600; }
+  .cond-group-head .role { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .cond-group-head .role.mandatory { background: #fa8c16; color: #fff; }
+  .cond-group-head .role.optional { background: #1d5a96; color: #fff; }
+  .cond-group-head .help { color: var(--color-text-tertiary); font-weight: 400; font-size: 12px; }
+  .cond-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; flex-wrap: wrap; }
+  .cond-row select, .cond-row input { font-size: 13px; }
+  .cond-row .tag-input { flex: 1; min-width: 200px; }
+  .cond-min { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px 10px; background: rgba(255,255,255,0.6); border-radius: var(--radius); border: 1px dashed var(--color-border); }
+  .cond-min label { font-size: 12.5px; color: var(--color-text-secondary); }
+  .cond-min input { width: 50px; text-align: center; }
+  .add-link { color: var(--color-primary); font-size: 12.5px; cursor: pointer; user-select: none; }
+  .add-link:hover { text-decoration: underline; }
+  .del-link { color: var(--color-text-tertiary); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 4px; }
+  .del-link:hover { color: var(--color-error); }
+
+  /* ---------- Hit Preview ---------- */
+  .hit-preview { display: flex; align-items: center; gap: 16px; padding: 14px 16px; background: linear-gradient(90deg, var(--color-primary-bg), #f0f7ff); border: 1px solid var(--color-primary); border-radius: var(--radius); margin-top: 12px; }
+  .hit-preview .num { font-size: 22px; font-weight: 700; color: var(--color-primary); }
+  .hit-preview .lbl { font-size: 12.5px; color: var(--color-text-secondary); }
+  .hit-preview .pct { font-size: 12px; color: var(--color-text-tertiary); margin-left: auto; }
+
+  /* ---------- Rule List ---------- */
+  .rule-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--color-border-secondary); border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; background: #fff; transition: all .15s; }
+  .rule-item:hover { border-color: var(--color-primary); }
+  .rule-item.active { border-color: var(--color-primary); background: var(--color-primary-bg); }
+  .rule-item .pri { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: 12px; font-weight: 600; }
+  .rule-item .nm { font-weight: 500; flex: 1; }
+  .rule-item .pg { font-size: 11.5px; color: var(--color-text-tertiary); }
+  .rule-item .stats { font-size: 11.5px; color: var(--color-text-tertiary); }
+  .rule-item .stats b { color: var(--color-primary); font-weight: 600; }
+
+  /* ---------- Sort Note ---------- */
+  .sort-note { background: var(--color-bg-muted); border: 1px dashed var(--color-border); border-radius: var(--radius); padding: 10px 12px; font-size: 12.5px; color: var(--color-text-secondary); margin-top: 12px; line-height: 1.6; }
+  .sort-note code { background: #fff; padding: 1px 5px; border-radius: 3px; border: 1px solid var(--color-border-secondary); font-family: var(--mono); font-size: 11.5px; }
+
+  /* ---------- Explain (page 3) ---------- */
+  .explain-house { padding: 16px; background: var(--color-primary-bg); border-radius: var(--radius); border: 1px solid var(--color-primary); margin-bottom: 16px; }
+  .explain-house .name { font-size: 18px; font-weight: 600; }
+  .explain-house .meta { color: var(--color-text-secondary); font-size: 13px; margin-top: 4px; }
+  .explain-rule { padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius); margin-bottom: 10px; background: #fff; }
+  .explain-rule.winner { border-color: var(--color-success); background: var(--color-success-bg); }
+  .explain-rule .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .explain-rule .head .nm { font-weight: 600; }
+  .explain-rule .head .hc { margin-left: auto; color: var(--color-text-secondary); font-size: 12.5px; }
+  .explain-rule .head .hc b { color: var(--color-primary); font-size: 16px; }
+  .explain-section { font-size: 12.5px; color: var(--color-text-secondary); margin: 8px 0 4px; }
+  .explain-section b { color: var(--color-text); }
+  .explain-rule .gate { display: inline-block; padding: 2px 6px; background: var(--color-bg-muted); border: 1px solid var(--color-border-secondary); border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--color-text-secondary); margin-left: 6px; }
+  .flash { position: fixed; right: 24px; bottom: 24px; z-index: 100; background: var(--color-text); color: #fff; padding: 9px 16px; border-radius: var(--radius); font-size: 13px; box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(8px); transition: opacity .18s ease, transform .18s ease; pointer-events: none; }
+  .flash.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <div>
+        <div class="title">营销智能推送</div>
+        <div class="sub">研选责任盘 · Demo v2</div>
+      </div>
+    </div>
+    <div class="nav-section">业务</div>
+    <nav id="nav"></nav>
+    <div class="sidebar-foot">v2 演示：必选+可选+命中数+默认优先级<br/>单文件 · 内置假数据 · 刷新还原</div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb" id="crumb"></div>
+      <div class="right">
+        <span class="tag-v2">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          v2 新模型
+        </span>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+<div class="flash" id="flash"></div>
+
+<script>
+(function() {
+  "use strict";
+
+  /* ============ 8 户 mock 房主数据 ============ */
+  var HOUSES = [
+    { id: 1, name: "张丽华", phone: "138****8821", decorate: "5-10年", water: ["卫生间漏水", "阳台漏水"], env: [], layout: "三室两厅", price: "低", active: "近 30 天活跃", leads: 2, lastPush: "2026-09-12 短信" },
+    { id: 2, name: "李建国", phone: "139****1203", decorate: "5-10年", water: ["卫生间漏水"], env: ["墙面发霉"], layout: "三室一厅", price: "中", active: "近 30 天活跃", leads: 0, lastPush: "—" },
+    { id: 3, name: "王秀英", phone: "137****5566", decorate: "10年以上", water: [], env: [], layout: "两室一厅·带浴缸", price: "中", active: "近 7 天活跃", leads: 1, lastPush: "2026-09-25 企微" },
+    { id: 4, name: "赵志强", phone: "186****0098", decorate: "未装修", water: ["厨房漏水", "水管老化"], env: ["瓷砖开裂空鼓"], layout: "四室两厅", price: "高", active: "近 7 天活跃", leads: 3, lastPush: "—" },
+    { id: 5, name: "钱雅芬", phone: "135****3322", decorate: "5-10年", water: [], env: ["墙面发霉"], layout: "三室两厅·多孩", price: "中", active: "近 30 天活跃", leads: 1, lastPush: "—" },
+    { id: 6, name: "孙国良", phone: "133****7788", decorate: "5-10年", water: [], env: [], layout: "两室一厅", price: "低", active: "近 30 天沉默", leads: 0, lastPush: "2026-08-30 短信" },
+    { id: 7, name: "周慧敏", phone: "180****4421", decorate: "10年以上", water: [], env: [], layout: "两室一厅·带浴缸", price: "中", active: "近 30 天沉默", leads: 0, lastPush: "—" },
+    { id: 8, name: "吴志远", phone: "189****6611", decorate: "5-10年", water: ["卫生间漏水", "水管老化", "阳台漏水", "厨房漏水"], env: ["墙面发霉", "渗水返潮"], layout: "四室两厅", price: "高", active: "近 7 天活跃", leads: 2, lastPush: "2026-10-01 短信" }
+  ];
+
+  /* ============ 4 条示例规则（按新模型：mandatory + optional） ============ */
+  var DEFAULT_RULES = [
+    { id: 1, name: "渗漏检测包", package: "防水补漏责任包", manual_priority: 1, mutexGroup: "water",
+      mandatory: [{ tag: "decorate_status", op: "in", value: ["5-10年", "未装修"] }],
+      optional: [{ tag: "water_tag", op: "contains_any", value: ["卫生间漏水", "水管老化", "阳台漏水", "厨房漏水"] }],
+      minOptionalHits: 1 },
+    { id: 2, name: "浴改淋升级包", package: "浴改淋责任包", manual_priority: 2, mutexGroup: "bath",
+      mandatory: [{ tag: "decorate_status", op: "in", value: ["10年以上", "未装修"] }],
+      optional: [{ tag: "floor_plan", op: "contains_any", value: ["带浴缸"] }],
+      minOptionalHits: 1 },
+    { id: 3, name: "墙面刷新包", package: "墙面刷新责任包", manual_priority: 3, mutexGroup: "water",
+      mandatory: [{ tag: "decorate_status", op: "in", value: ["5-10年", "未装修"] }],
+      optional: [{ tag: "env_tag", op: "contains_any", value: ["瓷砖开裂空鼓", "墙面发霉", "渗水返潮"] }],
+      minOptionalHits: 1 },
+    { id: 4, name: "价格敏感提醒", package: "高性价比责任包", manual_priority: 4, mutexGroup: "price",
+      mandatory: [],
+      optional: [
+        { tag: "price_sensitivity", op: "in", value: ["高", "中"] },
+        { tag: "activity_level", op: "in", value: ["近 7 天活跃", "近 30 天活跃"] }
+      ],
+      minOptionalHits: 2 }
+  ];
+  var RULES = JSON.parse(JSON.stringify(DEFAULT_RULES));
+
+  /* ============ 标签字典（house → tag key） ============ */
+  var TAG_DICT = {
+    decorate_status: { "5-10年": "装修 5-10年", "10年以上": "装修 10 年以上", "未装修": "未装修" },
+    water_tag: { "卫生间漏水":"卫生间漏水", "水管老化":"水管老化", "阳台漏水":"阳台漏水", "厨房漏水":"厨房漏水" },
+    env_tag: { "瓷砖开裂空鼓":"瓷砖开裂空鼓", "墙面发霉":"墙面发霉", "渗水返潮":"渗水返潮" },
+    floor_plan: { "带浴缸":"户型带浴缸" },
+    price_sensitivity: { "高":"高", "中":"中", "低":"低" },
+    activity_level: { "近 7 天活跃":"近 7 天", "近 30 天活跃":"近 30 天", "近 30 天沉默":"沉默" }
+  };
+
+  function houseHasTag(house, tagKey) {
+    if (tagKey === "decorate_status") return [house.decorate];
+    if (tagKey === "water_tag") return house.water;
+    if (tagKey === "env_tag") return house.env;
+    if (tagKey === "floor_plan") return house.layout.indexOf("浴缸") >= 0 ? ["带浴缸"] : [];
+    if (tagKey === "price_sensitivity") return [house.price];
+    if (tagKey === "activity_level") return [house.active];
+    return [];
+  }
+
+  function evalCondition(cond, house) {
+    var houseVals = houseHasTag(house, cond.tag);
+    if (cond.op === "in") {
+      return cond.value.some(function(v){ return houseVals.indexOf(v) >= 0; });
+    }
+    if (cond.op === "contains_any") {
+      return cond.value.some(function(v){ return houseVals.indexOf(v) >= 0; });
+    }
+    if (cond.op === "contains_all") {
+      return cond.value.every(function(v){ return houseVals.indexOf(v) >= 0; });
+    }
+    if (cond.op === "eq") return houseVals[0] === cond.value[0];
+    if (cond.op === "neq") return houseVals[0] !== cond.value[0];
+    return false;
+  }
+
+  function evalRule(rule, house) {
+    var mandHit = 0, optHit = 0;
+    var mandDetail = [], optDetail = [];
+    rule.mandatory.forEach(function(c){
+      var hit = evalCondition(c, house);
+      if (hit) mandHit++;
+      mandDetail.push({ cond: c, hit: hit });
+    });
+    rule.optional.forEach(function(c){
+      var hit = evalCondition(c, house);
+      if (hit) optHit++;
+      optDetail.push({ cond: c, hit: hit });
+    });
+    var passed = (mandHit === rule.mandatory.length) && (optHit >= rule.minOptionalHits);
+    var hitCount = mandHit + optHit;
+    return { passed: passed, hitCount: hitCount, mandHit: mandHit, optHit: optHit, mandDetail: mandDetail, optDetail: optDetail };
+  }
+
+  function selectWinningRule(house, rules) {
+    var hits = rules.map(function(r){
+      return { rule: r, eval: evalRule(r, house) };
+    }).filter(function(x){ return x.eval.passed; });
+    if (hits.length === 0) return null;
+    hits.sort(function(a, b){
+      if (a.rule.manual_priority !== b.rule.manual_priority) return a.rule.manual_priority - b.rule.manual_priority;
+      if (a.eval.hitCount !== b.eval.hitCount) return b.eval.hitCount - a.eval.hitCount;
+      return a.rule.id - b.rule.id;
+    });
+    return hits;
+  }
+
+  /* ============ 频控（mock：每户每天最多 1 条 + 7 天冷却） ============ */
+  function canPush(house) {
+    if (house.lastPush === "—") return { ok: true, reason: null };
+    var lastDate = new Date(house.lastPush.replace("短信","").replace("企微","").trim());
+    var now = new Date("2026-10-09");
+    var diffDays = Math.floor((now - lastDate) / 86400000);
+    if (diffDays < 7) return { ok: false, reason: "7 天内已推送（" + house.lastPush + "）" };
+    return { ok: true, reason: null };
+  }
+
+  /* ============ 工具函数 ============ */
+  function icon(name, size) {
+    size = size || 16;
+    var paths = {
+      sliders: '<line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="2" x2="6" y1="14" y2="14"/><line x1="10" x2="14" y1="8" y2="8"/><line x1="18" x2="22" y1="16" y2="16"/>',
+      list: '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
+      zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+      help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/>',
+      chev: '<polyline points="9 18 15 12 9 6"/>',
+      check: '<polyline points="20 6 9 17 4 12"/>',
+      x: '<line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/>',
+      plus: '<line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="19"/>'
+    };
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (paths[name] || '') + '</svg>';
+  }
+
+  function flash(msg) {
+    var el = document.getElementById("flash");
+    el.textContent = msg;
+    el.classList.add("show");
+    setTimeout(function(){ el.classList.remove("show"); }, 1600);
+  }
+
+  /* ============ 路由 ============ */
+  var PAGES = [
+    { id: "rules", label: "规则配置", render: renderRules, icon: "sliders" },
+    { id: "dial", label: "拨号清单", render: renderDial, icon: "list" },
+    { id: "explain", label: "命中解释", render: renderExplain, icon: "help" }
+  ];
+  var selectedRuleId = 1;
+  var selectedHouseId = 8;
+
+  function go(pageId) {
+    location.hash = "#" + pageId;
+  }
+  function currentPage() {
+    var h = location.hash.replace("#", "");
+    return PAGES.find(function(p){ return p.id === h; }) ? h : "rules";
+  }
+
+  function renderNav() {
+    var nav = document.getElementById("nav");
+    var cur = currentPage();
+    nav.innerHTML = PAGES.map(function(p){
+      return '<div class="nav-item ' + (cur === p.id ? "active" : "") + '" onclick="window._go(\'' + p.id + '\')">' +
+        icon(p.icon, 16) +
+        '<span>' + p.label + '</span></div>';
+    }).join("");
+  }
+
+  function renderCrumb() {
+    var p = PAGES.find(function(x){ return x.id === currentPage(); });
+    document.getElementById("crumb").innerHTML = p.label + ' <span class="sub">/ ' + RULES.length + ' 条规则 · ' + HOUSES.length + ' 户房主 · v2 演示</span>';
+  }
+
+  /* ============ 页面 1：规则配置 ============ */
+  function renderRules() {
+    var content = document.getElementById("content");
+    var rule = RULES.find(function(r){ return r.id === selectedRuleId; }) || RULES[0];
+
+    var hitPreview = computeHitPreview(rule);
+
+    content.innerHTML =
+      '<div class="page-head"><h2>规则配置</h2><p>营销管理岗维护：硬性门槛（必须全中）+ 加分项（至少命中 K 个）+ 默认优先级（数字小者靠前）</p></div>' +
+
+      '<div class="grid cols-2">' +
+        '<div class="card">' +
+          '<div class="card-title">规则列表' +
+            '<span class="meta">' + RULES.length + ' 条 · 按默认优先级排序</span>' +
+          '</div>' +
+          RULES.slice().sort(function(a,b){ return a.manual_priority - b.manual_priority; }).map(function(r){
+            var hits = HOUSES.filter(function(h){ return (selectWinningRule(h, [r]) || [])[0]; }).length;
+            return '<div class="rule-item ' + (r.id === rule.id ? "active" : "") + '" onclick="window._selRule(' + r.id + ')">' +
+              '<span class="pri">' + r.manual_priority + '</span>' +
+              '<span class="nm">' + r.name + '</span>' +
+              '<span class="stats">命中 <b>' + hits + '</b> 户</span>' +
+            '</div>';
+          }).join("") +
+          '<div class="sort-note">多规则都命中时，按 <code>默认优先级 ↑</code> → <code>匹配度 ↓</code> → <code>入库顺序 ↑</code> 三级排序挑出胜出者。</div>' +
+        '</div>' +
+
+        '<div class="card">' +
+          '<div class="card-title">' +
+            '<span>' + rule.name + '</span>' +
+            '<span class="badge primary"><span class="dot"></span> 编辑中</span>' +
+          '</div>' +
+
+          '<div class="form-row"><div class="fr-label">规则名<div class="hint">业务可读名称</div></div>' +
+            '<div class="fr-control"><input type="text" value="' + rule.name + '" style="width:240px" onchange="window._updRule(' + rule.id + ',\'name\',this.value)"/></div></div>' +
+
+          '<div class="form-row"><div class="fr-label">产品包<div class="hint">命中后推送的责任包</div></div>' +
+            '<div class="fr-control"><select onchange="window._updRule(' + rule.id + ',\'package\',this.value)"><option ' + (rule.package==="防水补漏责任包"?"selected":"") + '>防水补漏责任包</option><option ' + (rule.package==="浴改淋责任包"?"selected":"") + '>浴改淋责任包</option><option ' + (rule.package==="墙面刷新责任包"?"selected":"") + '>墙面刷新责任包</option><option ' + (rule.package==="高性价比责任包"?"selected":"") + '>高性价比责任包</option></select></div></div>' +
+
+          '<div class="form-row"><div class="fr-label">默认优先级<div class="hint">数字小者靠前，标签打平时按此排</div></div>' +
+            '<div class="fr-control"><input type="number" value="' + rule.manual_priority + '" min="1" max="99" style="width:80px" onchange="window._updRule(' + rule.id + ',\'manual_priority\',parseInt(this.value))"/></div></div>' +
+
+          renderConditionBuilder(rule) +
+
+          '<div class="hit-preview">' +
+            '<div><div class="num">' + hitPreview.count + ' 户</div><div class="lbl">预计命中（仅本规则）</div></div>' +
+            '<div class="pct">占房主池 ' + hitPreview.pct + '%</div>' +
+          '</div>' +
+
+          '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">' +
+            '<button class="btn" onclick="window._reset()">重置</button>' +
+            '<button class="btn primary" onclick="window._save()">保存规则</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderConditionBuilder(rule) {
+    return '<div class="form-row"><div class="fr-label">条件组合<div class="hint">硬性门槛 + 加分项</div></div>' +
+      '<div class="fr-control">' +
+
+        '<div class="cond-group mandatory">' +
+          '<div class="cond-group-head">' +
+            '<span class="role mandatory">硬性门槛</span>' +
+            '<span class="help">房主必须有，缺一不可</span>' +
+          '</div>' +
+          (rule.mandatory.length === 0 ? '<div style="color:var(--color-text-tertiary);font-size:12.5px;padding:6px 0">无硬性门槛</div>' :
+            rule.mandatory.map(function(c, i){
+              return '<div class="cond-row">' +
+                renderTagSelect(c.tag, rule.id, "mandatory", i) +
+                '<span style="color:var(--color-text-tertiary)">属于</span>' +
+                renderValueChips(c.value, rule.id, "mandatory", i) +
+                '<span class="del-link" onclick="window._delCond(' + rule.id + ',\'mandatory\',' + i + ')">' + icon("x", 12) + '</span>' +
+              '</div>';
+            }).join("")) +
+          '<span class="add-link" onclick="window._addCond(' + rule.id + ',\'mandatory\')">' + icon("plus", 11) + ' 添加硬性门槛</span>' +
+        '</div>' +
+
+        '<div class="cond-group optional">' +
+          '<div class="cond-group-head">' +
+            '<span class="role optional">加分项</span>' +
+            '<span class="help">命中越多匹配度越高，<b>至少命中 ' + rule.minOptionalHits + ' 个</b>才算命中</span>' +
+          '</div>' +
+          rule.optional.map(function(c, i){
+            return '<div class="cond-row">' +
+              renderTagSelect(c.tag, rule.id, "optional", i) +
+              '<span style="color:var(--color-text-tertiary)">包含任一</span>' +
+              renderValueChips(c.value, rule.id, "optional", i) +
+              '<span class="del-link" onclick="window._delCond(' + rule.id + ',\'optional\',' + i + ')">' + icon("x", 12) + '</span>' +
+            '</div>';
+          }).join("") +
+          '<span class="add-link" onclick="window._addCond(' + rule.id + ',\'optional\')">' + icon("plus", 11) + ' 添加加分项</span>' +
+          '<div class="cond-min">' +
+            '<label>至少命中几个加分项：</label>' +
+            '<input type="number" min="0" max="' + rule.optional.length + '" value="' + rule.minOptionalHits + '" onchange="window._updRule(' + rule.id + ',\'minOptionalHits\',parseInt(this.value))"/>' +
+            '<span style="font-size:12px;color:var(--color-text-tertiary)">（最大 ' + rule.optional.length + '，超过会红色提示）</span>' +
+          '</div>' +
+        '</div>' +
+
+      '</div></div>';
+  }
+
+  function renderTagSelect(tagKey, ruleId, group, idx) {
+    var opts = [
+      { v: "decorate_status", t: "装修状态" },
+      { v: "water_tag", t: "水路标签" },
+      { v: "env_tag", t: "环境标签" },
+      { v: "floor_plan", t: "户型标签" },
+      { v: "price_sensitivity", t: "价格敏感" },
+      { v: "activity_level", t: "活跃度" }
+    ];
+    return '<select onchange="window._updTag(' + ruleId + ',\'' + group + '\',' + idx + ',this.value)">' +
+      opts.map(function(o){ return '<option value="' + o.v + '" ' + (o.v === tagKey ? "selected" : "") + '>' + o.t + '</option>'; }).join("") +
+    '</select>';
+  }
+
+  function renderValueChips(values, ruleId, group, idx) {
+    return values.map(function(v, vi){
+      return '<span class="tag-pill">' + v + ' <span class="del-link" style="font-size:14px" onclick="event.stopPropagation();window._delVal(' + ruleId + ',\'' + group + '\',' + idx + ',' + vi + ')">×</span></span>';
+    }).join("") + '<input type="text" placeholder="+ 加值" style="width:90px;font-size:12px;padding:3px 8px" onkeydown="if(event.key===\'Enter\'){window._addVal(' + ruleId + ',\'' + group + '\',' + idx + ',this.value);this.value=\'\'}"/>';
+  }
+
+  function computeHitPreview(rule) {
+    var hits = HOUSES.filter(function(h){
+      var e = evalRule(rule, h);
+      return e.passed;
+    });
+    return { count: hits.length, pct: ((hits.length / HOUSES.length) * 100).toFixed(1) };
+  }
+
+  /* ============ 页面 2：拨号清单 ============ */
+  function renderDial() {
+    var content = document.getElementById("content");
+
+    var rows = HOUSES.map(function(h){
+      var winners = selectWinningRule(h, RULES);
+      var winner = winners && winners.length > 0 ? winners[0] : null;
+      var allHits = winners ? winners.map(function(x){ return { name: x.rule.name, hc: x.eval.hitCount }; }) : [];
+      var freq = canPush(h);
+      return { house: h, winner: winner, allHits: allHits, freq: freq };
+    });
+
+    var totalPushable = rows.filter(function(r){ return r.winner && r.freq.ok; }).length;
+    var totalBlocked = rows.filter(function(r){ return r.winner && !r.freq.ok; }).length;
+    var noMatch = rows.filter(function(r){ return !r.winner; }).length;
+
+    content.innerHTML =
+      '<div class="page-head"><h2>拨号清单</h2><p>每户房主按"匹配度 ↓ + 默认优先级 ↑"自动排序。一户同期只推一个产品包（互斥组内自动去重）。</p></div>' +
+
+      '<div class="grid kpi" style="margin-bottom:16px">' +
+        '<div class="kpi accent"><div class="k-label">总户数</div><div class="k-value">' + HOUSES.length + '</div><div class="k-sub">本批范围</div></div>' +
+        '<div class="kpi"><div class="k-label">可推送</div><div class="k-value" style="color:var(--color-success)">' + totalPushable + '</div><div class="k-sub">通过频控闸门</div></div>' +
+        '<div class="kpi"><div class="k-label">频控拦下</div><div class="k-value" style="color:var(--color-warning)">' + totalBlocked + '</div><div class="k-sub">7 天内已推过</div></div>' +
+        '<div class="kpi"><div class="k-label">未命中</div><div class="k-value" style="color:var(--color-text-tertiary)">' + noMatch + '</div><div class="k-sub">无规则适用</div></div>' +
+      '</div>' +
+
+      '<div class="card" style="padding:0">' +
+        '<table>' +
+          '<thead><tr>' +
+            '<th style="width:130px">户主</th>' +
+            '<th style="width:110px">联系方式</th>' +
+            '<th style="width:90px">装修状态</th>' +
+            '<th>命中的规则（按优先级）</th>' +
+            '<th style="width:90px">匹配度</th>' +
+            '<th style="width:90px">上次推送</th>' +
+            '<th style="width:100px">频控</th>' +
+            '<th style="width:80px">操作</th>' +
+          '</tr></thead><tbody>' +
+          rows.map(function(r){
+            var houseTags = [r.house.decorate].concat(r.house.water).concat(r.house.env);
+            if (r.house.layout.indexOf("浴缸") >= 0) houseTags.push("带浴缸");
+            houseTags.push(r.house.price + "敏感");
+            houseTags.push(r.house.active);
+
+            return '<tr class="row-clickable" onclick="window._selHouse(' + r.house.id + ')">' +
+              '<td><b>' + r.house.name + '</b><div style="font-size:11.5px;color:var(--color-text-tertiary)">' + r.house.layout + '</div></td>' +
+              '<td><span class="code">' + r.house.phone + '</span></td>' +
+              '<td><span class="badge neutral">' + r.house.decorate + '</span></td>' +
+              '<td>' + (r.winner ?
+                '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">' +
+                  '<span class="badge success"><span class="dot"></span> ' + r.winner.rule.name + '</span>' +
+                  (r.allHits.length > 1 ? '<span style="color:var(--color-text-tertiary);font-size:11.5px">（' + r.allHits.slice(1).map(function(x){return x.name + " " + x.hc;}).join(" / ") + '）</span>' : '') +
+                '</div>' :
+                '<span class="badge neutral">未命中</span>'
+              ) + '</td>' +
+              '<td>' + (r.winner ? '<span style="font-size:16px;font-weight:600;color:var(--color-primary)">' + r.winner.eval.hitCount + '</span> <span style="color:var(--color-text-tertiary);font-size:11.5px">/ ' + (r.winner.rule.mandatory.length + r.winner.rule.optional.length) + '</span>' : '—') + '</td>' +
+              '<td style="font-size:12.5px;color:var(--color-text-secondary)">' + r.house.lastPush + '</td>' +
+              '<td>' + (r.freq.ok ? '<span class="badge success"><span class="dot"></span> 可推</span>' : '<span class="badge warning" title="' + r.freq.reason + '">拦下</span>') + '</td>' +
+              '<td><button class="btn sm" onclick="event.stopPropagation();window._selHouse(' + r.house.id + ')">查看</button></td>' +
+            '</tr>';
+          }).join("") +
+          '</tbody></table>' +
+      '</div>' +
+      '<div class="sort-note">' +
+        '<b>排序逻辑：</b>一户命中多条规则时，依次按 <code>默认优先级 ↑</code> → <code>匹配度 ↓</code> → <code>入库顺序 ↑</code> 挑出胜出者。例如"张丽华"同时命中渗漏(2)和刷新(2)，但渗漏的默认优先级 1 < 3，<b>渗漏胜出</b>。' +
+      '</div>';
+  }
+
+  /* ============ 页面 3：命中解释 ============ */
+  function renderExplain() {
+    var content = document.getElementById("content");
+    var house = HOUSES.find(function(h){ return h.id === selectedHouseId; }) || HOUSES[0];
+
+    var winners = selectWinningRule(house, RULES);
+    var winner = winners && winners.length > 0 ? winners[0] : null;
+
+    var allResults = RULES.map(function(r){
+      return { rule: r, eval: evalRule(r, house), isWinner: winner && winner.rule.id === r.id };
+    });
+
+    var totalHits = allResults.filter(function(x){ return x.eval.passed; }).length;
+
+    content.innerHTML =
+      '<div class="page-head"><h2>命中解释</h2><p>点开任一户主看"为什么命中 / 为什么不命中"。可追溯、可解释，不是黑盒。</p></div>' +
+
+      '<div class="explain-house">' +
+        '<div style="display:flex;align-items:center;gap:14px">' +
+          '<div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600">' + house.name.charAt(0) + '</div>' +
+          '<div style="flex:1">' +
+            '<div class="name">' + house.name + '</div>' +
+            '<div class="meta">' + house.layout + ' · ' + house.decorate + ' · ' + house.phone + ' · 历史线索 ' + house.leads + ' 条</div>' +
+          '</div>' +
+          '<div>' +
+            '<select onchange="window._selHouse(parseInt(this.value))">' +
+              HOUSES.map(function(h){ return '<option value="' + h.id + '" ' + (h.id === house.id ? "selected" : "") + '>' + h.name + '</option>'; }).join("") +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+        '<div style="margin-top:12px;font-size:13px">' +
+          '<b>该户标签：</b>' +
+          ['<span class="tag-pill matched">装修 ' + house.decorate + '</span>'] +
+          house.water.map(function(t){ return '<span class="tag-pill matched">' + t + '</span>'; }) +
+          house.env.map(function(t){ return '<span class="tag-pill matched">' + t + '</span>'; }) +
+          (house.layout.indexOf("浴缸") >= 0 ? '<span class="tag-pill matched">户型带浴缸</span>' : '') +
+          '<span class="tag-pill ' + (house.price !== "低" ? "matched" : "missed") + '">价格敏感度·' + house.price + '</span>' +
+          '<span class="tag-pill ' + (house.active.indexOf("活跃") >= 0 ? "matched" : "missed") + '">' + house.active + '</span>' +
+        '</div>' +
+      '</div>' +
+
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13.5px">' +
+        '<b>4 条规则的评估结果</b>' +
+        '<span class="badge primary">' + totalHits + ' / 4 命中</span>' +
+        (winner ? '<span class="badge success">胜出：' + winner.rule.name + '（优先级 ' + winner.rule.manual_priority + '）</span>' : '<span class="badge neutral">无规则命中</span>') +
+      '</div>' +
+
+      allResults.sort(function(a,b){
+        if (a.isWinner !== b.isWinner) return a.isWinner ? -1 : 1;
+        return a.rule.manual_priority - b.rule.manual_priority;
+      }).map(function(x){
+        var e = x.eval;
+        return '<div class="explain-rule ' + (x.isWinner ? "winner" : "") + '">' +
+          '<div class="head">' +
+            '<span class="pri" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:' + (x.isWinner ? "var(--color-success)" : "var(--color-bg-muted)") + ';color:' + (x.isWinner ? "#fff" : "var(--color-text)") + ';font-size:12px;font-weight:600">' + x.rule.manual_priority + '</span>' +
+            '<span class="nm">' + x.rule.name + (x.isWinner ? ' <span class="badge success">胜出</span>' : '') + '</span>' +
+            '<span class="hc">匹配度 <b>' + e.hitCount + '</b> / ' + (x.rule.mandatory.length + x.rule.optional.length) + '</span>' +
+          '</div>' +
+
+          '<div class="explain-section"><b>硬性门槛（必须全部命中）</b>' +
+            (x.rule.mandatory.length === 0 ? ' <span style="color:var(--color-text-tertiary)">无</span>' :
+              ' — 命中 ' + e.mandHit + ' / ' + x.rule.mandatory.length + x.rule.mandatory.map(function(c,i){
+                return ' <span class="gate">' + c.tag + ' ∈ {' + c.value.join(",") + '}</span> ' + (e.mandDetail[i].hit ? '<span style="color:var(--color-success)">' + icon("check", 12) + '</span>' : '<span style="color:var(--color-error)">' + icon("x", 12) + '</span>');
+              }).join("")
+            ) +
+          '</div>' +
+
+          '<div class="explain-section"><b>加分项（至少命中 ' + x.rule.minOptionalHits + ' 个）</b>' +
+            ' — 命中 ' + e.optHit + ' / ' + x.rule.optional.length + x.rule.optional.map(function(c,i){
+              return ' <span class="gate">' + c.tag + ' ∋ {' + c.value.join(",") + '}</span> ' + (e.optDetail[i].hit ? '<span style="color:var(--color-success)">' + icon("check", 12) + '</span>' : '<span style="color:var(--color-error)">' + icon("x", 12) + '</span>');
+            }).join("") +
+          '</div>' +
+
+          '<div style="margin-top:8px;font-size:12.5px">' +
+            (e.passed ?
+              '<span style="color:var(--color-success)">' + icon("check", 12) + ' 命中</span> · 推送产品：' + x.rule.package :
+              '<span style="color:var(--color-text-tertiary)">' + icon("x", 12) + ' 不命中</span> · ' + (e.mandHit < x.rule.mandatory.length ? "硬性门槛未全部通过" : "加分项命中数 " + e.optHit + " < " + x.rule.minOptionalHits)
+            ) +
+          '</div>' +
+        '</div>';
+      }).join("") +
+
+      (winners && winners.length > 1 ?
+        '<div class="card" style="border-color:var(--color-warning);background:var(--color-warning-bg)">' +
+          '<div class="card-title" style="color:var(--color-warning)">' + icon("zap", 14) + ' 同户命中多条规则 · 三级排序结果</div>' +
+          winners.map(function(x, i){
+            return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px">' +
+              '<span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:' + (i === 0 ? "var(--color-success)" : "var(--color-bg-muted)") + ';color:' + (i === 0 ? "#fff" : "var(--color-text-secondary)") + ';font-size:11px;font-weight:600">' + (i+1) + '</span>' +
+              '<b>' + x.rule.name + '</b>' +
+              '<span style="color:var(--color-text-secondary)">匹配度 ' + x.eval.hitCount + ' · 默认优先级 ' + x.rule.manual_priority + '</span>' +
+              (i === 0 ? '<span class="badge success">胜出</span>' : '<span class="badge neutral">备选</span>') +
+            '</div>';
+          }).join("") +
+        '</div>'
+      : '') +
+      '';
+  }
+
+  /* ============ 全局事件 ============ */
+  window._go = function(id){ go(id); render(); };
+  window._selRule = function(id){ selectedRuleId = id; render(); };
+  window._selHouse = function(id){ selectedHouseId = id; if (currentPage() !== "explain") { go("explain"); } render(); };
+  window._updRule = function(id, key, val){
+    var r = RULES.find(function(x){ return x.id === id; });
+    r[key] = val;
+    render();
+    flash("已修改（未保存）");
+  };
+  window._updTag = function(id, group, idx, val){
+    var r = RULES.find(function(x){ return x.id === id; });
+    r[group][idx].tag = val;
+    render();
+  };
+  window._addCond = function(id, group){
+    var r = RULES.find(function(x){ return x.id === id; });
+    var defaults = { mandatory: { tag: "decorate_status", op: "in", value: ["5-10年"] }, optional: { tag: "water_tag", op: "contains_any", value: ["卫生间漏水"] } };
+    r[group].push(JSON.parse(JSON.stringify(defaults[group])));
+    render();
+  };
+  window._delCond = function(id, group, idx){
+    var r = RULES.find(function(x){ return x.id === id; });
+    r[group].splice(idx, 1);
+    render();
+  };
+  window._addVal = function(id, group, idx, val){
+    if (!val.trim()) return;
+    var r = RULES.find(function(x){ return x.id === id; });
+    r[group][idx].value.push(val.trim());
+    render();
+  };
+  window._delVal = function(id, group, idx, vi){
+    var r = RULES.find(function(x){ return x.id === id; });
+    r[group][idx].value.splice(vi, 1);
+    render();
+  };
+  window._save = function(){ flash("规则已保存（演示，未持久化）"); };
+  window._reset = function(){
+    RULES = JSON.parse(JSON.stringify(DEFAULT_RULES));
+    render();
+    flash("已重置为默认规则");
+  };
+
+  function render() {
+    renderNav();
+    renderCrumb();
+    var p = PAGES.find(function(x){ return x.id === currentPage(); });
+    p.render();
+  }
+  window.addEventListener("hashchange", render);
+
+  // expose
+  window._PAGES = PAGES;
+  window._RULES = RULES;
+  window._HOUSES = HOUSES;
+
+  render();
+})();
+</script>
+</body>
+</html>

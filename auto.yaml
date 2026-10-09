@@ -1,0 +1,120 @@
+- generic [ref=f4e2]:
+  - complementary [ref=f4e3]:
+    - generic [ref=f4e8]:
+      - generic [ref=f4e9]: 营销智能推送
+      - generic [ref=f4e10]: 研选责任盘 · Demo v3
+    - navigation [ref=f4e11]:
+      - generic [ref=f4e384] [cursor=pointer]: 映射配置
+      - generic [ref=f4e387] [cursor=pointer]: 筛选推送
+      - generic [ref=f4e392] [cursor=pointer]: 海报配置
+      - generic [ref=f4e398] [cursor=pointer]: 定时推送
+    - generic [ref=f4e31]:
+      - generic [ref=f4e32]: 0924 真实跑批数据
+      - generic [ref=f4e34]: 1053 户 · 1036 号码金域松湖 + 第五园 · 演示版
+  - generic [ref=f4e35]:
+    - generic [ref=f4e36]:
+      - generic [ref=f4e37]: 定时推送/ 渗漏 · 浴改淋 · 刷新 · 真实数据 1053 户
+      - generic [ref=f4e38]: 数据源：0924 真实跑批 · 与原 SQL 结果一致
+    - generic [ref=f4e41]:
+      - generic [ref=f4e403]:
+        - heading "定时推送" [level=2] [ref=f4e404]
+        - paragraph [ref=f4e405]: 针对项目创建周期性推送计划，推送前自动执行频控：同一模式 30 天内推送过的房屋不重复推；7 天内被其他模式推过的房屋也不推。频控只作用于营销类消息，通知类（如维修提醒）不受限。
+      - generic [ref=f4e406]:
+        - generic [ref=f4e412]:
+          - generic [ref=f4e413]: 推送计划
+          - generic [ref=f4e414]: "2"
+          - generic [ref=f4e415]: 进行中 1 · 已暂停 1
+        - generic [ref=f4e421]:
+          - generic [ref=f4e422]: 本期待推号码
+          - generic [ref=f4e423]: "439"
+          - generic [ref=f4e424]: 进行中计划去重合计（估算）
+        - generic [ref=f4e429]:
+          - generic [ref=f4e430]: 频控保护
+          - generic [ref=f4e431]: 30天 / 7天
+          - generic [ref=f4e432]: 同模式 / 跨模式禁止期
+        - generic [ref=f4e437]:
+          - generic [ref=f4e438]: 当前试算实际将推
+          - generic [ref=f4e439]: "455"
+          - generic [ref=f4e440]: 推广短信 · 每周二 10:00
+      - generic [ref=f4e441]:
+        - generic [ref=f4e442]:
+          - combobox [ref=f4e443] [cursor=pointer]:
+            - option "选择城市"
+            - option "东莞" [selected]
+            - option "深圳"
+          - combobox [ref=f4e444] [cursor=pointer]:
+            - option "选择项目"
+            - option "东莞金域松湖" [selected]
+          - combobox [ref=f4e445] [cursor=pointer]:
+            - option "全部命中产品" [selected]
+            - option "仅命中：渗漏"
+            - option "仅命中：浴改淋"
+            - option "仅命中：刷新"
+        - generic [ref=f4e446]:
+          - generic [ref=f4e447]: 推送模式
+          - combobox [ref=f4e448] [cursor=pointer]:
+            - option "推广短信" [selected]
+            - option "微信通知"
+            - option "住这儿通知"
+            - option "管家企微"
+          - generic [ref=f4e449]: 频率
+          - combobox [ref=f4e450] [cursor=pointer]:
+            - option "每周推送" [selected]
+            - option "每天推送"
+            - option "仅一次"
+          - combobox [ref=f4e451] [cursor=pointer]:
+            - option "周日"
+            - option "周一"
+            - option "周二" [selected]
+            - option "周三"
+            - option "周四"
+            - option "周五"
+            - option "周六"
+          - textbox [ref=f4e452]: 10:00
+          - button "保存并启用计划" [ref=f4e453] [cursor=pointer]
+        - generic [ref=f4e454]:
+          - generic [ref=f4e455]:
+            - generic [ref=f4e456]: "509"
+            - generic [ref=f4e457]: 命中房屋（目标范围）
+          - generic [ref=f4e458]:
+            - generic [ref=f4e459]: "29"
+            - generic [ref=f4e460]: 跳过：30 天内同模式（推广短信）已推
+          - generic [ref=f4e461]:
+            - generic [ref=f4e462]: "25"
+            - generic [ref=f4e463]: 跳过：7 天内被其他模式推过
+          - generic [ref=f4e464]:
+            - generic [ref=f4e465]: "455"
+            - generic [ref=f4e466]: 实际将推（去重 446 号码）
+        - generic [ref=f4e467]: 频控口径：同模式 30 天（推广短信 / 微信通知 / 住这儿通知 / 管家企微 各自独立计数）；跨模式 7 天（任一模式推过，其余模式 7 天内静默）。同一号码名下多套房合并为一个推送对象。计划执行时如遇海报未通过抽查，该批顺延至下一周期。
+      - generic [ref=f4e468]:
+        - generic [ref=f4e469]: 计划列表
+        - table [ref=f4e471]:
+          - rowgroup [ref=f4e472]:
+            - row [ref=f4e473]:
+              - columnheader "项目" [ref=f4e474]
+              - columnheader "推送模式" [ref=f4e475]
+              - columnheader "频率" [ref=f4e476]
+              - columnheader "目标范围" [ref=f4e477]
+              - columnheader "试算目标" [ref=f4e478]
+              - columnheader "状态" [ref=f4e479]
+              - columnheader "操作" [ref=f4e480]
+          - rowgroup [ref=f4e481]:
+            - row [ref=f4e482]:
+              - cell "东莞金域松湖" [ref=f4e483]
+              - cell "推广短信" [ref=f4e484]
+              - cell "每周二 10:00" [ref=f4e486]
+              - cell "全部命中产品" [ref=f4e487]
+              - cell "453 户 / 439 号码" [ref=f4e488]
+              - cell "进行中" [ref=f4e489]
+              - cell [ref=f4e492]:
+                - button "删除" [ref=f4e493] [cursor=pointer]
+            - row [ref=f4e494]:
+              - cell "深圳第五园" [ref=f4e495]
+              - cell "住这儿通知" [ref=f4e496]
+              - cell "每周四 15:00" [ref=f4e498]
+              - cell "命中：浴改淋" [ref=f4e499]
+              - cell "96 户 / 92 号码" [ref=f4e500]
+              - cell "已暂停" [ref=f4e501]
+              - cell [ref=f4e504]:
+                - button "删除" [ref=f4e505] [cursor=pointer]
+        - generic [ref=f4e506]: 执行记录与发送回执对应推送明细表；每次执行自动带频控过滤，被拦截的房屋记入频控日志（跳过原因：同模式 30 天 / 跨模式 7 天）。

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研选营销智能推送系统 · 一页纸方案摘要</title>
+<style>
+  :root{
+    --primary:#1D5A96; --primary-d:#17497B; --primary-bg:#E8F0F8; --primary-line:#C6DAEC;
+    --fg:#131A22; --fg2:#3D4854; --muted:#5B6675; --meta:#8A94A3;
+    --border:#DFE4EA; --bg:#F5F7FA; --sunken:#EEF1F5;
+    --success:#0F7A48; --success-bg:#E8F5EE; --warn:#B4530A; --warn-bg:#FDF3E3;
+    --danger:#B3261E; --danger-bg:#FBEDEC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;padding:24px 12px}
+  .page{max-width:960px;margin:0 auto;background:#fff;border:1px solid var(--border);border-radius:10px;
+    padding:34px 40px 30px;box-shadow:0 1px 2px rgba(19,26,34,.06),0 10px 30px rgba(19,26,34,.07)}
+  /* 顶部 */
+  .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--primary);padding-bottom:14px;margin-bottom:16px}
+  .hd h1{font-size:24px;font-weight:600;letter-spacing:-.01em}
+  .hd .oneline{font-size:13px;color:var(--muted);margin-top:5px;max-width:640px}
+  .hd .meta{text-align:right;font-size:12px;color:var(--meta);line-height:1.9;flex:0 0 auto}
+  .badge{display:inline-block;font-size:11.5px;font-weight:500;padding:3px 10px;border-radius:999px;
+    background:var(--success-bg);color:var(--success);border:1px solid #Bfe0CC;margin-top:2px}
+  h3{font-size:14px;font-weight:600;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  h3::before{content:"";width:4px;height:14px;background:var(--primary);border-radius:2px}
+  .sec{margin-top:18px}
+  /* 数据流 */
+  .flow{display:flex;align-items:stretch;gap:0}
+  .fstep{flex:1;border:1px solid var(--border);border-radius:7px;padding:9px 8px;text-align:center;background:#fff}
+  .fstep .tm{font-size:11px;color:var(--primary);font-weight:600;letter-spacing:.03em}
+  .fstep .tt{font-size:12.5px;font-weight:500;margin:3px 0 1px}
+  .fstep .dd{font-size:11px;color:var(--muted);line-height:1.4}
+  .fstep.hl{border-color:var(--primary);background:var(--primary-bg)}
+  .farr{flex:0 0 20px;display:flex;align-items:center;justify-content:center;color:var(--meta)}
+  /* 三卡 */
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .box{border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
+  .box .bt{font-size:13px;font-weight:600;margin-bottom:6px}
+  .box ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .box li{font-size:12px;color:var(--fg2);padding-left:12px;position:relative;line-height:1.5}
+  .box li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--primary-line)}
+  .box li b{font-weight:600;color:var(--fg)}
+  .box.warn{background:var(--warn-bg);border-color:#F2DCB8}
+  /* 范围两栏 */
+  .scope{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .scope .yes{border:1px solid #Bfe0CC;background:var(--success-bg);border-radius:8px;padding:12px 14px}
+  .scope .no{border:1px solid var(--border);background:var(--sunken);border-radius:8px;padding:12px 14px}
+  .scope .t{font-size:13px;font-weight:600;margin-bottom:6px}
+  .scope ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .scope li{font-size:12px;color:var(--fg2);padding-left:14px;position:relative;line-height:1.5}
+  .scope .yes li::before{content:"+";position:absolute;left:0;color:var(--success);font-weight:700}
+  .scope .no li::before{content:"–";position:absolute;left:1px;color:var(--meta)}
+  /* 待拍板表 */
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{background:var(--sunken);text-align:left;font-weight:600;font-size:11.5px;color:var(--muted);
+    padding:7px 9px;border-bottom:1px solid var(--border)}
+  td{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--fg2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .who{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;background:var(--primary-bg);
+    color:var(--primary-d);border:1px solid var(--primary-line);white-space:nowrap}
+  .who.biz{background:var(--warn-bg);color:var(--warn);border-color:#F2DCB8}
+  /* 排期 */
+  .mile{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:2px}
+  .m{border:1px solid var(--border);border-radius:7px;padding:9px 10px;position:relative;background:#fff}
+  .m .mid{font-size:11px;font-weight:700;color:var(--primary)}
+  .m .mdt{font-size:10.5px;color:var(--meta);margin:2px 0 4px}
+  .m .mtt{font-size:12px;font-weight:600;margin-bottom:3px}
+  .m .mdd{font-size:11px;color:var(--muted);line-height:1.45}
+  .m.now{border-color:var(--primary);background:var(--primary-bg)}
+  /* 底部 */
+  .ft{display:flex;justify-content:space-between;gap:16px;margin-top:16px;padding-top:12px;
+    border-top:1px solid var(--border);font-size:11.5px;color:var(--muted)}
+  .ft .mats b{color:var(--fg2);font-weight:600}
+  .pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:4px;border:1px solid var(--border);
+    background:var(--sunken);color:var(--fg2);margin:2px 4px 2px 0}
+  .pill.b{background:var(--primary-bg);border-color:var(--primary-line);color:var(--primary-d)}
+  .hl{color:var(--primary);font-weight:600}
+  .warn-t{color:var(--warn);font-weight:600}
+  @media print{
+    body{background:#fff;padding:0}
+    .page{box-shadow:none;border:none;border-radius:0;max-width:none;padding:10mm 11mm}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hd">
+    <div>
+      <h1>研选营销智能推送系统 · 方案摘要</h1>
+      <div class="oneline">把「筛标签 → 定产品 → 做海报 → 发短信 → 收线索」这条全靠人跑的链路，变成每日自动跑完、全程受频控保护、效果可归因复盘的闭环系统。</div>
+    </div>
+    <div class="meta">
+      <div class="badge">工程原型已端到端跑通</div>
+      <div style="margin-top:6px">v1.1 · 2026-10</div>
+      <div>责任盘约 125.7 万户 · T+1 每日一批</div>
+    </div>
+  </div>
+
+  <!-- 每日数据流 -->
+  <div class="sec">
+    <h3>系统每天自己跑（上海时间）</h3>
+    <div class="flow">
+      <div class="fstep"><div class="tm">02:00</div><div class="tt">房屋标签同步</div><div class="dd">MaxCompute 125.7 万行快照入本系统</div></div>
+      <div class="farr">→</div>
+      <div class="fstep"><div class="tm">02:10</div><div class="tt">三源补号</div><div class="dd">住儿 &gt; 企微 &gt; CRM，HMAC 归一加密</div></div>
+      <div class="farr">→</div>
+      <div class="fstep"><div class="tm">02:30</div><div class="tt">线索同步</div><div class="dd">ADB 全量线索，产品包词典识别</div></div>
+      <div class="farr">→</div>
+      <div class="fstep hl"><div class="tm">07:30</div><div class="tt">规则圈选 + 频控 + 发送</div><div class="dd">14 道闸门逐户校验，窗口内下发</div></div>
+      <div class="farr">→</div>
+      <div class="fstep"><div class="tm">09:10</div><div class="tt">T+1 归因</div><div class="dd">15 天窗口首触/末触双回填</div></div>
+    </div>
+  </div>
+
+  <!-- 三个核心机制 -->
+  <div class="sec">
+    <h3>三个核心机制（原型均已实测）</h3>
+    <div class="grid3">
+      <div class="box">
+        <div class="bt">① 规则圈选 · 一户一包</div>
+        <ul>
+          <li><b>渗漏检测包</b>：水路问题 × 老装修，启用</li>
+          <li><b>墙面刷新包</b>：墙面问题 × 多成员家庭 × 老装修，启用</li>
+          <li><b>浴改淋包</b>：依赖浴缸户型标签，<span class="warn-t">数据源未接入（GAP-2），系统锁定不可启用</span></li>
+          <li>互斥组 + 优先级排序，同户同周期只出一包</li>
+        </ul>
+      </div>
+      <div class="box">
+        <div class="bt">② 14 道闸门 · 宁可不发不可打扰</div>
+        <ul>
+          <li>线索静默（同包 90 天 / 客户 15 天，fail-open）</li>
+          <li>无手机号（数据缺口，计 NO_MOBILE 不假装发过）</li>
+          <li>退订/黑名单、房屋冷却 7 天、同包冷却 30 天</li>
+          <li>日 1 / 周 2 / 月 4 次、全局 5000/天</li>
+          <li>仅 10-12 点、15-18 点可发；22-08 点硬禁发</li>
+        </ul>
+      </div>
+      <div class="box">
+        <div class="bt">③ 归因复盘 · 诚实标注口径</div>
+        <ul>
+          <li>窗口 <b>15 天</b>固定常量，不可配</li>
+          <li>首触/末触双模型回填，明细 lead_count 可追溯</li>
+          <li>外部未给包时标 inferred，<b>不与外部数据混算准确率</b></li>
+          <li>「触达」=发送成功非已查看，相关≠因果，看板强制标注</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 范围 -->
+  <div class="sec">
+    <h3>一期范围</h3>
+    <div class="scope">
+      <div class="yes">
+        <div class="t" style="color:var(--success)">一期做（5 周）</div>
+        <ul>
+          <li>三源数据接入 + 规则配置（拖拽排序、命中预览）</li>
+          <li>每日跑批 + 14 闸门频控 + 发送窗口</li>
+          <li>模板套版个性化海报（Sharp 合成，零错字、约 0 成本/张）</li>
+          <li>推送记录、原因码分布、单条重推、停止未发送</li>
+          <li>短信/企微通道对接（对方团队拉通）、T+1 归因看板</li>
+        </ul>
+      </div>
+      <div class="no">
+        <div class="t">一期明确不做</div>
+        <ul>
+          <li>生成式 AI 出图（降级为可选背景素材，<b>待拍板③</b>）</li>
+          <li>撤回已送达短信（物理不可行，UI 不承诺）</li>
+          <li>点击/短链归因（依赖通道能力，<b>待拍板①</b>）</li>
+          <li>无互动降频、AI 自动调规则、多包同推</li>
+          <li>大改上游数仓（生产 SQL 一字不改，只加同步节点）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待拍板 -->
+  <div class="sec">
+    <h3>上会前需要拍板的 6 件事（不解决开发会中途停）</h3>
+    <table>
+      <thead><tr><th style="width:26%">事项</th><th style="width:34%">需要的结论</th><th style="width:14%">谁拍板</th><th>不拍板的后果</th></tr></thead>
+      <tbody>
+        <tr><td>① 通道接口协议</td><td>同步/异步、回执、带参短链、限流配额的接口文档</td><td><span class="who">外部通道团队</span></td><td>发送层无法对接，点击归因能否做也悬而未决</td></tr>
+        <tr><td>② 海报视觉素材来源</td><td>模板与素材由业务方还是设计方提供、交付时间</td><td><span class="who biz">业务/设计</span></td><td>模板规格无法冻结，海报页只能占位</td></tr>
+        <tr><td>③ 海报方案降级确认</td><td>接受「模板套版」替代原始诉求「生成式 AI 海报」</td><td><span class="who biz">业务负责人</span></td><td>需求实质变更未签字，有验收返工风险</td></tr>
+        <tr><td>④ 一户一包确认</td><td>确认一个周期一套房只推一个产品包</td><td><span class="who biz">业务负责人</span></td><td>若要多包同推，规则模型与频控需返工</td></tr>
+        <tr><td>⑤ 频控合规口径</td><td>冷却 7/30 天、日 1 条、禁发时段等默认值合规认可</td><td><span class="who biz">业务/合规</span></td><td>阈值无合规背书，短信通道有封号风险</td></tr>
+        <tr><td>⑥ 退订授权与回流</td><td>营销授权来源、退订入口与名单回流方式</td><td><span class="who biz">业务方</span></td><td>合规命门，没有退订闭环不能正式发送</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 排期 -->
+  <div class="sec">
+    <h3>建议排期（以 Kickoff 结论为准）</h3>
+    <div class="mile">
+      <div class="m now"><div class="mid">M0</div><div class="mdt">10/9（五）</div><div class="mtt">评审 + Kickoff</div><div class="mdd">6 项拍板、分工、GAP 探查任务派发</div></div>
+      <div class="m"><div class="mid">M1</div><div class="mdt">10/12 – 10/23</div><div class="mtt">数据链路</div><div class="mdd">三源接入、补号覆盖率核查（≥70% 才开发送）</div></div>
+      <div class="m"><div class="mid">M2</div><div class="mdt">10/26 – 10/30</div><div class="mtt">圈选跑批</div><div class="mdd">规则/闸门/海报，原型已验证，接真实数据</div></div>
+      <div class="m"><div class="mid">M3</div><div class="mdt">11/02 – 11/13</div><div class="mtt">通道联调</div><div class="mdd">外部通道对接、回执、退订回流，摘 DRY_RUN</div></div>
+      <div class="m"><div class="mid">M4</div><div class="mdt">11/16 – 11/27</div><div class="mtt">归因 + 试运行</div><div class="mdd">T+1 归因看板上线，小流量试运行 2 周</div></div>
+    </div>
+  </div>
+
+  <div class="ft">
+    <div class="mats">
+      <b>随附材料：</b>
+      <span class="pill b">PRD.md</span><span class="pill b">ARCHITECTURE.md</span><span class="pill b">UIUX.md</span>
+      <span class="pill b">DATA-CONTRACT.md</span><span class="pill b">openapi.yaml</span>
+      <span class="pill">ADR-001~013</span><span class="pill">OPEN-DECISIONS.md</span>
+      <span class="pill">种子与同步 SQL × 8</span><span class="pill">可运行前后端原型</span><span class="pill">Kickoff 会议材料包</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

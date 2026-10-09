@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研选营销智能推送系统 · 产品需求文档（PRD）</title>
+<style>
+  :root{
+    --primary:#1D5A96; --primary-d:#17497B; --primary-bg:#E8F0F8; --primary-line:#C6DAEC;
+    --fg:#131A22; --fg2:#3D4854; --muted:#5B6675; --meta:#8A94A3;
+    --border:#DFE4EA; --bg:#F5F7FA; --sunken:#EEF1F5;
+    --success:#0F7A48; --success-bg:#E8F5EE; --warn:#B4530A; --warn-bg:#FDF3E3;
+    --danger:#B3261E; --danger-bg:#FBEDEC;
+    --ai:#0F766E; --ai-bg:#E6F2F1; --ai-line:#B8DBD7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.65;padding:24px 12px;font-size:13.5px}
+  .sheet{max-width:1000px;margin:0 auto 22px;background:#fff;border:1px solid var(--border);
+    border-radius:10px;padding:34px 42px;box-shadow:0 1px 2px rgba(19,26,34,.06),0 10px 30px rgba(19,26,34,.07)}
+  .sheet:last-child{margin-bottom:0}
+  .kicker{font-size:11px;letter-spacing:.14em;color:var(--meta);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  h1{font-size:27px;font-weight:650;letter-spacing:-.01em;line-height:1.32}
+  h2{font-size:18px;font-weight:640;display:flex;align-items:baseline;gap:9px;margin-bottom:6px}
+  h2 .no{font-size:14px;font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums}
+  h3{font-size:13.5px;font-weight:650;margin:16px 0 7px;color:var(--fg)}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.7}
+  .cover-head{border-bottom:2px solid var(--primary);padding-bottom:18px;margin-bottom:18px}
+  .lead{font-size:14.5px;line-height:1.85;color:var(--fg2);background:var(--primary-bg);
+    border:1px solid var(--primary-line);border-radius:8px;padding:15px 20px;margin-top:14px}
+  .lead b{color:var(--primary-d);font-weight:650}
+  /* 文档信息格 */
+  .info{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:16px}
+  .info .ig{display:flex;border-bottom:1px solid var(--border);border-right:1px solid var(--border);min-height:40px}
+  .info .ig:nth-child(3n){border-right:none}
+  .info .ig:nth-last-child(-n+3){border-bottom:none}
+  .info .k{flex:0 0 82px;background:var(--sunken);padding:9px 12px;font-size:11.5px;color:var(--muted);font-weight:600}
+  .info .v{flex:1;padding:9px 12px;font-size:12.5px;color:var(--fg2)}
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+  th{background:var(--sunken);text-align:left;font-weight:600;font-size:11.5px;color:var(--muted);
+    padding:8px 11px;border-bottom:1px solid var(--border);white-space:nowrap}
+  td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--fg2);vertical-align:top;line-height:1.6}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--fg);font-weight:600}
+  td .no-col{font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums}
+  /* 时间轴 */
+  .flow{display:flex;align-items:stretch;gap:0;margin:12px 0 6px}
+  .fstep{flex:1;border:1px solid var(--border);border-radius:8px;padding:11px 9px;text-align:center;background:#fff}
+  .fstep .tm{font-size:12px;color:var(--primary);font-weight:700;font-variant-numeric:tabular-nums}
+  .fstep .tt{font-size:12.5px;font-weight:640;margin:4px 0 3px}
+  .fstep .dd{font-size:11px;color:var(--muted);line-height:1.45}
+  .fstep.hl{border-color:var(--primary);background:var(--primary-bg)}
+  .farr{flex:0 0 16px;display:flex;align-items:center;justify-content:center;color:var(--meta);font-size:12px}
+  /* 链路 */
+  .chain{display:flex;align-items:stretch;gap:0;margin:12px 0 4px}
+  .cstep{flex:1;border:1px solid var(--border);border-radius:7px;padding:9px 7px;text-align:center;background:#fff}
+  .cstep .ct{font-size:12px;font-weight:640}
+  .cstep .cd{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .cstep.core{border-color:var(--primary);background:var(--primary-bg)}
+  .cstep.p2{border-style:dashed;background:var(--sunken)}
+  /* 卡片 */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .box{border:1px solid var(--border);border-radius:9px;padding:13px 15px;background:#fff}
+  .box .bt{font-size:13px;font-weight:650;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+  .box .bt .badge{flex:0 0 19px;height:19px;border-radius:5px;background:var(--primary-bg);color:var(--primary-d);
+    font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1px solid var(--primary-line)}
+  .box ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .box li{font-size:12px;color:var(--fg2);padding-left:12px;position:relative;line-height:1.62}
+  .box li::before{content:"";position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:var(--primary-line)}
+  .box li b{color:var(--fg);font-weight:600}
+  /* 提示条 */
+  .note{border-left:3px solid var(--primary);background:var(--primary-bg);border-radius:0 8px 8px 0;
+    padding:11px 17px;font-size:12.5px;color:var(--fg2);margin-top:14px;line-height:1.75}
+  .note.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+  .note.ai{border-left-color:var(--ai);background:var(--ai-bg)}
+  .note b{color:var(--fg)}
+  /* 里程碑 */
+  .mile{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:8px}
+  .m{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff}
+  .m .mid{font-size:11.5px;font-weight:700;color:var(--primary)}
+  .m .mdt{font-size:10.5px;color:var(--meta);margin:2px 0 5px;font-variant-numeric:tabular-nums}
+  .m .mtt{font-size:12.5px;font-weight:640;margin-bottom:4px}
+  .m .mdd{font-size:11px;color:var(--muted);line-height:1.45}
+  .m.now{border-color:var(--primary);background:var(--primary-bg)}
+  /* 标签 */
+  .who{display:inline-block;font-size:11px;padding:1px 8px;border-radius:4px;background:var(--primary-bg);
+    color:var(--primary-d);border:1px solid var(--primary-line);white-space:nowrap;font-weight:600}
+  .who.biz{background:var(--warn-bg);color:var(--warn);border-color:#F2DCB8}
+  .who.data{background:var(--success-bg);color:var(--success);border-color:#Bfe0CC}
+  .who.ai{background:var(--ai-bg);color:var(--ai);border-color:var(--ai-line)}
+  .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:4px;background:var(--sunken);
+    border:1px solid var(--border);color:var(--muted);margin:2px 4px 2px 0}
+  .pagefoot{margin-top:16px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--meta);
+    display:flex;justify-content:space-between}
+  .hl{color:var(--primary);font-weight:650}
+  .warn-t{color:var(--warn);font-weight:650}
+  .ai-t{color:var(--ai);font-weight:650}
+  .muted-t{color:var(--muted)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:var(--sunken);
+    padding:1px 5px;border-radius:3px;color:var(--fg2)}
+  @media print{
+    body{background:#fff;padding:0}
+    .sheet{box-shadow:none;border:none;border-radius:0;max-width:none;margin:0;page-break-after:always;padding:13mm 15mm}
+    .sheet:last-child{page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 封面 + 产品定位 ============ -->
+<div class="sheet">
+  <div class="cover-head">
+    <div class="kicker">Product Requirements Document</div>
+    <h1>研选营销智能推送系统</h1>
+    <div class="sub" style="margin-top:8px">
+      将「标签圈人 → 产品匹配 → 海报生成 → 渠道触达」这条当前为<strong>纯人工操作</strong>的营销链路，
+      收敛为由「产品包 × 标签」规则驱动、<strong>T+1 自动运行</strong>的营销闭环工作台。
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="ig"><div class="k">文档版本</div><div class="v">v1.0</div></div>
+    <div class="ig"><div class="k">更新日期</div><div class="v">2026-10</div></div>
+    <div class="ig"><div class="k">当前状态</div><div class="v">工程原型已端到端跑通</div></div>
+    <div class="ig"><div class="k">数据基座</div><div class="v">责任盘 125.7 万户 · T+1</div></div>
+    <div class="ig"><div class="k">一期周期</div><div class="v">5 周（含试运行）</div></div>
+    <div class="ig"><div class="k">读者</div><div class="v">产品总监</div></div>
+  </div>
+
+  <div class="lead">
+    <b>一句话定义：</b>把「推谁、推什么、什么时候推、推过没有」四件事，<b>从个人经验与手工表格，固化为可配置、可预览、可追溯的系统规则</b>，并由系统每日自动执行。<br>
+    <b>要解决的本质问题不是"缺工具"，而是"营销经验无法沉淀"</b>——圈选标准、产品匹配判断、发送节奏当前全部存在于个人员工的经验与手工操作中：<b>无法复用</b>（每次活动重新拉表）、<b>无法审计</b>（配错查不出原因）、<b>无法追溯</b>（发完查不到结果）。
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 1 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §1 现状与目标用户 ============ -->
+<div class="sheet">
+  <div class="kicker">Context</div>
+  <h2><span class="no">01</span>现状问题与目标用户</h2>
+  <div class="sub">链路被拆成四段独立的人工操作，每段都有结构性断点。</div>
+
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:20%">环节</th><th style="width:40%">当前做法</th><th>结构性断点</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="no-col">1</td>
+        <td><b>人群圈选</b></td>
+        <td>人工用 Excel 按标签筛选目标房屋</td>
+        <td>重复劳动；筛选口径不统一、跨人不可比；易错</td>
+      </tr>
+      <tr>
+        <td class="no-col">2</td>
+        <td><b>产品匹配</b></td>
+        <td>依赖个人经验判断「哪类房屋推哪个产品包」</td>
+        <td>经验不可沉淀、不可复用、不可审计；人员变动即断档</td>
+      </tr>
+      <tr>
+        <td class="no-col">3</td>
+        <td><b>海报制作</b></td>
+        <td>逐张手工设计制作</td>
+        <td>无法个性化、无法规模化；产量直接受人力上限约束</td>
+      </tr>
+      <tr>
+        <td class="no-col">4</td>
+        <td><b>触达下发</b></td>
+        <td>名单整理后交平台批量群发</td>
+        <td><span class="warn-t">无频次控制 → 重复触达引发投诉与拉黑</span>；<b>无发送记录 → 不可追溯、不可补推</b></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>目标用户</h3>
+  <div class="grid2">
+    <div class="box">
+      <div class="bt"><span class="badge">主</span>营销管理岗 · 总部</div>
+      <ul>
+        <li>职责：维护产品包、配置「产品包 × 标签」映射规则、设定频控策略</li>
+        <li>核心诉求：<b>规则配一次能长期复用</b>；不会配错、不会推错人；推完有数据可汇报</li>
+        <li>能力边界：熟练使用 Excel 与后台管理界面，<b>不具备 SQL 与规则引擎能力</b></li>
+      </ul>
+    </div>
+    <div class="box">
+      <div class="bt"><span class="badge">次</span>大区 / 营业部运营</div>
+      <ul>
+        <li>职责：发起推送、查看执行结果、对重点客户手动重推</li>
+        <li>核心诉求：判断当天推荐是否合理；<b>未发送的能查到原因</b>；能对指定对象补推</li>
+        <li>能力边界：熟悉企微与短信后台，能读懂数据表格</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 2 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §2 产品链路与自动化机理 ============ -->
+<div class="sheet">
+  <div class="kicker">Product Flow</div>
+  <h2><span class="no">02</span>产品链路与自动化机理</h2>
+  <div class="sub">七环节链路中，<b>「映射配置」是本期唯一新增的产品能力</b>，其余环节由既有数据资产与外部通道承载。</div>
+
+  <div class="chain">
+    <div class="cstep"><div class="ct">标签数据基座</div><div class="cd">房屋标签宽表<br>125.7 万行 · T+1</div></div>
+    <div class="farr">→</div>
+    <div class="cstep"><div class="ct">人群圈选</div><div class="cd">按规则筛出<br>当日目标房屋</div></div>
+    <div class="farr">→</div>
+    <div class="cstep core"><div class="ct">映射配置</div><div class="cd">产品包 × 标签<br>优先级 + 互斥</div></div>
+    <div class="farr">→</div>
+    <div class="cstep"><div class="ct">推荐匹配</div><div class="cd">单包收敛<br>一户一包</div></div>
+    <div class="farr">→</div>
+    <div class="cstep"><div class="ct">海报生成</div><div class="cd">模板套版<br>变量填充</div></div>
+    <div class="farr">→</div>
+    <div class="cstep"><div class="ct">触达下发</div><div class="cd">频控校验后<br>走既有通道</div></div>
+    <div class="farr">→</div>
+    <div class="cstep p2"><div class="ct">效果回流</div><div class="cd">归因分析<br>二期</div></div>
+  </div>
+
+  <h3>每日自动运行时序（T+1，Asia/Shanghai）</h3>
+  <div class="flow">
+    <div class="fstep"><div class="tm">02:00</div><div class="tt">标签同步</div><div class="dd">房屋标签快照<br>入库</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">02:10</div><div class="tt">号码补齐</div><div class="dd">三源优先级解析<br>住儿 &gt; 企微 &gt; CRM</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">02:30</div><div class="tt">线索同步</div><div class="dd">全量线索快照<br>产品包词典识别</div></div>
+    <div class="farr">→</div>
+    <div class="fstep hl"><div class="tm">07:30</div><div class="tt">跑批与发送</div><div class="dd">规则圈选 → 频控校验<br>→ 海报生成 → 窗口内下发</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">09:10</div><div class="tt">归因回填</div><div class="dd">15 天窗口<br>首触 / 末触回填</div></div>
+  </div>
+
+  <div class="note">
+    <b>人在环中的位置：</b>全链路无人值守。人工仅在两处介入——<b>① 配置映射规则与频控策略</b>（低频、一次性）；<b>② 查看执行结果与归因数据</b>（日常）。<br>
+    跑批具备<b>按日幂等</b>能力：<code>campaign_task.stat_date</code> 唯一约束，同日重复触发自动拒绝，避免误发。
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 3 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §3 三个核心机制 ============ -->
+<div class="sheet">
+  <div class="kicker">Core Mechanisms</div>
+  <h2><span class="no">03</span>三个核心机制</h2>
+  <div class="sub">本期系统的产品价值集中在这三个机制上，均已由原型验证。</div>
+
+  <div class="grid3">
+    <div class="box">
+      <div class="bt"><span class="badge">A</span>映射规则模型</div>
+      <ul>
+        <li><b>实体：</b>产品包为单一实体，清单由业务方自行维护；<b>不含</b> SKU、价格、库存、订单</li>
+        <li><b>规则结构：</b>条件（标签表达式）→ 动作（推荐产品包）</li>
+        <li><b>冲突消解：</b>优先级排序 + 互斥组；同一房屋、同一周期<b>收敛为单一产品包</b></li>
+        <li><b>配置体验：</b>保存前提供命中预览（预计命中户数、组内冲突与胜出规则提示）</li>
+      </ul>
+    </div>
+    <div class="box">
+      <div class="bt"><span class="badge">B</span>频控模型（P0 一等功能）</div>
+      <ul>
+        <li><b>名单类：</b>退订名单、黑名单，按<b>号码与房屋双键</b>校验</li>
+        <li><b>冷却类：</b>房屋冷却 7 天｜产品包冷却 30 天｜线索静默（同包 90 天 / 客户 15 天）</li>
+        <li><b>频次类：</b>房屋日 1 / 周 2 / 月 4 次｜全局日上限 5000 条</li>
+        <li><b>时段类：</b>可发窗口 10:00–12:00、15:00–18:00｜<b>22:00–08:00 硬禁发</b></li>
+        <li>数据缺失时 <b>fail-open</b>（放行并告警），避免因上游断数误停业务</li>
+        <li>全部拦截<b>落盘并给出原因码</b>，可解释、可重推</li>
+      </ul>
+    </div>
+    <div class="box">
+      <div class="bt"><span class="badge">C</span>归因模型</div>
+      <ul>
+        <li><b>窗口：</b>15 天，固定常量不可配置</li>
+        <li><b>口径：</b>首触 / 末触<b>双模型回填</b>，明细可追溯至 lead_count</li>
+        <li><b>数据来源标注：</b>外部未标注产品包时记为 <code>inferred</code>，<b>不与外部数据混算准确率</b></li>
+        <li><b>口径声明：</b>「触达」= 发送成功，非已查看；相关 ≠ 因果，看板强制标注</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <b>合规前置：</b>频控阈值（冷却天数、日上限、禁发时段）需经业务与合规书面认可后方可正式发送；退订名单必须形成回流闭环，否则不得开启真实触达。
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 4 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §4 AI 的角色与边界 ============ -->
+<div class="sheet">
+  <div class="kicker">AI Positioning</div>
+  <h2><span class="no">04</span>AI 的角色与边界</h2>
+  <div class="sub">本节回答一个必须先对齐的问题：<b>这个系统的"智能"来自哪里</b>。</div>
+
+  <div class="note ai" style="margin-top:0">
+    <b>结论：</b>系统的自动化能力来自<b>规则引擎 + 数据驱动</b>，而非模型推理。生成式 AI 在本链路中定位为<b>可选增强</b>，
+    不承担圈选、匹配、频控、发送等任何主链决策——这保证了结果<b>可解释、可审计、可复现</b>，也符合营销场景对"可控"的硬要求。
+  </div>
+
+  <table style="margin-top:14px">
+    <thead><tr><th style="width:26%">链路环节</th><th style="width:22%">执行主体</th><th>产品说明</th></tr></thead>
+    <tbody>
+      <tr><td>人群圈选</td><td><b>规则引擎</b></td><td>规则由业务自行配置，支持保存前命中预览，随时可调整</td></tr>
+      <tr><td>产品匹配</td><td><b>规则引擎</b></td><td>优先级 + 互斥组收敛，同一房屋同期只输出一个产品包</td></tr>
+      <tr><td>频控校验</td><td><b>规则引擎</b></td><td>14 项闸门硬约束，不通过即落盘原因码</td></tr>
+      <tr>
+        <td>海报生成</td><td><b>模板套版</b><br><span class="muted-t">变量填充 + 图像合成</span></td>
+        <td>按房屋真实标签自动选择痛点文案并套用模板；单张 20–200ms，边际成本趋近于零，文字零错字</td>
+      </tr>
+      <tr>
+        <td>背景素材生产</td><td><span class="ai-t">生成式 AI</span><br><span class="muted-t">离线 · 可选</span></td>
+        <td>可用生成式 API 批量产出背景图素材池，<b>经人工审核后入库</b>作为模板背景，<b>不在跑批链路内调用</b></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>决策依据：为什么主链路不采用生成式出图</h3>
+  <table>
+    <thead><tr><th style="width:16%">维度</th><th style="width:42%">生成式出图</th><th>模板套版（采用）</th></tr></thead>
+    <tbody>
+      <tr><td><b>成本</b></td><td>约 0.2 元/张；日发 5000 张 ≈ 3 万元/月，成本随发送量线性增长</td><td><b>边际成本趋近于零</b>，复用自有算力</td></tr>
+      <tr><td><b>准确性</b></td><td>中文渲染不可控，<b>存在错字风险</b>；横幅含小区名、联系方式等零容错字段</td><td>文本层由变量注入，<b>零错字</b></td></tr>
+      <tr><td><b>时延</b></td><td>单张数秒（异步任务），无法满足 T+1 单批次产出</td><td>单张 20–200ms，<b>单批可分钟级完成</b></td></tr>
+      <tr><td><b>可回归性</b></td><td>同输入不同输出，<b>问题不可复现</b>，抽查与验收困难</td><td>同输入同输出，<b>可抽查、可验收</b></td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="box">
+      <div class="bt">个性化的实现路径</div>
+      <ul>
+        <li>「个性化」的诉求被保留，但实现方式从<b>「模型逐张现画」</b>调整为<b>「模板 + 变量逐张组装」</b></li>
+        <li>推送内容由房屋<b>自身标签</b>决定</li>
+        <li>海报痛点文案取自该房屋<b>真实标签</b>（如"墙面发霉"）</li>
+        <li>社会证明仅在<b>真实数据达标</b>时展示，禁止编造数字</li>
+      </ul>
+    </div>
+    <div class="box" style="background:var(--sunken)">
+      <div class="bt">生成式出图的启用条件（满足其一）</div>
+      <ul>
+        <li>单批实验量 ≤ 200 张，且已设定成本上限与人工复核</li>
+        <li>用于背景素材池生产，人工审核后入库</li>
+        <li>业务明确接受成本与不可复现性，并书面确认</li>
+      </ul>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:8px;padding-top:7px;border-top:1px dashed var(--border)">
+        不满足上述条件时默认不开启，跑批链路中不出现任何生成式调用。
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>二期演进方向：</b>基于归因结果自动优化规则权重、辅助生成人群定向文案。仍以「人在环上确认」为前提，不引入自动决策。
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 5 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §5 范围与指标 ============ -->
+<div class="sheet">
+  <div class="kicker">Scope &amp; Metrics</div>
+  <h2><span class="no">05</span>范围边界与成功指标</h2>
+
+  <h3>一期范围（In Scope）</h3>
+  <div class="grid2">
+    <div class="box" style="border-color:#Bfe0CC;background:var(--success-bg)">
+      <div class="bt">本期交付</div>
+      <ul>
+        <li>三源数据接入 + 映射规则配置（优先级排序、命中预览）</li>
+        <li>每日跑批 + 14 项频控闸门 + 发送时间窗口</li>
+        <li>模板套版个性化海报（零错字，边际成本趋近于零）</li>
+        <li>推送明细、原因码分布、单条重推、批次停止</li>
+        <li>短信 / 企微通道对接（由外部通道团队拉通）</li>
+        <li>T+1 归因看板</li>
+      </ul>
+    </div>
+    <div class="box">
+      <div class="bt">一期明确不做（Non-goals）</div>
+      <ul>
+        <li>生成式 AI 出图进主链路（降级为可选背景素材池）</li>
+        <li>点击 / 短链归因（依赖通道能力，待通道团队确认）</li>
+        <li>撤回已送达短信（物理不可行，产品不承诺）</li>
+        <li>AI 自动调规则、无互动自动降频、多包同推</li>
+        <li>自建 CDP / MA 平台级能力（出价、跨渠道归因建模）</li>
+        <li>改动上游生产数据仓库（生产 SQL 零改动，仅新增同步节点）</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>成功指标</h3>
+  <table>
+    <thead><tr><th style="width:22%">层级</th><th style="width:30%">指标</th><th>定义与口径说明</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="1"><b>北极星</b></td><td>单位触达的线索产出</td><td>归因窗口内产生的去重线索数 ÷ 成功触达数，仅统计同口径数据源</td></tr>
+      <tr><td rowspan="4"><b>过程指标</b></td><td>号码覆盖率</td><td>可解析出有效号码的房屋占比，<b>≥70% 为发送前置门槛</b></td></tr>
+      <tr><td>规则命中率</td><td>命中任一规则的产品包候选房屋占比，用于评估规则覆盖度</td></tr>
+      <tr><td>拦截率与原因码分布</td><td>按 14 类原因码分布，用于定位是数据缺口还是频控生效</td></tr>
+      <tr><td>发送成功率 / 重推率</td><td>通道回执成功占比；人工重推占比反映规则与数据质量</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note warn">
+    <b>验收门槛（DRY_RUN 摘除条件）：</b>号码覆盖率 ≥ 70% 且频控合规口径获书面认可，两项同时满足方可开启真实发送；
+    覆盖率未达标时系统仅生成待发送清单、不执行发送。
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0</span><span>第 6 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ §6 依赖、风险与待决策 + 里程碑 ============ -->
+<div class="sheet">
+  <div class="kicker">Dependencies &amp; Risks</div>
+  <h2><span class="no">06</span>外部依赖、风险与待决策项</h2>
+
+  <h3>外部依赖</h3>
+  <table>
+    <thead><tr><th style="width:26%">依赖项</th><th style="width:20%">归属方</th><th>状态与影响</th></tr></thead>
+    <tbody>
+      <tr><td>T+1 标签数据同步</td><td><span class="who data">数据团队</span></td><td>同步方式待架构确认；未就绪时跑批自动中止并告警</td></tr>
+      <tr><td>短信 / 企微通道对接</td><td><span class="who biz">外部通道团队</span></td><td>通道存在已确认，接口标准待拉通；影响发送层与点击归因可行性</td></tr>
+      <tr><td>海报素材与品牌规范</td><td><span class="who biz">业务 / 设计</span></td><td>未提供时模板规格无法冻结，海报页仅能占位</td></tr>
+      <tr><td>产品清单与产品包定义</td><td><span class="who biz">业务方</span></td><td>业务自行维护，系统不介入</td></tr>
+    </tbody>
+  </table>
+
+  <h3>主要风险</h3>
+  <div class="grid2">
+    <div class="box" style="border-left:3px solid var(--danger)">
+      <ul>
+        <li><b>R1 通道能力未确认</b>：是否支持回执、带参短链直接决定点击归因能否纳入一期</li>
+        <li><b>R2 上游数据缺口</b>：「浴改淋」产品包依赖的户型标签数据源未接入，系统已<b>锁定该包不可启用</b></li>
+        <li><b>R3 合规闭环未定</b>：营销授权来源与退订回流方式未确认，<b>缺失则不能正式发送</b></li>
+      </ul>
+    </div>
+    <div class="box" style="border-left:3px solid var(--warn)">
+      <ul>
+        <li><b>R4 素材未定</b>：海报模板规格无法冻结，影响 M2 交付</li>
+        <li><b>R5 需求实现方式变更</b>：海报由"AI 生成"调整为"模板套版"，<b>需书面确认以防验收争议</b></li>
+        <li><b>R6 覆盖率不达标</b>：号码覆盖率若长期低于 70%，系统将持续处于"只出清单不发送"状态</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>待决策项（阻塞开发，需会上闭环）</h3>
+  <table>
+    <thead><tr><th style="width:4%">#</th><th style="width:22%">事项</th><th style="width:34%">需要的结论</th><th style="width:16%">决策人</th><th>不决策的后果</th></tr></thead>
+    <tbody>
+      <tr><td class="no-col">1</td><td>通道接口协议</td><td>同步/异步、回执机制、带参短链、限流配额的接口文档</td><td><span class="who">外部通道团队</span></td><td>发送层无法对接；点击归因可行性悬置</td></tr>
+      <tr><td class="no-col">2</td><td>海报素材来源</td><td>模板与素材由业务方或设计方提供、明确交付时间</td><td><span class="who biz">业务 / 设计</span></td><td>模板规格无法冻结，海报页只能占位</td></tr>
+      <tr><td class="no-col">3</td><td>海报方案降级确认</td><td>接受「模板套版」替代原始诉求「生成式 AI 海报」，需书面确认</td><td><span class="who biz">业务负责人</span></td><td><b>需求实质变更未签字，存在验收返工风险</b></td></tr>
+      <tr><td class="no-col">4</td><td>单包输出确认</td><td>确认一个周期内单套房屋仅推送一个产品包</td><td><span class="who biz">业务负责人</span></td><td>若需多包同推，规则模型与频控需返工重做</td></tr>
+      <tr><td class="no-col">5</td><td>频控合规口径</td><td>冷却 7/30 天、日 1 条、禁发时段等默认值获合规认可</td><td><span class="who biz">业务 / 合规</span></td><td>阈值无合规背书，短信通道存在封号风险</td></tr>
+      <tr><td class="no-col">6</td><td>退订授权与回流</td><td>营销授权来源、退订入口、退订名单回流方式</td><td><span class="who biz">业务方</span></td><td><b>合规命门，无退订闭环不得正式发送</b></td></tr>
+    </tbody>
+  </table>
+
+  <h3>里程碑（以启动会结论为准）</h3>
+  <div class="mile">
+    <div class="m now"><div class="mid">M0</div><div class="mdt">10/09</div><div class="mtt">评审与启动</div><div class="mdd">6 项决策闭环、分工确认、缺口探查派发</div></div>
+    <div class="m"><div class="mid">M1</div><div class="mdt">10/12–10/23</div><div class="mtt">数据链路</div><div class="mdd">三源接入；号码覆盖率核查（须 ≥70%）</div></div>
+    <div class="m"><div class="mid">M2</div><div class="mdt">10/26–10/30</div><div class="mtt">圈选跑批</div><div class="mdd">规则、频控、海报接真实数据验证</div></div>
+    <div class="m"><div class="mid">M3</div><div class="mdt">11/02–11/13</div><div class="mtt">通道联调</div><div class="mdd">外部通道对接、回执、退订回流；摘除 DRY_RUN</div></div>
+    <div class="m"><div class="mid">M4</div><div class="mdt">11/16–11/27</div><div class="mtt">归因与试运行</div><div class="mdd">归因看板上线，小流量试运行 2 周</div></div>
+  </div>
+
+  <div class="pagefoot"><span>研选营销智能推送系统 · PRD v1.0 · 2026-10</span><span>第 7 页 / 共 7 页</span></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1755 @@
+openapi: 3.0.3
+info:
+  title: 房屋责任盘营销闭环系统 API
+  version: 1.0.0
+  description: |
+    一期接口契约（v1）。统一响应包裹 { code, data, message }，code=0 表示成功。
+    鉴权：Authorization: Bearer <jwt>。所有路径以 /api/v1 为前缀。
+servers:
+  - url: /api/v1
+    description: 主服务
+tags:
+  - name: auth
+    description: 认证
+  - name: product-package
+    description: 产品包
+  - name: tag
+    description: 标签字典
+  - name: rule
+    description: 映射规则与互斥组
+  - name: campaign
+    description: 每日跑批
+  - name: push
+    description: 推送任务、明细、重推、回执
+  - name: frequency
+    description: 频控规则与名单
+  - name: poster
+    description: 海报模板
+  - name: audit
+    description: 操作审计
+  - name: lead
+    description: 线索与客户时间线
+  - name: analytics
+    description: 效果看板与归因
+
+paths:
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: 登录
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LoginResponse'
+  /auth/me:
+    get:
+      tags: [auth]
+      summary: 当前用户与数据权限范围
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/CurrentUser'
+
+  /product-packages:
+    get:
+      tags: [product-package]
+      summary: 产品包列表
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: q
+          in: query
+          schema: { type: string }
+        - name: status
+          in: query
+          schema: { type: string, enum: [enabled, disabled] }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PagedProductPackage'
+    post:
+      tags: [product-package]
+      summary: 新建产品包
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPackageUpsert'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/ProductPackage'
+  /product-packages/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    get:
+      tags: [product-package]
+      summary: 产品包详情
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/ProductPackage'
+    patch:
+      tags: [product-package]
+      summary: 更新产品包
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPackageUpsert'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/ProductPackage'
+    delete:
+      tags: [product-package]
+      summary: 软删除产品包
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /tags:
+    get:
+      tags: [tag]
+      summary: 标签字典（按标签组分组）
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TagGroup'
+  /tags/{tagKey}/values:
+    get:
+      tags: [tag]
+      summary: 某标签的可选值/值域
+      parameters:
+        - name: tagKey
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/TagValueRange'
+
+  /rules:
+    get:
+      tags: [rule]
+      summary: 规则列表（按优先级排序）
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema: { type: string, enum: [enabled, disabled] }
+        - name: packageId
+          in: query
+          schema: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PagedRule'
+    post:
+      tags: [rule]
+      summary: 新建规则
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuleUpsert'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/Rule'
+  /rules/reorder:
+    patch:
+      tags: [rule]
+      summary: 批量调整优先级
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id: { type: integer, format: int64 }
+                      priority: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /rules/preview:
+    post:
+      tags: [rule]
+      summary: 命中预览（抽样同步 / 全量异步）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RulePreviewRequest'
+      responses:
+        '200':
+          description: 抽样预览结果；若 mode=full 则返回 previewTaskId
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/RulePreviewResult'
+  /rules/preview/{taskId}:
+    get:
+      tags: [rule]
+      summary: 全量预览结果
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/RulePreviewResult'
+  /rules/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    get:
+      tags: [rule]
+      summary: 规则详情
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/Rule'
+    patch:
+      tags: [rule]
+      summary: 更新规则
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RuleUpsert'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/Rule'
+    delete:
+      tags: [rule]
+      summary: 软删除规则
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /mutex-groups:
+    get:
+      tags: [rule]
+      summary: 互斥组列表
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/MutexGroup'
+    post:
+      tags: [rule]
+      summary: 新建互斥组
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutexGroupUpsert'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/MutexGroup'
+  /mutex-groups/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    patch:
+      tags: [rule]
+      summary: 更新互斥组
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutexGroupUpsert'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags: [rule]
+      summary: 删除互斥组（被规则引用时返回 42200）
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /campaigns:
+    get:
+      tags: [campaign]
+      summary: 跑批任务列表
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/CampaignTask'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+  /campaigns/trigger:
+    post:
+      tags: [campaign]
+      summary: 手动触发跑批（幂等，同日重复触发返回已有任务）
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                statDate: { type: string, format: date }
+      responses:
+        '200':
+          description: 已存在同日任务
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/CampaignTask'
+        '202':
+          description: 已受理，异步执行
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/CampaignTask'
+  /campaigns/{id}:
+    get:
+      tags: [campaign]
+      summary: 跑批详情（统计）
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/CampaignTask'
+  /campaigns/{id}/preview:
+    get:
+      tags: [campaign]
+      summary: 预览本次待发送清单（脱敏）
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/PushDetail'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+
+  /push-tasks:
+    get:
+      tags: [push]
+      summary: 推送批次列表
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema: { type: string, enum: [queued, sending, done, partial, failed, halted] }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/PushTask'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+  /push-tasks/{id}:
+    get:
+      tags: [push]
+      summary: 推送批次详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PushTask'
+  /push-tasks/{id}/halt:
+    post:
+      tags: [push]
+      summary: 停止发送 / 中止批次（止损；中止该批次中尚未下发的明细）
+      description: |
+        确定性语义：把该批次中 status=queued 的明细置为 halted，不再下发。
+        已在途（已提交通道）的明细尽力中止，以通道回执为准；已送达（sent）的明细不撤回（短信物理不可召回）。
+        中止不可逆；如需继续发送，走重推。操作写 operation_audit(action=push.halt)。
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HaltRequest'
+      responses:
+        '200':
+          description: 中止已受理并返回更新后的批次
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PushTask'
+        '409':
+          description: 批次已结束（done/failed/halted），不可中止（code=40900）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /push-details:
+    get:
+      tags: [push]
+      summary: 推送明细查询
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: pushTaskId
+          in: query
+          schema: { type: integer, format: int64 }
+        - name: houseId
+          in: query
+          schema: { type: string }
+        - name: msgType
+          in: query
+          schema: { type: string, enum: [marketing, notice] }
+        - name: packageId
+          in: query
+          schema: { type: integer, format: int64 }
+        - name: status
+          in: query
+          schema: { type: string, enum: [queued, sent, failed, suppressed, halted, resent, deferred] }
+        - name: reasonCode
+          in: query
+          schema:
+            type: string
+            enum: [LEAD_PACKAGE_COOLDOWN, LEAD_HOUSE_COOLDOWN, NO_MOBILE, HOUSE_COOLDOWN, PACKAGE_COOLDOWN, HOUSE_DAILY_CAP, HOUSE_WEEKLY_CAP, HOUSE_MONTHLY_CAP, OUT_OF_WINDOW, BLOCKED_WINDOW, GLOBAL_CAP_DEFERRED, OPT_OUT, BLACKLIST, HOLIDAY_SKIP]
+        - name: startDate
+          in: query
+          schema: { type: string, format: date }
+        - name: endDate
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/PushDetail'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+  /push-details/{id}:
+    get:
+      tags: [push]
+      summary: 推送明细详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PushDetail'
+  /push-details/{id}/resend:
+    post:
+      tags: [push]
+      summary: 单条重推
+      description: |
+        重推**可覆盖**冷却期与频次上限（需 exemptCooldown=true 二次确认 + 强制留痕）。
+        **不可覆盖**：闸门 0 线索静默（LEAD_PACKAGE_COOLDOWN / LEAD_HOUSE_COOLDOWN）、退订/黑名单（OPT_OUT / BLACKLIST）、禁发时段（BLOCKED_WINDOW）、全局日上限（GLOBAL_CAP_DEFERRED）——一期不提供任何覆盖通道，命中即返回 42200。
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                exemptCooldown:
+                  type: boolean
+                  default: false
+                  description: 是否豁免**冷却期与频次上限**（默认否，需运营显式勾选）。豁免范围**不含**闸门 0 线索静默、退订/黑名单、禁发时段、全局日上限
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PushDetail'
+        '422':
+          description: 被频控拦截（code=42200）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /push-details/resend-batch:
+    post:
+      tags: [push]
+      summary: 批次重推（按筛选条件，异步）
+      description: |
+        批次重推遵循与单条重推相同的覆盖边界：**可覆盖**冷却期/频次上限（exemptCooldown=true）；**不可覆盖**闸门 0 线索静默、退订/黑名单、禁发时段、全局日上限——命中的明细保持原状态并计入跳过数，不回传覆盖。一期不提供任何覆盖通道。
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pushTaskId: { type: integer, format: int64 }
+                statuses:
+                  type: array
+                  items: { type: string }
+                startDate: { type: string, format: date }
+                endDate: { type: string, format: date }
+                exemptCooldown: { type: boolean, default: false, description: 是否豁免冷却期与频次上限；不含闸门 0/退订黑名单/禁发时段/全局日上限 }
+      responses:
+        '202':
+          description: 已受理
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          resendTaskId: { type: string }
+  /push/callback:
+    post:
+      tags: [push]
+      summary: 外部通道回执回调（更新明细状态、失败原因、退订回流）
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushCallbackRequest'
+      responses:
+        '200':
+          description: 受理成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /frequency-rules:
+    get:
+      tags: [frequency]
+      summary: 频控规则列表
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FrequencyRule'
+  /frequency-rules/{id}:
+    patch:
+      tags: [frequency]
+      summary: 更新频控规则
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FrequencyRule'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/FrequencyRule'
+  /suppression-list:
+    get:
+      tags: [frequency]
+      summary: 名单查询
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: listType
+          in: query
+          schema: { type: string, enum: [unsubscribe, blacklist, whitelist] }
+        - name: targetValue
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SuppressionItem'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+    post:
+      tags: [frequency]
+      summary: 新增名单项
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuppressionItem'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/SuppressionItem'
+  /suppression-list/{id}:
+    delete:
+      tags: [frequency]
+      summary: 移除名单项
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /poster-templates:
+    get:
+      tags: [poster]
+      summary: 海报模板列表
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PosterTemplate'
+    post:
+      tags: [poster]
+      summary: 新建海报模板
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PosterTemplateUpsert'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/PosterTemplate'
+  /poster-templates/{id}:
+    parameters:
+      - $ref: '#/components/parameters/IdPath'
+    patch:
+      tags: [poster]
+      summary: 更新海报模板
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PosterTemplateUpsert'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /poster-templates/{id}/render-preview:
+    post:
+      tags: [poster]
+      summary: 模板预览渲染
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: 变量样本键值对
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          posterUrl: { type: string, format: uri }
+
+  /leads:
+    get:
+      tags: [lead]
+      summary: 线索列表
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: customerKey
+          in: query
+          schema: { type: string }
+        - name: houseId
+          in: query
+          schema: { type: string }
+        - name: packageId
+          in: query
+          schema: { type: integer, format: int64 }
+        - name: leadGrade
+          in: query
+          schema: { type: string }
+        - name: leadStatus
+          in: query
+          schema: { type: string }
+        - name: attributed
+          in: query
+          description: true=已归因（first/last_touch_push_id 非空），false=未归因
+          schema: { type: boolean }
+        - name: startDate
+          in: query
+          schema: { type: string, format: date }
+        - name: endDate
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/LeadRecord'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+  /leads/{leadId}:
+    get:
+      tags: [lead]
+      summary: 线索详情（含归因出的首次/末次触达推送与海报）
+      parameters:
+        - name: leadId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LeadRecord'
+        '404':
+          description: 线索不存在（code=40400）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /customers/{customerKey}/timeline:
+    get:
+      tags: [lead]
+      summary: 客户/房源线索时间线（线索事件 + 关联触达事件按时间轴合并）
+      parameters:
+        - name: customerKey
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LeadTimeline'
+  /customers/{customerKey}/lead-summary:
+    get:
+      tags: [lead]
+      summary: 客户线索摘要（最近一次线索时间、闸门 0 命中状态、冷却剩余天数）
+      parameters:
+        - name: customerKey
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LeadSummary'
+  /analytics/lead-conversion:
+    get:
+      tags: [analytics]
+      summary: 效果看板 - 发送到线索转化
+      description: 一期无点击数据，触达口径为发送成功（sent），是「发送相关性」而非因果；响应必须回传归因局限与未归因数。
+      parameters:
+        - name: groupBy
+          in: query
+          schema: { type: string, enum: [package, tag, poster_template], default: package }
+        - name: attribution
+          in: query
+          description: 归因口径：first=首发触达，last=末次触达
+          schema: { type: string, enum: [first, last], default: last }
+        - name: startDate
+          in: query
+          schema: { type: string, format: date }
+        - name: endDate
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LeadConversionResult'
+  /analytics/lead-quality:
+    get:
+      tags: [analytics]
+      summary: 效果看板 - 线索质量分布（按维度分组 × 质量口径）
+      description: 需求「分产品包/标签/海报模板的线索质量」。groupBy 为分组维度，qualityBy 为质量口径，质量分布在同一 groupBy 下出。大区/项目维度一期无数据源，不做。
+      parameters:
+        - name: groupBy
+          in: query
+          description: 分组维度
+          schema: { type: string, enum: [package, tag, poster_template], default: package }
+        - name: qualityBy
+          in: query
+          description: 质量分布口径
+          schema: { type: string, enum: [lead_grade, lead_status], default: lead_grade }
+        - name: packageId
+          in: query
+          schema: { type: integer, format: int64 }
+        - name: startDate
+          in: query
+          schema: { type: string, format: date }
+        - name: endDate
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/LeadQualityResult'
+  /analytics/attribution-runs:
+    get:
+      tags: [analytics]
+      summary: 归因作业记录与未归因数（可观测）
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AttributionRun'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+
+  /audits:
+    get:
+      tags: [audit]
+      summary: 操作审计查询
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: operatorId
+          in: query
+          schema: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          items:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AuditRecord'
+                          total: { type: integer }
+                          page: { type: integer }
+                          limit: { type: integer }
+                          hasMore: { type: boolean }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer, format: int64 }
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code: { type: integer, example: 0 }
+        message: { type: string, example: "ok" }
+        data: { nullable: true }
+      required: [code, message]
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string, minLength: 8 }
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string }
+        expiresIn: { type: integer, example: 7200 }
+    CurrentUser:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        roles:
+          type: array
+          items: { type: string }
+        dataScopes:
+          type: array
+          description: 可访问的组织范围（大区/城市/营业部/服务站）
+          items: { type: string }
+
+    ProductPackage:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        code: { type: string }
+        name: { type: string }
+        description: { type: string }
+        status: { type: string, enum: [enabled, disabled] }
+        productItemsText: { type: string }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              itemName: { type: string }
+              itemDesc: { type: string }
+              sortOrder: { type: integer }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    ProductPackageUpsert:
+      type: object
+      required: [code, name]
+      properties:
+        code: { type: string, maxLength: 64 }
+        name: { type: string, maxLength: 128 }
+        description: { type: string }
+        status: { type: string, enum: [enabled, disabled] }
+        productItemsText: { type: string }
+    PagedProductPackage:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductPackage'
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+        hasMore: { type: boolean }
+
+    TagGroup:
+      type: object
+      properties:
+        tagGroup: { type: string }
+        tagGroupName: { type: string }
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              tagKey: { type: string }
+              tagName: { type: string }
+              valueType: { type: string, enum: [enum, number, string] }
+              enumValues:
+                type: array
+                items: { type: string }
+    TagValueRange:
+      type: object
+      properties:
+        tagKey: { type: string }
+        valueType: { type: string, enum: [enum, number, string] }
+        enumValues:
+          type: array
+          items: { type: string }
+        minValue: { type: number, nullable: true }
+        maxValue: { type: number, nullable: true }
+
+    RuleCondition:
+      type: object
+      required: [tag, op]
+      properties:
+        tag: { type: string, description: 标签键（对应 tag_dictionary.tag_key） }
+        op: { type: string, enum: [eq, neq, in, not_in, gte, lte, between, exists] }
+        value:
+          description: 依据 op 为标量、数组或区间
+          nullable: true
+    RuleConditionGroup:
+      type: object
+      properties:
+        logic: { type: string, enum: [AND, OR], default: AND }
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuleCondition'
+    Rule:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        packageId: { type: integer, format: int64 }
+        priority: { type: integer, description: 数字越小优先级越高 }
+        mutexGroupId: { type: integer, format: int64, nullable: true }
+        conditionLogic: { type: string, enum: [AND, OR] }
+        conditionJson: { $ref: '#/components/schemas/RuleConditionGroup' }
+        status: { type: string, enum: [enabled, disabled] }
+        remark: { type: string }
+    RuleUpsert:
+      type: object
+      required: [name, packageId, priority, conditionJson]
+      properties:
+        name: { type: string, maxLength: 128 }
+        packageId: { type: integer, format: int64 }
+        priority: { type: integer }
+        mutexGroupId: { type: integer, format: int64, nullable: true }
+        conditionLogic: { type: string, enum: [AND, OR] }
+        conditionJson: { $ref: '#/components/schemas/RuleConditionGroup' }
+        status: { type: string, enum: [enabled, disabled] }
+        remark: { type: string }
+    PagedRule:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rule'
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+        hasMore: { type: boolean }
+
+    MutexGroup:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        mode: { type: string, enum: [single], description: MVP 仅 single（组内取最高优先级）；all 为预留值，一期不实现、不暴露 UI }
+        status: { type: string, enum: [enabled, disabled] }
+        memberRuleIds:
+          type: array
+          items: { type: integer, format: int64 }
+    MutexGroupUpsert:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, maxLength: 128 }
+        mode: { type: string, enum: [single], default: single, description: MVP 仅 single }
+        status: { type: string, enum: [enabled, disabled] }
+
+    RulePreviewRequest:
+      type: object
+      properties:
+        draft:
+          $ref: '#/components/schemas/RuleUpsert'
+        mode: { type: string, enum: [sample, full], default: sample }
+        sampleSize: { type: integer, default: 50000 }
+        scope:
+          type: object
+          description: 可选抽样范围
+          properties:
+            region: { type: string }
+            city: { type: string }
+    RulePreviewResult:
+      type: object
+      properties:
+        previewTaskId: { type: string, nullable: true }
+        matchedCount: { type: integer }
+        suppressedByMutexCount: { type: integer }
+        samples:
+          type: array
+          items:
+            type: object
+            properties:
+              houseId: { type: string }
+              communityName: { type: string }
+              matchedRuleId: { type: integer, format: int64 }
+              packageId: { type: integer, format: int64 }
+        conflicts:
+          type: array
+          description: 与更高优先级规则的冲突提示
+          items:
+            type: object
+            properties:
+              ruleId: { type: integer, format: int64 }
+              ruleName: { type: string }
+              overlapCount: { type: integer }
+
+    CampaignTask:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        statDate: { type: string, format: date }
+        status: { type: string, enum: [pending, running, success, failed, partial] }
+        startedAt: { type: string, format: date-time, nullable: true }
+        finishedAt: { type: string, format: date-time, nullable: true }
+        scannedCount: { type: integer }
+        matchedCount: { type: integer }
+        suppressedCount: { type: integer }
+        queuedCount: { type: integer }
+        errorMessage: { type: string, nullable: true }
+
+    PushTask:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        campaignTaskId: { type: integer, format: int64 }
+        channel: { type: string, enum: [sms, wecom] }
+        msgType: { type: string, enum: [marketing, notice], default: marketing, description: 消息类型。marketing 受全部频控；notice（验证码/维修进度/缴费提醒/紧急通知）不计入营销频控、不被频控拦截、不受禁发时段限制 }
+        totalCount: { type: integer }
+        successCount: { type: integer }
+        failedCount: { type: integer }
+        haltedCount: { type: integer, description: 被中止（未下发）的明细数 }
+        leadCount: { type: integer, description: 批次级线索计数（归因作业回填）：本批次已归因关联到的线索数（按 lead_id 去重） }
+        status: { type: string, enum: [queued, sending, done, partial, failed, halted] }
+        haltedAt: { type: string, format: date-time, nullable: true }
+        haltedBy: { type: integer, format: int64, nullable: true }
+        haltReason: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    HaltRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+          maxLength: 255
+          description: 中止原因（必填，用于审计留痕）
+        channelRecall:
+          type: boolean
+          default: false
+          description: |
+            是否请求外部通道尝试撤回在途/已送达消息。默认 false。
+            仅当外部通道提供撤回 API 时有效，成功与否以通道回执为准；不影响「停止未下发明细」的确定性语义。
+
+    PushDetail:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        pushTaskId: { type: integer, format: int64 }
+        houseId: { type: string }
+        msgType: { type: string, enum: [marketing, notice], description: 冗余自批次；频控统计按 marketing 过滤 }
+        packageId: { type: integer, format: int64 }
+        ruleId: { type: integer, format: int64 }
+        posterUrl: { type: string, format: uri }
+        contactMobileMasked: { type: string, example: "138****8888" }
+        customerKeyHash: { type: string, nullable: true, description: 确定性关联键（归一化手机号 HMAC-SHA256），用于线索归因 join 与闸门 0 判重；注意加密手机号因随机 IV 不可用于 join }
+        status: { type: string, enum: [queued, sent, failed, suppressed, halted, resent, deferred], description: deferred 表示因全局日上限顺延次日 }
+        failReason: { type: string, nullable: true, description: 通道失败原因（status=failed 时） }
+        reasonCode:
+          type: string
+          nullable: true
+          enum: [LEAD_PACKAGE_COOLDOWN, LEAD_HOUSE_COOLDOWN, NO_MOBILE, HOUSE_COOLDOWN, PACKAGE_COOLDOWN, HOUSE_DAILY_CAP, HOUSE_WEEKLY_CAP, HOUSE_MONTHLY_CAP, OUT_OF_WINDOW, BLOCKED_WINDOW, GLOBAL_CAP_DEFERRED, OPT_OUT, BLACKLIST, HOLIDAY_SKIP]
+          description: 拦截/顺延原因码（一期 14 个；闸门执行顺序 0a LEAD_PACKAGE_COOLDOWN / 0b LEAD_HOUSE_COOLDOWN（线索，fail-open）→ 0c NO_MOBILE（无号码，数据缺口）→ 1 OPT_OUT / BLACKLIST → 5/6 冷却 → 7 频次 → 8 全局 → 10 禁发 → 9 发送窗口。前端按六组着色：线索闸门/数据缺口/名单/频控/发送时段/节假日）
+        deferredUntil: { type: string, format: date, nullable: true, description: 顺延标记：被全局上限/窗口顺延的目标日期（status=deferred 时必填） }
+        deferCount: { type: integer, default: 0, description: 连续顺延次数，超过阈值触发告警 }
+        leadCount: { type: integer, default: 0, description: 明细级线索计数（归因作业回填）：该明细作为首触或末触归因到的线索数 }
+        isResent: { type: boolean }
+        resentFromId: { type: integer, format: int64, nullable: true }
+        sentAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    PushCallbackRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [channelMsgId, status]
+            properties:
+              channelMsgId: { type: string }
+              status: { type: string, enum: [sent, failed] }
+              failReason: { type: string, nullable: true }
+              unsubscribe:
+                type: boolean
+                default: false
+                description: 是否退订（true 时回流 suppression_list）
+
+    FrequencyRule:
+      type: object
+      description: 频控规则（字段命名与默认值对齐 PRD §8）
+      properties:
+        id: { type: integer, format: int64 }
+        scopeType: { type: string, enum: [global, package] }
+        packageId: { type: integer, format: int64, nullable: true }
+        houseCooldownDays: { type: integer, default: 7, minimum: 1, maximum: 30, description: 同一房屋冷却期（天） }
+        packageCooldownDays: { type: integer, default: 30, minimum: 1, maximum: 180, description: 同一产品包冷却期（天） }
+        leadPackageCooldownDays: { type: integer, default: 90, minimum: 1, maximum: 365, description: 闸门 0a 同包线索静默冷却（天）：该客户对同一产品包已有线索时拦截该包推送，不可被重推覆盖 }
+        leadHouseCooldownDays: { type: integer, default: 15, minimum: 1, maximum: 90, description: 闸门 0b 客户级线索静默冷却（天）：该客户对任意产品包已有线索时拦截其全部营销推送，不可被重推覆盖。字段名对齐原因码 LEAD_HOUSE_COOLDOWN（不使用已作废的旧原因码命名） }
+        leadGateFailMode: { type: string, enum: [open, closed], default: open, description: 闸门 0 降级模式。open=线索数据缺失/过期时跳过闸门0继续跑批并显著告警；closed=暂停营销下发并告警。任何模式下降级必须可见，禁止静默跳过 }
+        houseDailyCap: { type: integer, default: 1, minimum: 1, maximum: 3 }
+        houseWeeklyCap: { type: integer, default: 2, minimum: 1, maximum: 3 }
+        houseMonthlyCap: { type: integer, default: 4, minimum: 1, maximum: 8 }
+        globalDailyCap: { type: integer, default: 5000, minimum: 100, maximum: 100000, description: 全局每日发送上限（可按渠道/大区分别配置） }
+        crossChannelCount: { type: boolean, default: true, description: 跨渠道合并计数。锚点为「房屋」而非渠道：同一房屋当日短信+企微合并计 1 次；建议保持 true，避免业主被重复打扰 }
+        effectiveLookbackDays: { type: integer, readOnly: true, description: 回看窗口由各维度独立回看自动推导（= 各维度最大值），不可单独配置；仅回传供 UI 展示与排查。禁止用统一固定窗口，否则长冷却期会静默失效 }
+        holidaySkip: { type: boolean, default: false, description: P1 可选，默认 false（保持行为可预期） }
+        sendWindows:
+          type: array
+          description: 可发送时段，1-N 段（对应 PRD send_windows），默认两段 [10:00-12:00, 15:00-18:00]；多段保存时自动合并重叠
+          items:
+            $ref: '#/components/schemas/SendWindow'
+        blockedWindows:
+          type: array
+          readOnly: true
+          description: 禁发时段（PRD blocked_windows），固定 22:00-次日 08:00，硬编码不可配置、不可关闭、重推亦不可越过；仅回传供 UI 只读展示
+          items:
+            type: object
+            properties:
+              windowStart: { type: string, example: "22:00" }
+              windowEnd: { type: string, example: "08:00" }
+              crossDay: { type: boolean, default: true }
+        status: { type: string, enum: [enabled, disabled] }
+
+    SendWindow:
+      type: object
+      required: [windowStart, windowEnd]
+      properties:
+        id: { type: integer, format: int64 }
+        dayType: { type: string, enum: [all, weekday, weekend, holiday], default: all, description: 生效日类型（工作日/周末可分别配置） }
+        windowStart: { type: string, example: "10:00", description: "时段起（含），HH:mm" }
+        windowEnd: { type: string, example: "12:00", description: "时段止（含），HH:mm" }
+        crossDay: { type: boolean, default: false, description: "是否跨天段（如 19:30-21:00 之外需跨 0 点）" }
+        enabled: { type: boolean, default: true }
+        sortOrder: { type: integer }
+
+    SuppressionItem:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        listType: { type: string, enum: [unsubscribe, blacklist, whitelist] }
+        targetType: { type: string, enum: [mobile, house_id] }
+        targetValue: { type: string }
+        source: { type: string }
+        expiresAt: { type: string, format: date-time, nullable: true }
+
+    PosterTemplate:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        packageId: { type: integer, format: int64, nullable: true }
+        width: { type: integer }
+        height: { type: integer }
+        backgroundOssKey: { type: string }
+        svgSpec: { type: object, additionalProperties: true }
+        status: { type: string, enum: [draft, published, archived] }
+    PosterTemplateUpsert:
+      type: object
+      required: [name, width, height, backgroundOssKey, svgSpec]
+      properties:
+        name: { type: string, maxLength: 128 }
+        packageId: { type: integer, format: int64, nullable: true }
+        width: { type: integer }
+        height: { type: integer }
+        backgroundOssKey: { type: string }
+        svgSpec: { type: object, additionalProperties: true }
+        status: { type: string, enum: [draft, published, archived] }
+
+    AuditRecord:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        operatorId: { type: integer, format: int64 }
+        action: { type: string }
+        targetType: { type: string }
+        targetId: { type: string }
+        beforeJson: { type: object, additionalProperties: true, nullable: true }
+        afterJson: { type: object, additionalProperties: true, nullable: true }
+        ip: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    LeadRecord:
+      type: object
+      description: 线索记录（外部线索系统 T+1 同步，归因字段由本系统回填）
+      properties:
+        leadId: { type: string }
+        customerKey: { type: string, description: 统一客户键（归一化手机号 HMAC / 统一 ID） }
+        customerKeyType: { type: string, enum: [mobile_hash, unified_id] }
+        houseId: { type: string, nullable: true }
+        houseMatchType:
+          type: string
+          nullable: true
+          enum: [pride, zhantu_fallback]
+          description: "房屋匹配方式。pride=战图码直接匹配责任盘；zhantu_fallback=战图码未命中、回落 pride 码匹配；null=未匹配任何责任盘房屋（customer_key 带 unmatched: 前缀）"
+        packageId: { type: integer, format: int64, nullable: true, description: 映射到本系统字典后的产品包 id（可空）。对应 PRD lead_package_id / UIUX package_id }
+        externalPackageCode: { type: string, nullable: true, maxLength: 64, description: 外部提供的原始包编码（未映射到本系统字典）。与 packageId 组合区分两类「未映射」：有码无 id = 集成问题；无码 = 上游缺失 }
+        packageSource:
+          type: string
+          enum: [external, inferred, none]
+          default: none
+          description: 产品包来源。external=外部提供且已映射；inferred=外部未给、本系统按归因结果推断（取 firstTouchPushId 对应推送的包）；none=无来源。none 时闸门 0 退化为单一房屋级冷却（15 天）。看板按此区分统计，不混算准确率
+        leadGrade: { type: string, nullable: true }
+        leadStatus: { type: string, nullable: true }
+        leadQuality: { type: string, nullable: true, maxLength: 8, description: 上游客户质量评级原值（如 A/B/C/D），看板按此分布统计 }
+        isValidForReno: { type: boolean, default: false, description: 是否为装修业务有效线索（intention_type=自营 且 is_repair=否 且意向一级类型≠家政维修 且非测试 且业务状态有效） }
+        isValidForRepair: { type: boolean, default: false, description: 是否为维修业务有效线索（is_repair=是，渗漏包反向口径使用） }
+        staleInSource: { type: boolean, default: false, description: 全量快照中未再出现的线索置 true（上游已失效/删除的软标记，不物理删） }
+        latestDealAt: { type: string, format: date-time, nullable: true, description: 最近成交时间（上游业绩字段） }
+        orderCnt: { type: integer, default: 0, description: 历史成交单数 }
+        performanceAmount: { type: number, nullable: true, description: "历史业绩金额，numeric(18,2)，单位元" }
+        sourceChannel: { type: string, nullable: true }
+        firstTouchPushId: { type: integer, format: int64, nullable: true, description: 归因：首次触达推送明细 id }
+        lastTouchPushId: { type: integer, format: int64, nullable: true, description: 归因：末次触达推送明细 id }
+        attributionWindowDays: { type: integer, nullable: true, description: 归因窗口快照（回填时所用值），常量 15，不可配置 }
+        attributedAt: { type: string, format: date-time, nullable: true, description: null 表示尚未归因 }
+        leadCreatedAt: { type: string, format: date-time }
+        syncedAt: { type: string, format: date-time }
+
+    LeadTimeline:
+      type: object
+      properties:
+        customerKey: { type: string }
+        lastLeadAt: { type: string, format: date-time, nullable: true, description: 客户最近一次产生线索的时间 }
+        gateStatus: { type: string, enum: [clear, lead_package_cooldown, lead_house_cooldown, data_unavailable], description: 闸门 0 当前状态 }
+        cooldownRemainDays: { type: integer, nullable: true }
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeadTimelineEvent'
+
+    LeadTimelineEvent:
+      type: object
+      properties:
+        eventType: { type: string, enum: [lead, push] }
+        occurredAt: { type: string, format: date-time }
+        packageId: { type: integer, format: int64, nullable: true }
+        leadId: { type: string, nullable: true }
+        pushId: { type: integer, format: int64, nullable: true }
+        pushStatus: { type: string, nullable: true }
+        posterUrl: { type: string, format: uri, nullable: true }
+        attributionRole: { type: string, enum: [first_touch, last_touch, none], description: 触达事件在该线索归因中的角色 }
+
+    LeadSummary:
+      type: object
+      properties:
+        customerKey: { type: string }
+        lastLeadAt: { type: string, format: date-time, nullable: true }
+        leadCount: { type: integer }
+        gateStatus: { type: string, enum: [clear, lead_package_cooldown, lead_house_cooldown, data_unavailable] }
+        cooldownRemainDays: { type: integer, nullable: true }
+
+    LeadConversionResult:
+      type: object
+      properties:
+        groupBy: { type: string, enum: [package, tag, poster_template] }
+        attribution: { type: string, enum: [first, last] }
+        totalSent: { type: integer }
+        totalLeads: { type: integer }
+        conversionRate: { type: number, description: 线索数 / 发送数 }
+        unattributedLeads: { type: integer, description: 未归因线索数（必须展示） }
+        unattributedRatio: { type: number }
+        attributionLimitNote: { type: string, description: 归因局限说明：触达=发送成功（非已查看），相关≠因果 }
+        degraded: { type: boolean, description: 是否处于弱归因/包级归因降级态 }
+        buckets:
+          type: array
+          items:
+            type: object
+            properties:
+              key: { type: string }
+              keyName: { type: string, nullable: true }
+              sent: { type: integer }
+              leads: { type: integer }
+              conversionRate: { type: number }
+
+    LeadQualityResult:
+      type: object
+      description: 线索质量分布=分组维度 × 质量口径
+      properties:
+        groupBy: { type: string, enum: [package, tag, poster_template], description: 分组维度 }
+        qualityBy: { type: string, enum: [lead_grade, lead_status], description: 质量分布口径 }
+        total: { type: integer }
+        note: { type: string, description: 口径说明：触达=发送成功（非已查看）；groupBy=tag 时一条线索若命中多标签会在各标签各计一次，占比之和可能大于 100% }
+        groups:
+          type: array
+          items:
+            type: object
+            properties:
+              key: { type: string, description: "维度键（package: 包 id；tag: 标签编码；poster_template: 模板 id）" }
+              keyName: { type: string, nullable: true }
+              total: { type: integer, description: 该分组下线索数 }
+              buckets:
+                type: array
+                description: 该分组下的质量分布（按 qualityBy）
+                items:
+                  type: object
+                  properties:
+                    key: { type: string }
+                    count: { type: integer }
+                    ratio: { type: number }
+
+    AttributionRun:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        statDate: { type: string, format: date }
+        windowDays: { type: integer }
+        leadScanned: { type: integer }
+        attributed: { type: integer }
+        unattributed: { type: integer }
+        status: { type: string, enum: [running, success, failed] }
+        errorMessage: { type: string, nullable: true }
+
+security:
+  - bearerAuth: []

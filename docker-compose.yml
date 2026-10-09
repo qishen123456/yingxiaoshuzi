@@ -1,0 +1,25 @@
+# 研选营销智能推送系统 · 本地依赖（PostgreSQL 16）
+# 仅用于本地开发与演示；生产使用公司 RDS，不允许以此配置上线。
+# 启动：docker compose up -d db
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: yanxuan-marketing-pg
+    environment:
+      POSTGRES_DB: yanxuan_marketing
+      POSTGRES_USER: marketing
+      POSTGRES_PASSWORD: marketing_dev_pwd
+      TZ: Asia/Shanghai
+    ports:
+      # 宿主 5434 -> 容器 5432，避让本机已有 PostgreSQL（5432）与其他项目容器（5433）
+      - "5434:5432"
+    volumes:
+      - yanxuan_marketing_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U marketing -d yanxuan_marketing"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  yanxuan_marketing_pgdata:

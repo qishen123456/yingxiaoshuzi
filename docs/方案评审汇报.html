@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="KOlppep4yeTdpuKMRt9TPV">
+<head data-page-node-id="wB7ATKb0itqaZpv7afHwob">
+<meta charset="UTF-8" data-page-node-id="unkD7HJDGgzKXonwE6VCzC">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="vQCpGPezfeIApd7MBxB78L">
+<title>房屋责任盘营销闭环系统 · 设计方案评审</title>
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-soft:#F5F7FA;
+    --surface:#FFFFFF;
+    --sunken:#EEF1F5;
+    --fg:#131A22;
+    --fg2:#3D4854;
+    --muted:#5B6675;
+    --meta:#8A94A3;
+    --border:#DFE4EA;
+    --border-strong:#C7CFD8;
+    --primary:#1D5A96;
+    --primary-hover:#17497B;
+    --primary-bg:#E8F0F8;
+    --primary-text:#0C447C;
+    --success:#0F7A48;
+    --success-bg:#E8F5EE;
+    --warn:#B4530A;
+    --warn-bg:#FDF3E3;
+    --danger:#B3261E;
+    --danger-bg:#FBEDEC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg-soft);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--fg);-webkit-font-smoothing:antialiased}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{width:1280px;height:720px;position:relative;flex:0 0 auto;
+    transform-origin:center center;background:var(--bg);
+    box-shadow:0 1px 2px rgba(19,26,34,.06),0 12px 40px rgba(19,26,34,.10);
+    border-radius:6px;overflow:hidden}
+  .slide{position:absolute;inset:0;padding:52px 68px 68px;
+    display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;transition:opacity .28s ease,transform .28s ease;
+    transform:translateY(8px)}
+  .slide.active{opacity:1;visibility:visible;transform:translateY(0)}
+
+  /* 通用排版 */
+  .eyebrow{font-size:13px;letter-spacing:.09em;color:var(--meta);
+    text-transform:uppercase;font-weight:500;margin-bottom:10px}
+  h1{font-size:44px;font-weight:500;line-height:1.22;letter-spacing:-.01em}
+  h2{font-size:32px;font-weight:500;line-height:1.3;letter-spacing:-.005em}
+  h2 + .sub{margin-top:10px}
+  .sub{font-size:17px;color:var(--muted);line-height:1.6;font-weight:400}
+  .lead{font-size:18px;line-height:1.65;color:var(--fg2)}
+  strong{font-weight:500}
+  .hl{color:var(--primary);font-weight:500}
+  .warn-t{color:var(--warn);font-weight:500}
+  .danger-t{color:var(--danger);font-weight:500}
+  .ok-t{color:var(--success);font-weight:500}
+
+  .rule{height:1px;background:var(--border);margin:22px 0}
+
+  /* 页码 */
+  .pager{position:absolute;left:68px;right:68px;bottom:26px;
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:12.5px;color:var(--meta)}
+  .pager .track{flex:1;height:2px;background:var(--border);margin:0 18px;border-radius:2px;overflow:hidden}
+  .pager .fill{height:100%;background:var(--primary);transition:width .3s ease}
+
+  /* 底部导航按钮 */
+  #hud{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    display:flex;gap:8px;z-index:20}
+  #hud button{border:1px solid var(--border-strong);background:var(--surface);
+    color:var(--muted);font-size:13px;padding:7px 14px;border-radius:6px;cursor:pointer;
+    font-family:inherit;transition:.15s}
+  #hud button:hover{border-color:var(--primary);color:var(--primary)}
+  #hud .hint{font-size:12px;color:var(--meta);align-self:center;margin-left:6px}
+
+  /* ---------- 封面 ---------- */
+  .cover{justify-content:center;padding-bottom:52px}
+  .cover .badge{display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--primary);background:var(--primary-bg);
+    padding:6px 14px;border-radius:999px;margin-bottom:26px;font-weight:500;width:fit-content}
+  .cover .dot{width:6px;height:6px;border-radius:50%;background:var(--primary)}
+  .cover h1{font-size:52px;max-width:920px}
+  .cover .subline{margin-top:22px;font-size:20px;color:var(--muted);line-height:1.6;max-width:800px}
+  .cover .foot{margin-top:52px;display:flex;gap:44px;font-size:14px;color:var(--muted)}
+  .cover .foot div span{display:block;color:var(--meta);font-size:12px;margin-bottom:5px;letter-spacing:.05em}
+  .tags{margin-top:34px;display:flex;gap:10px}
+  .tags i{font-style:normal;font-size:14px;padding:7px 15px;border:1px solid var(--border);
+    border-radius:6px;color:var(--fg2);background:var(--sunken)}
+
+  /* ---------- 横向流程 ---------- */
+  .flow{display:flex;align-items:stretch;gap:0;margin-top:34px}
+  .step{flex:1;border:1px solid var(--border);border-radius:8px;background:var(--surface);
+    padding:18px 14px;text-align:center;position:relative}
+  .step .n{font-size:11px;color:var(--meta);letter-spacing:.08em;margin-bottom:7px}
+  .step .t{font-size:15.5px;font-weight:500;line-height:1.35}
+  .step .d{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .arw{flex:0 0 34px;display:flex;align-items:center;justify-content:center;color:var(--border-strong)}
+  .arw svg{display:block}
+  .step.new{border-color:var(--primary);background:var(--primary-bg)}
+  .step.new .t{color:var(--primary-text)}
+  .step.new .n{color:var(--primary)}
+  .step.pain{border-color:#F0CFCB;background:var(--danger-bg)}
+  .step.pain .t{color:#7A1A15}
+
+  /* ---------- 卡片网格 ---------- */
+  .grid{display:grid;gap:14px;margin-top:28px}
+  .grid.c2{grid-template-columns:1fr 1fr}
+  .grid.c3{grid-template-columns:repeat(3,1fr)}
+  .grid.c4{grid-template-columns:repeat(4,1fr)}
+  .card{border:1px solid var(--border);border-radius:8px;padding:16px 18px;background:var(--surface)}
+  .card .ct{font-size:15px;font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .card .cd{font-size:13.5px;color:var(--muted);line-height:1.6}
+  .card.warn{background:var(--warn-bg);border-color:#F2DCB8}
+  .card.ok{background:var(--success-bg);border-color:#C5E3D2}
+  .card.bad{background:var(--danger-bg);border-color:#F0CFCB}
+  .card.info{background:var(--primary-bg);border-color:#C6DAEC}
+  .num{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--primary);
+    color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:500}
+
+  /* ---------- 表格 ---------- */
+  table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px}
+  th{text-align:left;font-weight:500;font-size:12.5px;color:var(--muted);
+    padding:9px 12px;border-bottom:1px solid var(--border-strong);
+    background:var(--sunken);letter-spacing:.02em}
+  td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--fg2);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  td.pri{font-weight:500;color:var(--primary);width:74px}
+  .pill{display:inline-block;font-size:12px;padding:2px 8px;border-radius:4px;
+    background:var(--sunken);color:var(--fg2);border:1px solid var(--border)}
+  .pill.b{background:var(--primary-bg);border-color:#C6DAEC;color:var(--primary-text)}
+
+  /* ---------- 纵向流程 ---------- */
+  .vflow{margin-top:24px;display:flex;flex-direction:column;gap:0}
+  .vrow{display:flex;align-items:center;gap:16px}
+  .vbox{flex:1;border:1px solid var(--border);border-radius:8px;padding:13px 18px;background:var(--surface);
+    display:flex;align-items:baseline;gap:14px}
+  .vbox .vt{font-size:14.5px;font-weight:500;flex:0 0 132px;color:var(--fg)}
+  .vbox .vd{font-size:13.5px;color:var(--muted);line-height:1.55}
+  .vbox.stop{background:var(--warn-bg);border-color:#F2DCB8}
+  .vbox.stop .vt{color:var(--warn)}
+  .vbox.win{background:var(--success-bg);border-color:#C5E3D2}
+  .vbox.win .vt{color:var(--success)}
+  .vlink{height:22px;display:flex;align-items:center;padding-left:16px;color:var(--border-strong)}
+
+  /* ---------- 双栏 ---------- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:26px;flex:1;min-height:0}
+  .panel{border:1px solid var(--border);border-radius:10px;padding:20px 22px;background:var(--surface);
+    display:flex;flex-direction:column;min-height:0}
+  .panel .ph{font-size:16px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+  .panel .ps{font-size:12.5px;color:var(--meta);margin-bottom:14px}
+  .panel.ok{background:var(--success-bg);border-color:#C5E3D2}
+  .panel.no{background:var(--sunken)}
+  .list{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .list li{font-size:13.5px;color:var(--fg2);line-height:1.5;padding-left:16px;position:relative}
+  .list li::before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;
+    border-radius:50%;background:var(--border-strong)}
+  .panel.ok .list li::before{background:var(--success)}
+  .list li b{font-weight:500;color:var(--fg);display:block;margin-bottom:1px;font-size:14px}
+  .list li em{font-style:normal;color:var(--muted);font-size:12.5px}
+  .list.tight{gap:8px}
+  .list.tight li{line-height:1.5}
+  .list.tight li b{display:inline;font-size:13.5px;margin-bottom:0}
+  .list.tight li b::after{content:" · ";color:var(--border-strong);font-weight:400}
+  .list.tight li em{font-size:12.5px}
+
+  /* 海报模板示意 */
+  .poster{width:210px;border:1px solid var(--border-strong);border-radius:6px;
+    background:var(--bg-soft);padding:0;overflow:hidden;flex:0 0 auto}
+  .poster .ph-top{background:var(--primary);height:52px;display:flex;align-items:center;
+    justify-content:center;color:#fff;font-size:13px;font-weight:500}
+  .poster .ph-body{padding:14px}
+  .poster .slot{border:1px dashed var(--border-strong);border-radius:4px;
+    font-size:11.5px;color:var(--primary);padding:7px 9px;margin-bottom:7px;background:#fff;line-height:1.4}
+  .poster .ph-foot{height:26px;background:var(--sunken);display:flex;align-items:center;
+    justify-content:center;font-size:10.5px;color:var(--meta)}
+  .prow{display:flex;gap:18px;align-items:flex-start;margin-top:22px}
+
+  .note{margin-top:auto;font-size:13.5px;color:var(--muted);line-height:1.6;
+    border-left:2px solid var(--primary);padding:2px 0 2px 14px}
+  .note.warn{border-left-color:var(--warn)}
+  .note.warn span{color:var(--warn);font-weight:500}
+  .note b{font-weight:500;color:var(--fg)}
+
+  .two-col-txt{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:24px}
+  .kv{font-size:14px;color:var(--fg2);line-height:1.75}
+  .kv b{font-weight:500;color:var(--fg);display:block;margin-bottom:4px}
+  .kv .m{color:var(--muted);font-size:13.5px}
+  @media print{
+    html,body{overflow:visible;background:#fff}
+    #viewport{position:static;display:block}
+    #stage{transform:none!important;box-shadow:none;width:100%;height:auto}
+    .slide{position:relative;opacity:1;visibility:visible;transform:none;
+      page-break-after:always;height:720px}
+    #hud{display:none}
+  }
+</style>
+</head>
+<body data-page-node-id="EnHwY107aHWv2ZXZ1ddUAB">
+<div id="viewport" data-page-node-id="9pVt4CGGSBlErefhhdabsP"><div id="stage" data-page-node-id="I4utMcxkxKUGCigm8mApa3">
+
+<!-- ============ 1 封面 ============ -->
+<section class="slide cover active" data-page-node-id="Cne7MjdKLSnUQc58FYVyDH">
+  <div class="badge" data-page-node-id="ttEkhGpfx2gBzy2qs5HJD2"><span class="dot" data-page-node-id="RehXJm3H04ldrCHqqhNcAM"></span>设计方案评审</div>
+  <h1 data-page-node-id="wcMcLOXtRKBIbf2rOiVTTT">房屋责任盘营销闭环系统</h1>
+  <div class="subline" data-page-node-id="q4Hm8XihxouYAJJJDNqB9Z">把「筛标签 → 定产品 → 做海报 → 发短信」这条目前全靠人跑的链路，<br data-page-node-id="BSo7wfBMHrKGVSFI8i4ikE">变成一个系统自动跑完的闭环。</div>
+  <div class="tags" data-page-node-id="1XyLqlXD8t4gK4cnTB7KlV">
+    <i data-page-node-id="L1Nghb1TOHFUXb7V6f6Jew">标签圈人</i><i data-page-node-id="ybAJwCh0ziV6wfq5iJB9RE">规则推品</i><i data-page-node-id="ryOPYGeYtFPyFg71IQrism">一客一图</i><i data-page-node-id="WHF9cJSLBlaqn0a5KGm2Hc">频控防扰</i><i data-page-node-id="AR0GFrJct3cFlBF2xAGwEu">全程留痕</i><i data-page-node-id="AR0GFrJct3cFlBF2xAGwEv">线索回流</i>
+  </div>
+  <div class="foot" data-page-node-id="zLb7cid1c6krjnSrEuWAzQ">
+    <div data-page-node-id="Ddm0UtCaCOcii1kdvDJsUd"><span data-page-node-id="PdOqWMkPZgPnUvMFgSPKs0">覆盖范围</span>125.7 万户责任盘</div>
+    <div data-page-node-id="4dr2EMyb50AQBsCXH0Ndl8"><span data-page-node-id="tBWNGyeyWAcPp8pNShxWfQ">产品包</span>当前 7 个，可持续增加</div>
+    <div data-page-node-id="xZYCFqNJDGmPqPQTw9NRsf"><span data-page-node-id="dtKx2SHbIImldEyY93Fm7r">汇报日期</span>2026 年 9 月</div>
+  </div>
+  <div class="pager" data-page-node-id="o7T2846A6AiB6rACRHKv0T"><span data-page-node-id="tiCYFB6Q3A74A94AZagbQX">方案评审</span><div class="track" data-page-node-id="q19nLDCBIlmCXg4wWbskVX"><div class="fill" style="width:8%" data-page-node-id="xg93u9Tg0WWwbZ4QWsvymq"></div></div><span data-page-node-id="HE4ZeE0WCrLEYsKdC2gGw5">1 / 12</span></div>
+</section>
+
+<!-- ============ 2 现状 ============ -->
+<section class="slide" data-page-node-id="kuBeUTXG7BuMcLPBSnWoNJ">
+  <div class="eyebrow" data-page-node-id="XJKR0JWhvKCdc2KCjd4MbK">现状</div>
+  <h2 data-page-node-id="rndwMfNgpGmkjOBDA2slgJ">现在这条链路，四段全靠人</h2>
+  <div class="sub" data-page-node-id="ZC5CKSC4MvNp3T9heZMm5g">每一步都有人在做判断，但判断标准、发送节奏、发送记录都没有留在系统里。</div>
+
+  <div class="flow" data-page-node-id="hH1PjwPSu92JOvTJ1InaQ6">
+    <div class="step pain" data-page-node-id="85oykcuMyavaCWHDCnIGLD"><div class="n" data-page-node-id="08RR7q3FYHMqjmtkAoe28b">STEP 1</div><div class="t" data-page-node-id="IkI8ruN1AZZSxCUNzLKXae">Excel 筛标签</div><div class="d" data-page-node-id="DvcfRVr8bV8fXcCRyA0ojr">人工导出、人工筛选</div></div>
+    <div class="arw" data-page-node-id="KtdWMCT5Y8KVyIx6UZjbgV"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="exjwrXQzBtEd1HVZv4F4FS"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="7LWJw75pD2AQJKHqdfNIX4"/></svg></div>
+    <div class="step pain" data-page-node-id="gIBFBJcml6fnCe3J4t6HqE"><div class="n" data-page-node-id="bhMoIkYfTNr9buKg6H3byu">STEP 2</div><div class="t" data-page-node-id="0prRh7iSFBvmjVAjDM22RP">人工判断推什么</div><div class="d" data-page-node-id="plEDAyD3oXMhDN1cy2vhxF">靠经验，标准在人脑子里</div></div>
+    <div class="arw" data-page-node-id="TOJ0DeCmNGlZWrlMKdiwda"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="lL5b6vJmEa6ntiLiPY7z46"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="WopkfQaNVOMVmZpDl51cnO"/></svg></div>
+    <div class="step pain" data-page-node-id="GLwU3FUNynfNFylLxA1JLb"><div class="n" data-page-node-id="ynCS0gvcxQT6r3koXB4NIz">STEP 3</div><div class="t" data-page-node-id="ew9zeUxHqk0Dtcn0Z4eSgI">人工做海报</div><div class="d" data-page-node-id="2HAwznzwIlnjPOgVqZfBXD">一套套改，费时且样式不一</div></div>
+    <div class="arw" data-page-node-id="UnHD4G0klFRYULW10QfcmJ"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="N0TvlafLfPoC3TbRpeky8R"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="0pikEbjT8yPl0u78uEzbDS"/></svg></div>
+    <div class="step pain" data-page-node-id="UGdWo9XnSBO6DwyaLtm32c"><div class="n" data-page-node-id="U2Gah6hA9otGr1nmvKJNIA">STEP 4</div><div class="t" data-page-node-id="knYNDM3DyicufxET8vKA0d">人工发短信</div><div class="d" data-page-node-id="3P7VIkDXtZSLMsh5lbHwMa">发多发少无人管</div></div>
+  </div>
+
+  <div class="grid c4" data-page-node-id="p4IyPAk1KhiJ1M3ZvDwAWg">
+    <div class="card bad" data-page-node-id="Khc4akCu6cqYUMJ1zmROeY"><div class="ct" data-page-node-id="0g0C4slEGEGsFfCCadiPBj">标准留不下来</div><div class="cd" data-page-node-id="LhZ5DETEGFgPed2A9MqFYN">换个运营，推的产品就变了。同一个客户，两个人可能给出两种结论。</div></div>
+    <div class="card bad" data-page-node-id="ondfDNW4JO900QWvkQVzIF"><div class="ct" data-page-node-id="6AgFM5ZeaLuzSA4CnrCC15">没有频次概念</div><div class="cd" data-page-node-id="qjANjNVWYpjaXigEiiQE1z">谁被推过、推过几次、多久推一次，没人算得清。客户被反复打扰。</div></div>
+    <div class="card bad" data-page-node-id="6sruTDD9szpMkSlaCb5m02"><div class="ct" data-page-node-id="3zUN1xQP4ESFM4YTJGT3Ve">发完查不到</div><div class="cd" data-page-node-id="I7L9dSW0zm1mhXy0TD54rV">谁收到了、谁失败了、为什么失败，事后无法追溯。</div></div>
+    <div class="card bad" data-page-node-id="01UBH6GZniCbD1CCt1gRxW"><div class="ct" data-page-node-id="cXtJYrAfX4GVF3nVUHAeER">无法复盘</div><div class="cd" data-page-node-id="7q0ZH4twr0kcHKNhGohYSU">效果好或差，说不清是哪一步造成的，下一次仍然靠感觉。</div></div>
+  </div>
+  <div class="pager" data-page-node-id="1lhGs7GAVN2o4vExfdZB57"><span data-page-node-id="F1qQAmc82779xtJzhvdktk">现状</span><div class="track" data-page-node-id="s1qbVfwyBe8rlSAKzQBiR0"><div class="fill" style="width:17%" data-page-node-id="zxhCCXpkyPtPEn9yfGeX51"></div></div><span data-page-node-id="4njG8cgypnjYa4bGvmx0r5">2 / 12</span></div>
+</section>
+
+<!-- ============ 3 目标链路 ============ -->
+<section class="slide" data-page-node-id="9GBQxGQn1JEDFHy9I9JYGH">
+  <div class="eyebrow" data-page-node-id="biUnC7LEEwfBbVuHzGEeyv">目标</div>
+  <h2 data-page-node-id="QY7lcmtSgYlMh1FcQZQekt">要做的：让这条链路自己跑完</h2>
+  <div class="sub" data-page-node-id="G9tC9RwZpEsglMhEG5vX54">营销管理只需要做一件事——<span class="hl" data-page-node-id="2lO0npd3aS9GdBeNY7m9yC">配一次「什么标签推什么产品」的规则</span>，之后每天系统自己跑。</div>
+
+  <div class="flow" data-page-node-id="znMrDmyeZge4TkxHuJLkVp">
+    <div class="step" data-page-node-id="rKbyLQL8GnpQkIYrTsRl36"><div class="n" data-page-node-id="P1zbFJ5OylFGoYjG9dvDbN">STEP 1</div><div class="t" data-page-node-id="6dSxzj7TpjYuDkLySAtbg3">标签数据</div><div class="d" data-page-node-id="bHOegMTvX7EAD38pjhoT8S">125.7 万户<br data-page-node-id="3UfifKshiRkQ7L6oox3qDm">每天更新</div></div>
+    <div class="arw" data-page-node-id="nkzKfChUsELoKThvOV3i0w"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="Ah40SR40rSMdKUPPd77cfZ"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="dfA2S6CfBbtEDxhlUPFQ3W"/></svg></div>
+    <div class="step" data-page-node-id="ZEhBC2KGae0f4keh66ESiV"><div class="n" data-page-node-id="nDb1iVKMPNA9hWHdGAWcp5">STEP 2</div><div class="t" data-page-node-id="5SY4Ebf3qWve4KGMu4QN1A">圈出目标客户</div><div class="d" data-page-node-id="DJLBZCDtwY1VqOLBrTqCfQ">按标签组合<br data-page-node-id="Q3GDMKwZ3L9jgYSStHVVoO">筛出人群</div></div>
+    <div class="arw" data-page-node-id="LfxnpioSe8BP2FD5jiwtDd"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="4hSOZiE531evA4QMWnpUAb"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="FxER6MbIxDbYOUdUfNKpSi"/></svg></div>
+    <div class="step new" data-page-node-id="hJYlDOCHKD97uLEEOGSECD"><div class="n" data-page-node-id="O2zJJjgRgOdEUbf6V7d40H">核心新增</div><div class="t" data-page-node-id="A7C58YQDqiqL8eGTeuDEZY">匹配产品包</div><div class="d" data-page-node-id="eCPMzpkO0K8ZrNPGiPI9Vk">按营销管理配的<br data-page-node-id="rkHWQWalbAyP5tSKM2p9xb">规则自动定</div></div>
+    <div class="arw" data-page-node-id="NTbUfOBwF6siT9xzC4j1ZC"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="r2O3VW63gvvU3L2RZ1EErg"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="txoOv0GQn41HIjlC1pinmd"/></svg></div>
+    <div class="step" data-page-node-id="a49mfKhTi4kQFTzMJUtmWN"><div class="n" data-page-node-id="7BjixvvL35xPyZM9CEbQSy">STEP 4</div><div class="t" data-page-node-id="sMG8zV2vRLjiEguGIp4TdQ">生成专属海报</div><div class="d" data-page-node-id="yoXLGXWDKKeWxUNyP93AX7">一人一张<br data-page-node-id="eWHaOrmP9ewiLFfGmCldJl">内容各不相同</div></div>
+    <div class="arw" data-page-node-id="QhkjuEbqfTQIdpBlhF6ugH"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="VokyeoR2aNhvJ0GEqIXk0c"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="JdxH9hHxxfGHxXhvw6Hu0N"/></svg></div>
+    <div class="step" data-page-node-id="DIQgp0LHGIYwHw9U5uQewD"><div class="n" data-page-node-id="mFZvIpOkrsMTtEsz44pHIR">STEP 5</div><div class="t" data-page-node-id="xHJzOK9nNjDciWzMTA8GnH">短信下发</div><div class="d" data-page-node-id="Rg5UHEEJITGtWe4q1hJfRK">走现有通道<br data-page-node-id="gA8sP7Y1leUkHeOTdHH6oK">不新建</div></div>
+    <div class="arw" data-page-node-id="qLPDTuAvzzHKMwlGAoUqvh"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="wHEbGkB81hQONK3twvQ038"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="fCBFLDB8M0ZHd971XqeMlQ"/></svg></div>
+    <div class="step new" data-page-node-id="ZCZKZG6uBlL1kW4HiTFTRf"><div class="n" data-page-node-id="HmLBdDEea9YsGBvRWwspWW">核心新增</div><div class="t" data-page-node-id="THb9yuQA2JTsIleYQWc70L">记录与线索回流</div><div class="d" data-page-node-id="Q8xVqf2iCMuLaDgUD4ULof">发没发、出没出线索<br data-page-node-id="6XpDN1IHn40ynCGi5zlQMn">都查得到</div></div>
+  </div>
+
+  <div class="grid c3" style="margin-top:30px" data-page-node-id="VrNHlyWZGVOKyqGSNqFhKm">
+    <div class="card info" data-page-node-id="sPhBFzvdRZGw1fPADRHEFY"><div class="ct" data-page-node-id="1yLUgrElvbhGNpEkhVzVpV">人做判断 → 系统做判断</div><div class="cd" data-page-node-id="CVOOCJ1ZLBjDmtqe1tjJD2">规则写在系统里，谁来看结果都一样</div></div>
+    <div class="card info" data-page-node-id="Qu6SHvBwkOSpq5T79FFYkY"><div class="ct" data-page-node-id="Rx4nlqbGVyeVoymLZScyGi">手工执行 → 自动执行</div><div class="cd" data-page-node-id="NCspK1RwDsuCVd9KNLUYdQ">每天一次自动跑，不依赖某个人在不在</div></div>
+    <div class="card info" data-page-node-id="HAo3SSe0OCIMxkk6acL5Ob"><div class="ct" data-page-node-id="40576GesHnEslbyfqBwHCS">结果靠问 → 结果可查</div><div class="cd" data-page-node-id="4b7qTnBg07cKF7Fdb9daRK">每一条推送都有记录和原因</div></div>
+  </div>
+  <div class="pager" data-page-node-id="3rImMsdgtjr2wfoco5LdT3"><span data-page-node-id="YFeWtOPRWtJbf2VsSlZ5us">目标链路</span><div class="track" data-page-node-id="2JbTC6kGmzzInASNHgZSpi"><div class="fill" style="width:25%" data-page-node-id="NODmF7zby8BDKfBbObkCip"></div></div><span data-page-node-id="k1YCC3FgGTIuMaBbSgw2Rn">3 / 12</span></div>
+</section>
+
+<!-- ============ 4 映射规则 ============ -->
+<section class="slide" data-page-node-id="YuT2W154SPpfRBppRKHHuo">
+  <div class="eyebrow" data-page-node-id="lSbEi53spJ6XnobjYzbPzi">核心设计 ①</div>
+  <h2 data-page-node-id="3pOMoMPuzatgvnXO2qCESh">产品包和标签，怎么对应？</h2>
+  <div class="sub" data-page-node-id="FLzcFmrUaoOplcwcL64hjh">营销管理在后台维护一张规则表，系统按这张表自动给每个客户定产品包。</div>
+
+  <table data-page-node-id="kIge5sZR2Mfh24aH54SJaV">
+    <thead data-page-node-id="VcFkpZEByupjdlia1cSn2I"><tr data-page-node-id="Wba7B1c2GkooHzMMIkNM8T"><th data-page-node-id="8EpTRjzEDNqT0BKfLCNprz">优先级</th><th data-page-node-id="SIylXlv5VRKpNGArpMzIMy">命中条件（客户标签）</th><th data-page-node-id="mQJmiLBJSktLe9E0q4GuFi">推送产品包</th><th data-page-node-id="cwVYdyjD0UMd0zZfIfwvSB">所属互斥组</th></tr></thead>
+    <tbody data-page-node-id="INijqv1z6GDBJaOCssewOl">
+      <tr data-page-node-id="D6NXFOWko3hLBGbvvAADIV"><td class="pri" data-page-node-id="pql8C8DWT0HkRH3XfbLAAv">第 1 位</td><td data-page-node-id="XTBvCxTl0zUsLmofDJWQx3">水路标签 = 卫生间漏水</td><td data-page-node-id="rxRzTSqo91bmIRaPvzf3tb"><span class="pill b" data-page-node-id="1Ty1uknkSDu4oDYF19efSh">防水补漏包</span></td><td data-page-node-id="QGBX4DDvwJ0W7THJv5hrcn">修缮类</td></tr>
+      <tr data-page-node-id="u1meCre6wvRKUOXnZI6LGK"><td class="pri" data-page-node-id="r1hC5rAsOFuHelwk2USJEv">第 2 位</td><td data-page-node-id="y6HR6eyNP2OINrp3MlOD2i">环境标签 = 墙面发霉</td><td data-page-node-id="eMpL9irDSDaZXWzyV4Aw1q"><span class="pill b" data-page-node-id="XXbmtUvVVY1AUSDwiT9LfX">墙面焕新包</span></td><td data-page-node-id="Q17G84b06Grc1jCPcdtKjV">修缮类</td></tr>
+      <tr data-page-node-id="qeLdNwZyZrZlCJP6J0i75p"><td class="pri" data-page-node-id="YusxeubC67xOMViAiqnane">第 3 位</td><td data-page-node-id="bzcBeX60LlvlFnuECatHCN">家电标签 = 空调故障</td><td data-page-node-id="bBUwcM2q15vBF1H5Zpq64X"><span class="pill b" data-page-node-id="AEH6ZFAoaV2YBL2WQ5oWDw">家电焕新包</span></td><td data-page-node-id="5riSDemUsTEHDdfbx15hyW">电器类</td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid c3" style="margin-top:26px" data-page-node-id="Rs0eda4fSfYbXSIcYLqN3X">
+    <div class="card" data-page-node-id="ratyDmV685MfWra8QzqFxF"><div class="ct" data-page-node-id="bNECrTPeadYnyNeAXu4Haz"><span class="num" data-page-node-id="36bMEXvyhpQHCeXyjl54Pm">1</span>优先级解决"都命中了怎么办"</div><div class="cd" data-page-node-id="UVBILMRLX07uS8DE2MjAzH">一个客户可能同时满足好几条规则。系统按<span class="hl" data-page-node-id="Y5vaUHNiMTTuBiElSJa9yk">从上到下</span>的顺序取，最上面那条胜出。</div></div>
+    <div class="card" data-page-node-id="Iqy1YErmugFibEYdQFHdh4"><div class="ct" data-page-node-id="lspgkucTDOspq1HXMhv6aG"><span class="num" data-page-node-id="CBZTNhQNnoGdJqv1DN0GLh">2</span>互斥组解决"能不能同时推"</div><div class="cd" data-page-node-id="KQGMquuw78TbhOBROsFUoU">同一互斥组里只能出一个包（比如"修缮类"里不能同时推补漏和墙面）。不同组之间互不影响。</div></div>
+    <div class="card" data-page-node-id="VhxszVf3c2dwqHO3AvEgxO"><div class="ct" data-page-node-id="Fh2jE1WzsBeSG9X7T6RK52"><span class="num" data-page-node-id="QrsPbx6LkwWLC1VSOXoWbH">3</span>最终结果：一户一包</div><div class="cd" data-page-node-id="pMb9qC6COLJkI5NW4UTauw">一个客户在一个周期内，只会收到<span class="hl" data-page-node-id="ycS9byKZB2c0YDren0Zh5m">一个产品包</span>的推荐，不会一次被推销两样。</div></div>
+  </div>
+
+  <div class="note" data-page-node-id="mYKgL1EQMjtioUCfkN2PId">这张规则表是<span class="hl" data-page-node-id="AMblBAG9CzWxGUj9ILGDtJ">活的</span>——产品包增减、优先级调整、互斥关系变更，营销管理自己在后台改，不需要开发改代码。改完还能立即看到"这条规则会命中多少人"。</div>
+  <div class="pager" data-page-node-id="QwnGfpbiDQylGQw8vBpdAl"><span data-page-node-id="bqr9LBFgublcB2dLZZAiuD">核心设计 ① · 映射规则</span><div class="track" data-page-node-id="0xEPc2PVQIKi7m1UHQ4rtg"><div class="fill" style="width:33%" data-page-node-id="80PowCfWTQAJBrTiZdckOr"></div></div><span data-page-node-id="0ImPIznzRGqWOqd84uVws8">4 / 12</span></div>
+</section>
+
+<!-- ============ 5 频控 ============ -->
+<section class="slide" data-page-node-id="IEGiKNctvN6esCGwhMHJSF">
+  <div class="eyebrow" data-page-node-id="IfG5ShE1XbMJjqMPLi52mb">核心设计 ②</div>
+  <h2 data-page-node-id="0YRA2PEp2O4izqbHDAewRd">怎么保证不打扰客户？</h2>
+  <div class="sub" data-page-node-id="6mTqWC1MDScKKPlhMm6m3v">这是整套设计里最不该出错的一环。收到投诉的原因通常不是内容，是<span class="warn-t" data-page-node-id="0JLpzMaCyHxYGFbiWaBzeD">发得太频</span>。</div>
+
+  <div class="grid c3" style="margin-top:24px" data-page-node-id="Jo5GJLKVqhvq9tSP7N01R8">
+    <div class="card warn" data-page-node-id="cpviO8qV6Put8xuT9AmwQs"><div class="ct" data-page-node-id="kOVJNp2Mt044dD4tbzoAdg"><span class="num" data-page-node-id="pBmXJIdZvqOlsJ6eg1t3cd">1</span>同一房屋冷却期</div><div class="cd" data-page-node-id="335zurZoRZjif4VNyevHyh">推过一次之后，<b data-page-node-id="DucQKqGEWV7W1NvK4a7cAF">7 天内</b>不再推任何产品包。</div></div>
+    <div class="card warn" data-page-node-id="EOGnYM545S53wog0MDkdtg"><div class="ct" data-page-node-id="MqmORp8Oj2eivO9vMdzmoH"><span class="num" data-page-node-id="Ohj4zLGriJilBQ9DKN75KW">2</span>同一产品包冷却期</div><div class="cd" data-page-node-id="t0z66qwC1moZCyP74zjAkC">推过某个产品包后，<b data-page-node-id="a9xqSqijHEmCYO0AeS0o1m">30 天内</b>不再重复推同一个包。</div></div>
+    <div class="card warn" data-page-node-id="HCCEefREGHQSl3SRdt7Ojw"><div class="ct" data-page-node-id="CHEN9mpY98p74y3FrW1NzM"><span class="num" data-page-node-id="Qsaf9zwuVL2O7i1jgJ1FsC">3</span>次数上限</div><div class="cd" data-page-node-id="E9UOqBxGDsxx3Ol2FaO6W5">一个客户：<b data-page-node-id="B2jXjBRAlHcBB48dG7xnJx">每天最多 1 次</b>、每周 2 次、每月 4 次。</div></div>
+  </div>
+  <div class="grid c2" style="margin-top:14px" data-page-node-id="ModD8MQsfwDJv3ArGwD2lz">
+    <div class="card warn" data-page-node-id="tSF8CmtDaxDkQI8iVlFMmf"><div class="ct" data-page-node-id="OXH4dfYYcvObGl4JNVqcts"><span class="num" data-page-node-id="UcuHe4BUTB5WEYYaWL29YI">4</span>只能在这两个时段发</div><div class="cd" data-page-node-id="HFYXs2v2knlMa6JIbM0wxQ">上午 <b data-page-node-id="NE0LmeFkyDB3MxxbtmmsWU">10:00–12:00</b>、下午 <b data-page-node-id="8RyxfJX7J3KPwliqwGRm0t">15:00–18:00</b>。<br data-page-node-id="0sEHepL6BjhfmP1N0w1fcW">晚上 22:00 到次日 08:00 <b data-page-node-id="fkB0t286ObtKD0dkEhqZFo">绝对不发</b>——这条写死在代码里，任何人都改不了，防止手滑。</div></div>
+    <div class="card warn" data-page-node-id="cwGWT62ngrGzq1UhdbqXrf"><div class="ct" data-page-node-id="H8Da6ytUWy2xclnqFiJD0n"><span class="num" data-page-node-id="I8t8lSzXRFOno391Hd7zEY">5</span>全公司每天有总量上限</div><div class="cd" data-page-node-id="og2loWqHC8T5bnanm8KOID">每天最多发 <b data-page-node-id="BhvATkcr9bFjjwts5G7bZB">5000 条</b>。超出的不丢弃，<b data-page-node-id="OEHNdIK3dt60mZOH6pJYwC">顺延到第二天</b>继续发，连续顺延超过 3 次会告警。</div></div>
+  </div>
+
+  <div class="note warn" data-page-node-id="FqCgazlvokyWHXm2P8j88C"><span data-page-node-id="NsgtW4mQDwaDWf1caKZ1W7">一条重要的例外：</span>上面这些限制<b data-page-node-id="GXMPOI43V96gAzStppEpYg">只管营销短信</b>。维修进度、缴费提醒这类<b data-page-node-id="hn3Wh7ov4Iu13pEZJAbp5Z">服务通知不受任何限制</b>——不会出现"因为 7 天内推过营销，业主收不到自家维修进度"这种事。</div>
+  <div class="pager" data-page-node-id="cTBAW0yAqOLNhvpiVB2WQJ"><span data-page-node-id="h98mrIp5cp02jotF7XCbxq">核心设计 ② · 频控</span><div class="track" data-page-node-id="py9dO2dP7BSMoFCva0wMIF"><div class="fill" style="width:42%" data-page-node-id="SL7S61GeP4h5bAk1SXMMzm"></div></div><span data-page-node-id="5pg3MFc4nWaNvygm3j4jOU">5 / 12</span></div>
+</section>
+
+<!-- ============ 6 海报 ============ -->
+<section class="slide" data-page-node-id="EyfSvdZsonbM1t0D0VSMQB">
+  <div class="eyebrow" data-page-node-id="5KCieGwcIwiFL9jqmL0Cev">核心设计 ③</div>
+  <h2 data-page-node-id="WOJRjUJUIkDutAns49cdDi">个性化海报，是怎么"个性化"的？</h2>
+  <div class="sub" data-page-node-id="oaaeIUlvnVCUlnFKHkfgeE">不是让 AI 随手画一张，而是<span class="hl" data-page-node-id="YvIX5dbhz8xMeFNEP2dPue">同一套模板 + 每个客户不同的内容</span>。这是经过成本对比后的选择。</div>
+
+  <div class="prow" data-page-node-id="qQVYE1mEChEFMBouOKRwWU">
+    <div class="poster" data-page-node-id="2meosUwuqkUH8cHp4lJ1oE">
+      <div class="ph-top" data-page-node-id="JF30aA5e41lCkCWBtmjIyy">模板样式（固定）</div>
+      <div class="ph-body" data-page-node-id="pvhsk5lth9m98e77Cz7Ku3">
+        <div class="slot" data-page-node-id="wWjTBAv1tQtMtPlfHenKnh">标题：{客户姓名}，您家的事我们记着</div>
+        <div class="slot" data-page-node-id="o0b0AnXQkyoDiJM0IFkefL">主推产品：{防水补漏包}</div>
+        <div class="slot" data-page-node-id="zsR9HHECINfeSR14EA3yEA">卖点文案：{针对卫生间漏水，3 天完工}</div>
+        <div class="slot" data-page-node-id="PG2plMj60GzlJ89W6Cs0Xk">房屋信息：{XX 项目 3 栋 501}</div>
+      </div>
+      <div class="ph-foot" data-page-node-id="JbI8CJL4xz5kjvcGDG5VWW">二维码 · 品牌标识（固定）</div>
+    </div>
+    <div style="flex:1" data-page-node-id="RgBG9oqxuUzL6vrQijlmVH">
+      <div class="grid c2" style="margin-top:0;gap:12px" data-page-node-id="NpiB4JKMqijjqIyrnO55mt">
+        <div class="card ok" data-page-node-id="qHpxKAsYuWCj9TSwNL50IX"><div class="ct" data-page-node-id="U5tbhWij4pl94sWmhg1Gx2">文字永远不会错</div><div class="cd" data-page-node-id="Vpe4jwYn5KTLzEB3Zor2iX">内容是变量填进去的，不是 AI 临时写的，不存在错字或不当表述。</div></div>
+        <div class="card ok" data-page-node-id="IqTym9ZOMWZyG1JdHrvkYR"><div class="ct" data-page-node-id="XVCLuIUVqzx4hujewk1zeI">成本几乎为零</div><div class="cd" data-page-node-id="wkslkH7tDzYyv1CdANrjDg">生成一张的时间以毫秒计，不产生按张计费。</div></div>
+        <div class="card ok" data-page-node-id="TIDRbIAmvWv0hdR9AklclI"><div class="ct" data-page-node-id="P7XNDFEA8AlwFGZlOfd7hn">结果稳定可复现</div><div class="cd" data-page-node-id="uLgEBnSTNAsdAf56yWaMx9">同一份数据，今天生成和明天生成长得一样，方便排查。</div></div>
+        <div class="card ok" data-page-node-id="npHufZCgIKhkbd5eD2kUDi"><div class="ct" data-page-node-id="EUIN3VA3QHL52g56yKaPpY">换模板不影响规则</div><div class="cd" data-page-node-id="OfgbQHTOECHoVIHM1ldG2Y">视觉样式可以随时换，映射规则与频控完全不受影响。</div></div>
+      </div>
+      <div class="note warn" style="margin-top:16px" data-page-node-id="S6fX8V4OhyZTQtWwZJDIDj"><span data-page-node-id="jrsAxVXpjyvBy22UuT8RGZ">为什么不用 AI 全生成：</span>全量 125.7 万张约需 <b data-page-node-id="G0U23BD3Me7ClbWW2gGt3s">25 万元</b>、耗时约 <b data-page-node-id="CGkBm3Z77KqBbBQaxpjJoN">7 天</b>，且存在文字出错与品牌表述风险。<br data-page-node-id="uyTHaaxzLWB5MBTm2PbBTX">折中方案：保留"AI 生成背景图"作为可选素材池，主链路仍走模板，兼顾好看与可控。</div>
+    </div>
+  </div>
+  <div class="pager" data-page-node-id="f2BFqJHQEBYsG77fUpQRkS"><span data-page-node-id="CwGLgnDGYqLSUqaQ6QaSCY">核心设计 ③ · 海报</span><div class="track" data-page-node-id="nER2F3cpGzvQPyWJ2GNEXd"><div class="fill" style="width:50%" data-page-node-id="cWASaHffKRXq8P4UCI1DCF"></div></div><span data-page-node-id="GNGRTDczs1cSzbX85qbMCl">6 / 12</span></div>
+</section>
+
+<!-- ============ 7 发出去之后 ============ -->
+<section class="slide" data-page-node-id="PcAvrWsD7JxXZ8e6YdzJog">
+  <div class="eyebrow" data-page-node-id="jgjTr01yYzDsueF6kOAvT9">核心设计 ④</div>
+  <h2 data-page-node-id="ykR3A8ocdNdjWoVQn4zn9I">发出去之后，还能管什么？</h2>
+  <div class="sub" data-page-node-id="NloWhbucFBXBCZFQHA7F5J">现在的链路发完就断了。新系统要做到"每一条都能追溯、都能补救"。</div>
+
+  <div class="grid c3" style="margin-top:30px" data-page-node-id="VPCQnpFy25EGyUpC844KUG">
+    <div class="card" data-page-node-id="qygxmjVuSLF4RTKrkXfFxE"><div class="ct" data-page-node-id="OL1UQDjbhBtW7TEBmQfJB0"><span class="num" data-page-node-id="YbUblAQER4ZCgbsKiYlzic">1</span>记录：查得到</div><div class="cd" data-page-node-id="YsUiZBHkNzThNPfklMM1Tk">每一条推送都留下结果：已发送 / 发送失败 / 被规则拦下 / 被顺延 / 主动停止。<br data-page-node-id="m21mCMozX8ksMHanHx98ul"><br data-page-node-id="HCy4wXdtNZ16w1GGFEMiso">被拦下的会写明<b data-page-node-id="bVpJE2AaKLkPIXPdTnM1nJ">具体原因</b>（共 11 种，如"房屋冷却期内""不在发送时段""已退订"），可按原因筛选。</div></div>
+    <div class="card" data-page-node-id="NiYrYNStYh9EDKAGLEBMIP"><div class="ct" data-page-node-id="aE7bge4D87mtwM0A7YhRmU"><span class="num" data-page-node-id="Nde9rExzxUxhzFtLBx2Ekw">2</span>重推：补得回来</div><div class="cd" data-page-node-id="fmWgXy7COQfFbzNCpQg1Cb">失败的可以<b data-page-node-id="XE4QwpGpZVyqV0HmmmssBq">单条补发</b>，也可以<b data-page-node-id="D3T4VXMvZnuzdQFQkd60N4">批量补发</b>。<br data-page-node-id="bjZdAz62baxxB4MJwTYoY2"><br data-page-node-id="5ks2BHnRdIIVaC7Kil5IP3">重推能覆盖冷却期和次数限制（比如重点楼盘要额外推一次），但<b data-page-node-id="mEZ3Ksa1sNNZrw0RtcFW0g">不能覆盖退订、投诉黑名单</b>——这是底线。</div></div>
+    <div class="card" data-page-node-id="XEr8PWofrnClZ7k55R2Fak"><div class="ct" data-page-node-id="LFEFDVWBeUWQ6VKQ57dtyj"><span class="num" data-page-node-id="HbyXV4qjtriNCPR2crH9ON">3</span>停止：拦得住</div><div class="cd" data-page-node-id="CDRLA8Oo8FWA6rgI6OWIF6">批次正在发送时，可以<b data-page-node-id="NL8z2LxmVVbwYadXfpGcfs">立即停止</b>还没发出去的部分。<br data-page-node-id="y1NkJsMi8lifcCSBASz1xx"><br data-page-node-id="9L5VChYqcGCz5cxMvwz1It">停止会记录操作人、时间和原因；停止的明细还可以再重推。这个操作不可撤销。</div></div>
+  </div>
+
+  <div class="note warn" style="margin-top:26px" data-page-node-id="Df4dcRS1o7Ef2tij4JiGYD"><span data-page-node-id="J9aMk2qeQ8RhJofnHT7EMl">必须说清的一件事：</span>已经发出去的短信<b data-page-node-id="wjXeVwyAse3zXzMfvPul5I">停不了</b>，也撤不回——这是短信本身的限制，不是系统能力问题。<br data-page-node-id="TQBuuOnOM9JILzCSBfMZ0K">所以真正的防线在<b data-page-node-id="9sAE8kUpGaLd23xzMwBu6v">发之前</b>：系统会在按下发送前告诉你"这一批会触及多少人、会被规则拦掉多少人"，看清楚了再发。</div>
+  <div class="pager" data-page-node-id="3z1HcB7kS5jxQfpvKVe38e"><span data-page-node-id="HrWrug6IcHEsSvIdKmQTqX">核心设计 ④ · 记录与补救</span><div class="track" data-page-node-id="RjRbFYW3waN9BHbAhiAtQ5"><div class="fill" style="width:58%" data-page-node-id="csiFQATCFLjRbIW4kxUdFV"></div></div><span data-page-node-id="V1RmZ1ZjnZsMcJaeAqRV5G">7 / 12</span></div>
+</section>
+
+<!-- ============ 8 线索联动与效果归因 ============ -->
+<section class="slide">
+  <div class="eyebrow">核心设计 ⑤</div>
+  <h2>推完之后，效果怎么看得见？</h2>
+  <div class="sub">原来的链路发完就断了。加上<span class="hl">线索回流</span>，才能回答「这次推送到底有没有用」。</div>
+
+  <div class="grid c2" style="margin-top:22px">
+    <div class="card info">
+      <div class="ct"><span class="num">1</span>已经出过线索的，就不再推了</div>
+      <div class="cd">
+        新增一道<span class="hl">优先级最高</span>的闸门，排在所有频控前面：<br>
+        同一个产品包已有线索 → 这个包 <b>90 天</b>内不再推<br>
+        其他产品已有线索 → <b>15 天</b>内不再推任何营销内容<br>
+        <span style="color:var(--muted)">为何分两级：已标"卫生间漏水"的房屋已推过防水补漏包，不再重复推送同包，但推荐厨卫防水维保是合理的。</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct"><span class="num">2</span>看得到客户最近一次线索时间</div>
+      <div class="cd">
+        客户详情页多一条<b>线索时间线</b>：<br>
+        最近一次线索是什么时候 · 线索等级（A / B / C / 无效）<br>
+        对应哪个产品包 · 对应哪一次发送<br>
+        <span style="color:var(--muted)">没线索 / 线索已超期 / 数据没拿到——三种状态各自显示，不混成一个「暂无」。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid c3" style="margin-top:14px">
+    <div class="card"><div class="ct"><span class="num">3</span>出线索的质量</div><div class="cd">看板按<b>产品包 / 标签 / 海报模板</b>分开看：发了多少、出了多少线索、有效线索率多少。哪个素材好，看得见。</div></div>
+    <div class="card"><div class="ct"><span class="num">4</span>算谁的功劳</div><div class="cd">发出后 <b>15 天</b>内的线索算这次发送的贡献。<b>首次触达</b>与<b>末次触达</b>两个口径同时出，不押注一种算法。</div></div>
+    <div class="card"><div class="ct"><span class="num">5</span>埋点，分三层看</div><div class="cd"><b>发送</b>：系统自有记录，不用埋。<br><b>点击</b>：要埋，但得通道给短链回执。<br><b>线索</b>：不是埋点，是销售系统<b>回填</b>。</div></div>
+  </div>
+
+  <div class="note warn" style="margin-top:18px"><span>对外统一口径（汇报请照这句说）：</span>系统的「触达」= <b>短信已经发出去了</b>，不是「客户看了」；看板的「归因」= <b>相关性</b>，不是因果关系。一期没有点击数据时，<b>「没看到」和「看了不感兴趣」分不开</b>——看板会如实标注这个缺口，不画假曲线。</div>
+  <div class="pager"><span>核心设计 ⑤ · 线索与效果</span><div class="track"><div class="fill" style="width:67%"></div></div><span>8 / 12</span></div>
+</section>
+
+<!-- ============ 9 完整例子 ============ -->
+<section class="slide" data-page-node-id="jCprJ2oyPDnXqBVg9BabqN">
+  <div class="eyebrow" data-page-node-id="yQ6TWCC5rfBlG8o1DQfAKW">走一遍</div>
+  <h2 data-page-node-id="EVjBFhfT6LqQq0F5IcCztI">一个客户，从数据到短信的全过程</h2>
+  <div class="sub" data-page-node-id="4ysov7FUvO4gg0ADDFwQQ7">用真实的一个房屋，看系统每一步会怎么处理。</div>
+
+  <div class="vflow" data-page-node-id="Bea2E7QbdKDogH8uVLF79O">
+    <div class="vrow" data-page-node-id="ZnXZ7l6hunVd3wu69B6jJu"><div class="vbox" data-page-node-id="Rx6dTk8a0ojYu8CG8Gj2gz"><div class="vt" data-page-node-id="Ao6HbwNSk7aeHYpZfcba0k">房屋档案</div><div class="vd" data-page-node-id="oLEJmE8OdoEl4sbG60fouX">深圳某项目 3 栋 501 ｜ 标签：卫生间漏水、墙面发霉、空调故障、自住常住、三口之家、装修 8 年</div></div></div>
+    <div class="vlink" data-page-node-id="5dcgQOn1L7IMzCBA6PWtlr"><svg width="12" height="22" viewBox="0 0 12 22" data-page-node-id="Nwk0ReLO9hZMK2lSQAJVrx"><path d="M6 0v16M2 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="eF5vBaHEV5PWEPr0TFO85L"/></svg></div>
+    <div class="vrow" data-page-node-id="G6yCdnCJyeMyMc7OJcPDkm"><div class="vbox" data-page-node-id="wIWMqxH5UvQnTgMGJL8j62"><div class="vt" data-page-node-id="RusasL01OaVlfHVt85dBKS">规则匹配</div><div class="vd" data-page-node-id="dLZJEn9rkR2Cl6vEvW0FVN">同时命中 3 条规则：防水补漏包（第 1 位）、墙面焕新包（第 2 位）、家电焕新包（第 3 位）</div></div></div>
+    <div class="vlink" data-page-node-id="FXkjbcawbZ50fsLRt8AEns"><svg width="12" height="22" viewBox="0 0 12 22" data-page-node-id="m2fZTbhYZ6VXspz4LMXiAS"><path d="M6 0v16M2 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="NpQ6Rd5ZWHT0oUOnIVuJsN"/></svg></div>
+    <div class="vrow" data-page-node-id="KF6gcDDGBYH2h3xHA7oTea"><div class="vbox" data-page-node-id="aEB73crUrThtUZseozjral"><div class="vt" data-page-node-id="FX5DA6noMdBXA5KQx90OQE">优先级裁决</div><div class="vd" data-page-node-id="eSvCEloWPTy8CWXmTqJDui">修复类互斥组内只保留第 1 位的 → 最终定为 <b style="color:var(--primary)" data-page-node-id="3FqSh5co7ZmBAyNOc24FTe">防水补漏包</b></div></div></div>
+    <div class="vlink" data-page-node-id="DYJP9ETutnuq8HqCa4AYGl"><svg width="12" height="22" viewBox="0 0 12 22" data-page-node-id="pOa6b7ggZvj3oDBlgfPAqk"><path d="M6 0v16M2 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="onMFOHXM7ZqwI6aQbA78Jt"/></svg></div>
+    <div class="vrow" data-page-node-id="czzWJY3EilBJf8YKIYaPBF"><div class="vbox" data-page-node-id="xoHAo3onJ1NbIRts4z2EGV"><div class="vt" data-page-node-id="uT6LDK1wVCujI7w66NyexB">生成海报</div><div class="vd" data-page-node-id="ubCNeeNRq4720sNxv0WGWH">用「防水补漏」模板，填入该房屋地址与漏水标签 → 生成专属海报</div></div></div>
+    <div class="vlink" data-page-node-id="rpaKCbijSrTrQDVRHyHgyj"><svg width="12" height="22" viewBox="0 0 12 22" data-page-node-id="SU5Cmm9mkT0F7HmOx03Xyc"><path d="M6 0v16M2 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="ivAhmrjcAGb7Rll9BY3Ytw"/></svg></div>
+    <div class="vrow" data-page-node-id="4RDWGocMGnZPpl2FJCv0jT"><div class="vbox stop" data-page-node-id="zKOs0wFoAR8CnGqG3M4vlE"><div class="vt" data-page-node-id="hlPv1KfyOgGzmrkrB2Ve5V">频控检查</div><div class="vd" data-page-node-id="PI2mF7tKuBE12NuDQEqFSl">发现该房屋 <b data-page-node-id="HX00xW06aH9aTGY18cAVLZ">3 天前刚收到过推送</b> → 距 7 天冷却期还差 4 天 → <b data-page-node-id="5KBE5r4BysRbb9dGaeOtHv">本次拦截</b></div></div></div>
+    <div class="vlink" data-page-node-id="gL5baSPKxutHe7Nd3qLPoI"><svg width="12" height="22" viewBox="0 0 12 22" data-page-node-id="P64P6areeZ1WOuMj9Vgd19"><path d="M6 0v16M2 12l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="QgSLEfYEDFRkbOj4BUMEPe"/></svg></div>
+    <div class="vrow" data-page-node-id="92steiaOSjeQ6If6uxA3Kd"><div class="vbox win" data-page-node-id="BLoTZvhioLmdI5koCbCt3v"><div class="vt" data-page-node-id="hUPMreSgAsQFeGJXM7RAT9">结果</div><div class="vd" data-page-node-id="HeuTcQfAIuwWxs2gc1A2a8">记为「未发送」，原因码 <b data-page-node-id="arl71ry5hrBZiEbtclZJCt">房屋冷却期内</b>；<b data-page-node-id="0aRxQ7HxXWfDHkD39qCl2r">4 天后自动重新进入候选</b>，不需要人工再捞一次</div></div></div>
+  </div>
+
+  <div class="note" data-page-node-id="IBEiQvZTJHc5O4wedLUwD6">这个例子里最关键的一点：<b data-page-node-id="14SJmGXnXwtJZQlwHQE842">被拦下不等于这个客户被丢掉</b>。系统记住他、记住原因、记住什么时候可以再推——这是"人工发短信"做不到的部分。</div>
+  <div class="pager" data-page-node-id="sFpfpA9dMJJDftH7FMYt4T"><span data-page-node-id="l0EjszZUe9qGtUJZnuDhJg">完整走一遍</span><div class="track" data-page-node-id="W2o33kAVtNvK7vxCQo83rf"><div class="fill" style="width:75%" data-page-node-id="QryrPtf0vQizB88zipevH9"></div></div><span data-page-node-id="vs00DM7vBPSu80IYD42sDV">9 / 12</span></div>
+</section>
+
+<!-- ============ 9 一期边界 ============ -->
+<section class="slide" data-page-node-id="ecYXHnHkedPfB1LD0lH8Ur">
+  <div class="eyebrow" data-page-node-id="ZvzDFpyWT3Io9oL5Czdq4M">范围</div>
+  <h2 data-page-node-id="jUNxauazvgHaUez6EpTmnz">这一期做什么、不做什么</h2>
+  <div class="sub" data-page-node-id="OSf7v7HOWWFV9P4J2ADVLG">你提过"这是一个小的系统功能"——所以我按这个定调收窄了范围。</div>
+
+  <div class="split" data-page-node-id="9HCTMxlxNGMhO3NDAiyWuq">
+    <div class="panel ok" data-page-node-id="hzzv9zcSVjxrxw0c12LnNt">
+      <div class="ph" style="color:var(--success)" data-page-node-id="GuJO9BdHFL1JXwX3V67J24">这一期做</div>
+      <div class="ps" data-page-node-id="eOYlO3JJ0MHaQdbizCcJOR">能跑通完整闭环的 10 项</div>
+      <ul class="list tight" data-page-node-id="7V6LOy4ejsaKuFJNaFYi6J">
+        <li data-page-node-id="LjTpBHIkXAaBxU8WQjwRTE"><b data-page-node-id="riybIgSyaaB1mG0R5cl6Q1">产品包管理</b><em data-page-node-id="Jr8WXuEVPFEHRMGvuwymCi">增删改产品包</em></li>
+        <li data-page-node-id="Tt7allt22kqA2NcQ9DI0XH"><b data-page-node-id="HydrVF07deJBUtJQI9Obo7">映射规则配置</b><em data-page-node-id="8BVHi1eKrt2e132pnb12Z1">优先级 + 互斥组</em></li>
+        <li data-page-node-id="0EKysccuEXhHrtaIDU3IDC"><b data-page-node-id="c793D4CHME4thYYoykNrdm">规则命中预览</b><em data-page-node-id="CyKfmrvgA4gX9cXTx3fRba">配完立刻看到会命中多少人</em></li>
+        <li data-page-node-id="V3Aylps4tqUEi6b7pHLlFW"><b data-page-node-id="j4nkCnCmiECEWFBeAqOCQS">每日自动圈人</b><em data-page-node-id="Nv62pfxhBcfCdSSclFLC2j">按最新标签生成推荐名单</em></li>
+        <li data-page-node-id="iWQAZquxSgfXs6IuTsH5Z6"><b data-page-node-id="dzYbAKSzxWuYoLpjBgM39g">频控与时段设置</b><em data-page-node-id="Mw3KMLl9ChBoLA6oXvjgO7">冷却期、次数上限、可发时段</em></li>
+        <li data-page-node-id="TIJDNtFKOiaFF5xCJIlO8H"><b data-page-node-id="ZnIBWZbRFjmKGkwnnGPOtJ">生成专属海报</b><em data-page-node-id="qzclLCH13aXsFjiZAtlj1p">模板 + 变量填充</em></li>
+        <li data-page-node-id="H3Vtrbc9cA90jZXKMf9CCV"><b data-page-node-id="laC0GnmLgjjUVxlxLgzMQD">推送记录查询</b><em data-page-node-id="Jd4GSNO26r195Zl867pRD9">发给谁、成没成、为什么没成</em></li>
+        <li data-page-node-id="hKVLRZb8C58G1UQbo1JEuC"><b data-page-node-id="sGdWleLZ4XLP5NFz2BsZPi">手动重推 / 停止发送</b><em data-page-node-id="rIdRbRT9FHC6L6BVKPxhaU">单条或批量</em></li>
+        <li data-page-node-id="x9Kd2LmQpR7vT4nB8sWcY1"><b data-page-node-id="x9Kd2LmQpR7vT4nB8sWcY2">线索回流与效果看板</b><em data-page-node-id="x9Kd2LmQpR7vT4nB8sWcY3">有线索不推、看线索质量</em></li>
+        <li data-page-node-id="OTOc1oHSATD6MR5NYtN3VV"><b data-page-node-id="mrzbAB7Td0tAV4rold2ejH">操作审计</b><em data-page-node-id="Z7bSiyc5jESsGP1PiJMLvR">谁改了规则、谁停了发送</em></li>
+      </ul>
+    </div>
+    <div class="panel no" data-page-node-id="WfAI13msYMs4kZiFlPoRAE">
+      <div class="ph" style="color:var(--muted)" data-page-node-id="7mhXL0y2xyFIoLVF6pVLZ9">这一期不做</div>
+      <div class="ps" data-page-node-id="pO1jCoruJz1YKYs4yI0jb0">不是不重要，是现在做不划算或做不了</div>
+      <ul class="list tight" data-page-node-id="aH1UWqXgla08U8BkBNDR72">
+        <li data-page-node-id="mnONsLI2W7IUKXf6s9ClsE"><b data-page-node-id="FBvQPrf2KXJHToFlTvREiS">点击埋点与落地页行为分析</b><em data-page-node-id="r8kTVI8inETMis0vtwkJ6k">需通道提供带参短链与点击回传；通道若能支持，则提前到一期</em></li>
+        <li data-page-node-id="n7gTqD9nvOK4lUDc5l8Um8"><b data-page-node-id="HRaH7TyhHlgRr37LnOf18E">"对方不回应就自动停手"</b><em data-page-node-id="dzJZeEef6GKKWsFDyiC24u">需要点击回流数据才能判断，一期没有数据源</em></li>
+        <li data-page-node-id="2h6kUO7LwtA5BQxRfNsVd9"><b data-page-node-id="hPZbAVr6G6DocGuvwRRurS">一次推多个产品包</b><em data-page-node-id="5XLbJuUE4Ic1bQofLTdTXA">改用"一条短信里合并推荐"来满足</em></li>
+        <li data-page-node-id="yqIc4dUYs2XPXMMAwtdUHx"><b data-page-node-id="4YGMCixiU5jRkX8LYmu8JM">自建短信通道</b><em data-page-node-id="B4oOKiNivfddhGeGFM2xP6">公司已有通道，本系统只提供数据出口</em></li>
+        <li data-page-node-id="eq5jOwVbO3qETZo78M0TZ6"><b data-page-node-id="BCiRG5Hv3auWhIDBjRqF9K">商品价格 / 库存管理</b><em data-page-node-id="senyicZuynZEpbzWy1ArA1">产品清单由业务自己维护，系统不管这些</em></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pager" data-page-node-id="0vonKhMjERlENYIbio0yF5"><span data-page-node-id="1YrtpKTBvoeChkUoCi2U9z">一期范围</span><div class="track" data-page-node-id="gkHvwxhiUl1tvwiECOzz8U"><div class="fill" style="width:83%" data-page-node-id="dKB2jLeKQSLDHGHiCPHZIb"></div></div><span data-page-node-id="vDtoLN58B7Q5gB1ssRPG2r">10 / 12</span></div>
+</section>
+
+<!-- ============ 10 待确认 ============ -->
+<section class="slide" data-page-node-id="3ChuoROUlPxK3HxB42ywkR">
+  <div class="eyebrow" data-page-node-id="PPe1FPSn9Zbk6Wv6sVXlUf">需要你决定</div>
+  <h2 data-page-node-id="fhIBsC7MhwTzgURL076MXg">4 件事，需要你拍板</h2>
+  <div class="sub" data-page-node-id="JEzRgRxZu3UoaEyBXjhnnY">每一条我都给了建议，你如果同意，直接确认即可。</div>
+
+  <div class="grid c2" style="margin-top:24px" data-page-node-id="n0KQEBA01o4UyUsGPnHx9v">
+    <div class="card warn" data-page-node-id="clDGNZCQwMWUt3bPEXoFwU"><div class="ct" data-page-node-id="OxrtAZifGxSRYEFyMWtIb3"><span class="num" data-page-node-id="dr1OeKc9eMRVBX3g7JJLb3">1</span>海报用哪种方式？</div><div class="cd" data-page-node-id="f33yThdcIIO92NBIHnzqzI">模板套版（推荐）：文字不会错、几乎不花钱、快。<br data-page-node-id="QOMoGcBSazAgr3k0qDAtoM">AI 全生成：每张约 0.2 元，125.7 万张约 25 万元、耗时约 7 天，且有出错风险。</div></div>
+    <div class="card warn" data-page-node-id="eQKo96YBfAU4CPNwSUwbdh"><div class="ct" data-page-node-id="sJYyMsqeKdH9YepvQv09Bw"><span class="num" data-page-node-id="AVE7eCyAeeo0GBROSTIZ87">2</span>一个客户推几个产品包？</div><div class="cd" data-page-node-id="IH3L3cZXWAMvCxAJEpk6wc">维持<b data-page-node-id="FHOUOmuTgS68Ygsajc2HsL">只推 1 个</b>（推荐）：互斥组 + 优先级取最高的那个，客户不会被一次推销两样。<br data-page-node-id="TOBUFAhXG0Ql2tXC93Mh3X">若确实想推两个，会连带改表结构并让触达量翻倍。</div></div>
+    <div class="card warn" data-page-node-id="Ij5BXaQ7QHeDUKjzhIlrzw"><div class="ct" data-page-node-id="1iwjlADEkSyCnZQPkIxSvl"><span class="num" data-page-node-id="MOcdHYa6H1bc6NIrCbJUMG">3</span>频控的默认值？</div><div class="cd" data-page-node-id="wjpbJli1UI95opjE1Adn5a">房屋冷却 <b data-page-node-id="CsHkXTj9j4naJ342RVG2Uj">7 天</b>、产品包冷却 <b data-page-node-id="TEI8uYkajsrGQCv65CFW6C">30 天</b>、每天 1 次 / 每周 2 次 / 每月 4 次、全公司每天上限 <b data-page-node-id="TD31jc4C9VTEhLBstKfCAt">5000 条</b>。<br data-page-node-id="r1Ro96Z633y4nVBBWTNCiw">这些值后台都能调。</div></div>
+    <div class="card warn" data-page-node-id="GaCEZhGTysVLbCM0x7MbsM"><div class="ct" data-page-node-id="u0yScK4tqmfbjTEs3biYRC"><span class="num" data-page-node-id="asNdr0udHTwyJipl5lr9Wj">4</span>服务通知要不要豁免？</div><div class="cd" data-page-node-id="sYvJlRi1KIoUR6JcGRbjG2">建议<b data-page-node-id="cNM0ZbFrt40w5Kmp8PZLz8">豁免</b>（推荐）：维修进度、缴费提醒这类通知，<b data-page-node-id="cNM0ZbFrt40w5Kmp8PZLz9">既不受频控限制，也不受「有线索就不发」的限制</b>，避免业主漏掉自家信息。</div></div>
+  </div>
+
+  <div class="note" data-page-node-id="gupaDsv3pE8m11Gb1Zg4L1">这 4 条一旦确认，我会把细节全部锁定成一份"规格说明"（功能、接口、数据结构、页面全部定死），之后开发和测试都以它为准。锁定之后再改动，代价会比现在大。</div>
+  <div class="pager" data-page-node-id="jdTaSfaIZdlo9H2pybfOqG"><span data-page-node-id="L0BgeGtsPjDaf4O04Ac4z9">待确认事项</span><div class="track" data-page-node-id="2k9l2qN12w2jx1aeQ55G55"><div class="fill" style="width:92%" data-page-node-id="LKMagXr3ZzZuGJtY3G2Dns"></div></div><span data-page-node-id="QlXtpaGXO4ECTaBlmUYoXy">11 / 12</span></div>
+</section>
+
+<!-- ============ 11 下一步 ============ -->
+<section class="slide" data-page-node-id="BAhJnwxnOXFJA1uirh64SL">
+  <div class="eyebrow" data-page-node-id="VR2rIQ3EDjNoAlTRqZqqLn">下一步</div>
+  <h2 data-page-node-id="OxhcIoLSwbgO2MxD3DIO0x">确认之后，怎么往下走</h2>
+
+  <div class="flow" style="margin-top:24px" data-page-node-id="4WBRD0rGWm7PAk78EfRG39">
+    <div class="step new" data-page-node-id="DaEAymeXy9FFk5fmrXn27E"><div class="n" data-page-node-id="ULJCbrfsCxaVBb9Gv4kKAC">当前</div><div class="t" data-page-node-id="uv7fNBEFGUnoMe6UxVucHe">你确认 4 件事</div><div class="d" data-page-node-id="sNfMu1WpEyR4GBoc0kN27b">海报方式<br data-page-node-id="iX7bIg5Cu7qyphFFOMUH11">推几个包<br data-page-node-id="nsN46IYKa2C4MahoNp7VE8">频控数值<br data-page-node-id="3b78oZNqZvnXtsIaWpWjIs">服务通知</div></div>
+    <div class="arw" data-page-node-id="o4upgN9IG2yt3LFBpUqa4W"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="F5nOQGvwMP0ZlqLEocvib1"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="2UfXBkt3tA4ESHecllRgDH"/></svg></div>
+    <div class="step" data-page-node-id="DRU4NpmJqRhMEA1qryQx6F"><div class="n" data-page-node-id="9r2TWxnsgJkzmZpECsP7xB">第 2 步</div><div class="t" data-page-node-id="C7WecgrHzunN25PfHBBVoJ">锁定规格说明</div><div class="d" data-page-node-id="YKMcLnN9AC5eoI3BDHxFmX">功能 / 接口<br data-page-node-id="KkMpjKF30kNWxZpnklEEtw">数据表 / 页面</div></div>
+    <div class="arw" data-page-node-id="YyiubS8lpWeCXTUWeA769S"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="Ff153WT7AznV3FsecsCGgg"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="EkBwZuor18eAkEX07uxJRr"/></svg></div>
+    <div class="step" data-page-node-id="H5Vnz4mrOAUFB5yzcrJVRE"><div class="n" data-page-node-id="0AbHjT7LqZDcQVDgfbiRYe">第 3 步</div><div class="t" data-page-node-id="NFEIwQXmTYIkUrwfVSMN7l">界面细化</div><div class="d" data-page-node-id="fuagP40n0RWeHMKxy6lcOH">每个页面<br data-page-node-id="4OHVtzawWzntWSy7kBZQKF">出具体样子</div></div>
+    <div class="arw" data-page-node-id="2NHlOQZPQDCni7g7Ejpj3x"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="15fiuvGODEQEAAEzQrbKIl"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="MpCHl7VInDM3C1nwo9B2Qx"/></svg></div>
+    <div class="step" data-page-node-id="MAY78qvEFzoT7C2ZnRKoVZ"><div class="n" data-page-node-id="DxozeFhqR2VYAdOHl7IajQ">第 4 步</div><div class="t" data-page-node-id="OsbOXRDUNCTqoTchdrcEpF">开发与测试</div><div class="d" data-page-node-id="kyE04dOFA58e8JFG1N0evc">前后端并行<br data-page-node-id="mNG16NBDEqQ65AP3N8QoNa">逐项验收</div></div>
+    <div class="arw" data-page-node-id="6umpTsa68uuru9werpeZYO"><svg width="20" height="10" viewBox="0 0 20 10" data-page-node-id="Ltj7H0HCeBjpQyHkiUfLHS"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="vwhBrQAI6NQGSzirV3B38f"/></svg></div>
+    <div class="step new" data-page-node-id="iQpsySdhkf3KVETMWg7asg"><div class="n" data-page-node-id="PEZVXv8CVNjgXrpXxFKgOc">终点</div><div class="t" data-page-node-id="u5r0G9QqeNmNdk2Q74UCSn">上线交付</div><div class="d" data-page-node-id="zOdbVuMysLWkuIyTp51DDt">可操作的<br data-page-node-id="da8yWWug5B7gDuhdJWsW6Y">完整系统</div></div>
+  </div>
+
+  <div class="split" style="margin-top:22px" data-page-node-id="KSFQKRrsr9T9Dkhrh26oRm">
+    <div class="panel info" data-page-node-id="Qh2MHygwAeGxVcdNPUrfgo">
+      <div class="ph" style="color:var(--primary-text)" data-page-node-id="yD5jJWVcfsVhbnJ7y3mGTT">需要你去问外部团队</div>
+      <div class="ps" data-page-node-id="M5WkrHvGFMdvaQf3XitGp6">这 4 件不确认，效果那块做不成</div>
+      <div class="kv" style="font-size:13.5px" data-page-node-id="fqEd2FziHKMkPVSzEWAtAr"><b data-page-node-id="O4Zr5IJnZLD29TdO81WetC">1 · 线索数据在哪个系统、能不能给我们拉？</b><span class="m" data-page-node-id="JnVB5UqwMf8x3JNA9c4taM">销售 CRM、呼叫中心，还是一张 Excel 表。</span></div>
+      <div class="kv" style="font-size:13.5px;margin-top:6px"><b>2 · 有没有统一的客户 ID？</b><span class="m">没有就只能拿手机号匹配——会错配，把别人的线索算到这个客户头上。</span></div>
+      <div class="kv" style="font-size:13.5px;margin-top:6px"><b>3 · 手机号两边怎么对齐？</b><span class="m">我们的手机号是加密存的，两边规则或密钥不一致，有 ID 也对不上。</span></div>
+      <div class="kv" style="font-size:13.5px;margin-top:6px"><b>4 · 通道有没有「回执」和带参短链？</b><span class="m">决定「点击」这一层数据做不做得成。</span></div>
+      <div class="note" style="margin-top:12px" data-page-node-id="s7FsXFxdPeCMjo7V4ZF2K2">不解决则<b>「有线索就不发」标记为未生效</b>——系统不假装在拦。</div>
+    </div>
+    <div class="panel" data-page-node-id="ETYYI7rbx6zcehm8FkHiQQ">
+      <div class="ph" data-page-node-id="CNBlQnhSzHNaSCcNeCw275">我会自动推进的部分</div>
+      <div class="ps" data-page-node-id="RHPnE83sbXMDaVvLSZnFRT">不需要你介入</div>
+      <ul class="list tight" data-page-node-id="ZZspwwzeGrH2EsWSCWBFFE">
+        <li data-page-node-id="X1cVnZWsaT3NeZnHdKlG0U"><b data-page-node-id="1JxCqSuYLeTG6TnUXwiYpf">规格说明生成</b><em data-page-node-id="9Y47sY2PfZmNODTU5Udn8P">把 4 份文档收敛成一份可开发的技术契约</em></li>
+        <li data-page-node-id="6QXick58bgh5nAA6fObFPy"><b data-page-node-id="PkAxCIwAU8DWXK0voM1bVT">界面细节设计</b><em data-page-node-id="FHujxCdDEaM2ywsaewZAcG">规则配置页、推送记录页、频控设置页</em></li>
+        <li data-page-node-id="JEas9pi5KOPDQQcI5J2s1B"><b data-page-node-id="lscWKDBbTOBCYFVEz9FxoW">开发与自检</b><em data-page-node-id="Kc3PQe6vksr0M9561rnyYM">前后端并行，每模块跑通再往下</em></li>
+        <li data-page-node-id="oFigpxBtBdJxK7IRLS4TJC"><b data-page-node-id="wTr5BTh2qFjJpBzOthir9i">测试与上线</b><em data-page-node-id="YkloFFLXNktjAicONDt6HH">按验收标准逐条测，通过后部署</em></li>
+      </ul>
+      <div class="note" style="margin-top:auto" data-page-node-id="9XACMG7hwLBFFDX2UDXDNC">只有两种情况会回来找你：<b data-page-node-id="yznq65KyS33w1jSe5gUA3W">技术上做不到</b>，或<b data-page-node-id="1TZFUwbEOQuvbTkIarAtI5">测试发现严重缺陷</b>。</div>
+    </div>
+  </div>
+  <div class="pager" data-page-node-id="MfLHFoyAnTiqCIlOwwalKc"><span data-page-node-id="KMTvxtUF41c6b9BwHvZI0M">下一步</span><div class="track" data-page-node-id="jcI0aRn2GmCyb5GxqywG1S"><div class="fill" style="width:100%" data-page-node-id="QYoPNv8I1OuUtG8yQZL4dT"></div></div><span data-page-node-id="I8kfJGp3UhgQMEp7R2HXMW">12 / 12</span></div>
+</section>
+
+</div></div>
+
+<div id="hud" data-page-node-id="6iRmqGDwxgC6IlKQoQrHAE">
+  <button id="prev" data-page-node-id="Cn43KFDMZeoREfESnRExTo">上一页</button>
+  <button id="next" data-page-node-id="FwFv4X39RmAvcybIg6KsxZ">下一页</button>
+  <span class="hint" data-page-node-id="EyAFlgUrCqQSDQ6uIGB3Vg">方向键 / 空格翻页</span>
+</div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx = 0;
+
+  function fit(){
+    var s = Math.min((window.innerWidth - 72) / 1280, (window.innerHeight - 108) / 720);
+    s = Math.max(s, 0.28);
+    stage.style.transform = 'scale(' + s.toFixed(4) + ')';
+  }
+
+  function show(i){
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === idx); });
+    document.getElementById('prev').disabled = idx === 0;
+    document.getElementById('next').disabled = idx === slides.length - 1;
+    document.getElementById('prev').style.opacity = idx === 0 ? .4 : 1;
+    document.getElementById('next').style.opacity = idx === slides.length - 1 ? .4 : 1;
+    if (history.replaceState) history.replaceState(null, '', '#' + (idx + 1));
+  }
+
+  document.getElementById('prev').onclick = function(){ show(idx - 1); };
+  document.getElementById('next').onclick = function(){ show(idx + 1); };
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown'){
+      e.preventDefault(); show(idx + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp'){
+      e.preventDefault(); show(idx - 1);
+    } else if (e.key === 'Home'){ show(0); }
+    else if (e.key === 'End'){ show(slides.length - 1); }
+  });
+
+  window.addEventListener('resize', fit);
+
+  var start = parseInt((location.hash || '').replace('#',''), 10);
+  fit();
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>

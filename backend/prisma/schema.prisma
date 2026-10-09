@@ -1,0 +1,448 @@
+// 研选营销智能推送系统 - Prisma Schema
+// 对齐 docs/ARCHITECTURE.md §6（16 张业务表）+ 3 张同步暂存表
+// 硬约束：不使用 PostgreSQL 声明式分区（无 PARTITION BY），push_detail 为普通表 + 时间索引
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 主数据：产品包 ====================
+
+model ProductPackage {
+  id                BigInt                 @id @default(autoincrement())
+  code              String                 @unique @db.VarChar(64)
+  name              String                 @db.VarChar(128)
+  description       String?
+  status            String                 @default("enabled") @db.VarChar(16)
+  productItemsText  String?                @map("product_items_text")
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt         DateTime?              @map("deleted_at") @db.Timestamptz
+  items             ProductPackageItem[]
+  rules             MappingRule[]
+  posters           PosterTemplate[]
+  pushDetails       PushDetail[]
+  leadRecords       LeadRecord[]
+
+  @@map("product_package")
+}
+
+model ProductPackageItem {
+  id          BigInt         @id @default(autoincrement())
+  packageId   BigInt         @map("package_id")
+  itemName    String         @map("item_name") @db.VarChar(128)
+  itemDesc    String?        @map("item_desc")
+  sortOrder   Int            @default(0) @map("sort_order")
+  package     ProductPackage @relation(fields: [packageId], references: [id])
+
+  @@unique([packageId, itemName], map: "uq_product_package_item_name")
+  @@index([packageId, sortOrder])
+  @@map("product_package_item")
+}
+
+model MutexGroup {
+  id        BigInt        @id @default(autoincrement())
+  name      String        @unique @db.VarChar(128)
+  mode      String        @default("single") @db.VarChar(16) // single（一期唯一支持）
+  status    String        @default("enabled") @db.VarChar(16)
+  rules     MappingRule[]
+
+  @@map("mutex_group")
+}
+
+model TagDictionary {
+  id           BigInt  @id @default(autoincrement())
+  tagGroup     String  @map("tag_group") @db.VarChar(64)
+  tagKey       String  @unique @map("tag_key") @db.VarChar(64)
+  tagName      String  @map("tag_name") @db.VarChar(128)
+  valueType    String  @map("value_type") @db.VarChar(16) // enum/multi_enum/number/string
+  enumValues   Json?   @map("enum_values")
+  minValue     Decimal? @map("min_value")
+  maxValue     Decimal? @map("max_value")
+  sourceColumn String? @map("source_column") @db.VarChar(64) // 上游拼音列名，GAP 标签为 null
+
+  @@index([tagGroup])
+  @@map("tag_dictionary")
+}
+
+model MappingRule {
+  id            BigInt     @id @default(autoincrement())
+  name          String     @unique @db.VarChar(128)
+  packageId     BigInt     @map("package_id")
+  priority      Int
+  mutexGroupId  BigInt?    @map("mutex_group_id")
+  conditionLogic String    @default("AND") @map("condition_logic") @db.VarChar(8)
+  conditionJson Json       @map("condition_json")
+  status        String     @default("enabled") @db.VarChar(16) // enabled / disabled
+  remark        String?
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  package       ProductPackage @relation(fields: [packageId], references: [id])
+  mutexGroup    MutexGroup?    @relation(fields: [mutexGroupId], references: [id])
+  pushDetails   PushDetail[]
+
+  @@index([status, priority])
+  @@index([mutexGroupId])
+  @@index([packageId])
+  @@map("mapping_rule")
+}
+
+// ==================== 数据同步：暂存表（明文仅短暂存在于 staging） ====================
+
+model HouseLabelStaging {
+  id                BigInt   @id @default(autoincrement())
+  houseId           String   @unique @map("house_id") @db.VarChar(64)
+  zhantuHouseId     String?  @map("zhantu_house_id") @db.VarChar(64)
+  houseName         String?  @map("house_name")
+  communityId       String?  @map("community_id") @db.VarChar(64)
+  communityName     String?  @map("community_name")
+  region            String?
+  city              String?
+  branch            String?
+  station           String?
+  stationCode       String?  @map("station_code")
+  waterTagsRaw      String?  @map("water_tags_raw")
+  electricTagsRaw   String?  @map("electric_tags_raw")
+  applianceTagsRaw  String?  @map("appliance_tags_raw")
+  envTagsRaw        String?  @map("env_tags_raw")
+  priceSensitivity  String?  @map("price_sensitivity")
+  residenceStatus   String?  @map("residence_status")
+  familyStructure   String?  @map("family_structure")
+  decorateStatus    String?  @map("decorate_status")
+  houseTypeName     String?  @map("house_type_name")
+  deliverYear       Decimal? @map("deliver_year") @db.Decimal(5, 2)
+  propertyArea      Decimal? @map("property_area")
+  layout            String?
+  repairKitchen     Int      @default(0) @map("repair_kitchen")
+  repairBalcony     Int      @default(0) @map("repair_balcony")
+  repairBathroom    Int      @default(0) @map("repair_bathroom")
+  statDate          DateTime @map("stat_date") @db.Date
+  syncedAt          DateTime @default(now()) @map("synced_at") @db.Timestamptz
+
+  @@index([statDate])
+  @@map("house_label_staging")
+}
+
+model HouseMobileStaging {
+  id           BigInt   @id @default(autoincrement())
+  houseId      String   @map("house_id") @db.VarChar(64)
+  mobileRaw    String   @map("mobile_raw") @db.VarChar(32) // 明文，merge 后清空
+  mobileSource String   @map("mobile_source") @db.VarChar(16)
+  isPreferred  Boolean  @default(false) @map("is_preferred")
+  syncedAt     DateTime @default(now()) @map("synced_at") @db.Timestamptz
+
+  @@index([houseId])
+  @@map("house_mobile_staging")
+}
+
+model LeadRecordStaging {
+  id                    BigInt    @id @default(autoincrement())
+  leadId                String    @unique @map("lead_id") @db.VarChar(64)
+  mobileRaw             String?   @map("mobile_raw") @db.VarChar(32)
+  customerKeyType       String    @map("customer_key_type") @db.VarChar(16)
+  houseIdPride          String?   @map("house_id_pride") @db.VarChar(64)
+  houseIdZhantu         String?   @map("house_id_zhantu") @db.VarChar(64)
+  projectCode           String?   @map("project_code")
+  servicestationCode    String?   @map("servicestation_code")
+  externalPackageCode   String?   @map("external_package_code")
+  intentionType         String?   @map("intention_type")
+  intentionFirstType    String?   @map("intention_first_type")
+  intentionSecondType   String?   @map("intention_second_type")
+  isRepair              String?   @map("is_repair")
+  leadGradeRaw          String?   @map("lead_grade_raw")
+  leadStatusRaw         String?   @map("lead_status_raw")
+  leadQuality           String?   @map("lead_quality") @db.VarChar(8)
+  isValidForReno        Boolean   @default(false) @map("is_valid_for_reno")
+  isValidForRepair      Boolean   @default(false) @map("is_valid_for_repair")
+  sourceChannel         String?   @map("source_channel")
+  leadCreatedAt         DateTime  @map("lead_created_at") @db.Timestamptz
+  latestDealAt          DateTime? @map("latest_deal_at") @db.Timestamptz
+  orderCnt              Int       @default(0) @map("order_cnt")
+  performanceAmount     Decimal?  @map("performance_amount") @db.Decimal(18, 2)
+  statDate              DateTime  @map("stat_date") @db.Date
+  syncedAt              DateTime  @default(now()) @map("synced_at") @db.Timestamptz
+
+  @@index([statDate])
+  @@map("lead_record_staging")
+}
+
+// ==================== 业务主表 ====================
+
+model HouseLabelSnapshot {
+  id                BigInt   @id @default(autoincrement())
+  houseId           String   @unique @map("house_id") @db.VarChar(64) // pride 码
+  zhantuHouseId     String?  @map("zhantu_house_id") @db.VarChar(64)
+  houseName         String?  @map("house_name")
+  communityId       String?  @map("community_id") @db.VarChar(64)
+  communityName     String?  @map("community_name")
+  region            String?
+  city              String?
+  branch            String?
+  station           String?
+  stationCode       String?  @map("station_code")
+  ownerNameMasked   String?  @map("owner_name_masked")
+  contactMobileEnc  String?  @map("contact_mobile_enc") // 无号码为 null -> NO_MOBILE
+  customerKeyHash   String?  @map("customer_key_hash") @db.VarChar(128)
+  labels            Json
+  statDate          DateTime @map("stat_date") @db.Date
+  syncedAt          DateTime @map("synced_at") @db.Timestamptz
+  labelVersion      String?  @default("v1") @map("label_version") @db.VarChar(32)
+  pushDetails       PushDetail[]
+
+  @@index([statDate])
+  @@index([region, city, branch, station])
+  @@index([communityId])
+  @@map("house_label_snapshot")
+}
+
+model HouseMobileResolve {
+  id              BigInt   @id @default(autoincrement())
+  houseId         String   @map("house_id") @db.VarChar(64)
+  mobileEnc       String   @map("mobile_enc")
+  customerKeyHash String   @map("customer_key_hash") @db.VarChar(128)
+  mobileMasked    String   @map("mobile_masked") @db.VarChar(32)
+  mobileSource    String   @map("mobile_source") @db.VarChar(16)
+  isPreferred     Boolean  @default(false) @map("is_preferred")
+  resolvedAt      DateTime @map("resolved_at") @db.Timestamptz
+
+  @@unique([houseId, customerKeyHash])
+  @@index([houseId, isPreferred])
+  @@index([mobileSource])
+  @@map("house_mobile_resolve")
+}
+
+model CampaignTask {
+  id              BigInt      @id @default(autoincrement())
+  statDate        DateTime    @unique @map("stat_date") @db.Date
+  status          String      @default("pending") @db.VarChar(16)
+  leadGateState   String      @default("active") @map("lead_gate_state") @db.VarChar(16) // active/bypassed_open/unavailable
+  startedAt       DateTime?   @map("started_at") @db.Timestamptz
+  finishedAt      DateTime?   @map("finished_at") @db.Timestamptz
+  scannedCount    Int         @default(0) @map("scanned_count")
+  matchedCount    Int         @default(0) @map("matched_count")
+  suppressedCount Int         @default(0) @map("suppressed_count")
+  queuedCount     Int         @default(0) @map("queued_count")
+  errorMessage    String?     @map("error_message")
+  pushTasks       PushTask[]
+
+  @@map("campaign_task")
+}
+
+model PushTask {
+  id              BigInt       @id @default(autoincrement())
+  campaignTaskId  BigInt       @map("campaign_task_id")
+  channel         String       @default("wecom") @db.VarChar(24)
+  msgType         String       @default("marketing") @map("msg_type") @db.VarChar(16)
+  totalCount      Int          @default(0) @map("total_count")
+  successCount    Int          @default(0) @map("success_count")
+  failedCount     Int          @default(0) @map("failed_count")
+  haltedCount     Int          @default(0) @map("halted_count")
+  leadCount       Int          @default(0) @map("lead_count")
+  status          String       @default("queued") @db.VarChar(16)
+  haltedAt        DateTime?    @map("halted_at") @db.Timestamptz
+  haltedBy        BigInt?      @map("halted_by")
+  haltReason      String?      @map("halt_reason") @db.VarChar(255)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  campaignTask    CampaignTask @relation(fields: [campaignTaskId], references: [id])
+  details         PushDetail[]
+
+  @@index([campaignTaskId])
+  @@index([status, createdAt])
+  @@map("push_task")
+}
+
+model PushDetail {
+  id                BigInt           @id @default(autoincrement())
+  pushTaskId        BigInt           @map("push_task_id")
+  houseId           String           @map("house_id") @db.VarChar(64)
+  msgType           String           @default("marketing") @map("msg_type") @db.VarChar(16)
+  packageId         BigInt?          @map("package_id")
+  ruleId            BigInt?          @map("rule_id")
+  posterTemplateId  BigInt?          @map("poster_template_id")
+  posterUrl         String?          @map("poster_url")
+  contactMobileEnc  String?          @map("contact_mobile_enc")
+  customerKeyHash   String?          @map("customer_key_hash") @db.VarChar(128)
+  status            String           @default("queued") @db.VarChar(16)
+  failReason        String?          @map("fail_reason") @db.VarChar(64)
+  reasonCode        String?          @map("reason_code") @db.VarChar(32)
+  deferredUntil     DateTime?        @map("deferred_until") @db.Date
+  deferCount        Int              @default(0) @map("defer_count")
+  leadCount         Int              @default(0) @map("lead_count")
+  channelMsgId      String?          @map("channel_msg_id") @db.VarChar(128)
+  isResent          Boolean          @default(false) @map("is_resent")
+  resentFromId      BigInt?          @map("resent_from_id")
+  sentAt            DateTime?        @map("sent_at") @db.Timestamptz
+  createdAt         DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  pushTask          PushTask            @relation(fields: [pushTaskId], references: [id])
+  house             HouseLabelSnapshot  @relation(fields: [houseId], references: [houseId])
+  package           ProductPackage?     @relation(fields: [packageId], references: [id])
+  rule              MappingRule?        @relation(fields: [ruleId], references: [id])
+  posterTemplate    PosterTemplate?     @relation(fields: [posterTemplateId], references: [id])
+
+  @@index([pushTaskId])
+  @@index([createdAt])
+  @@index([houseId, createdAt])
+  @@index([status])
+  @@index([packageId])
+  @@index([channelMsgId])
+  @@index([customerKeyHash, createdAt])
+  @@map("push_detail")
+}
+
+model PushFrequencyRule {
+  id                         BigInt @id @default(autoincrement())
+  scopeType                  String @map("scope_type") @db.VarChar(16) // global / package
+  packageId                  BigInt? @map("package_id")
+  houseCooldownDays          Int    @default(7) @map("house_cooldown_days")
+  packageCooldownDays        Int    @default(30) @map("package_cooldown_days")
+  houseDailyCap              Int    @default(1) @map("house_daily_cap")
+  houseWeeklyCap             Int    @default(2) @map("house_weekly_cap")
+  houseMonthlyCap            Int    @default(4) @map("house_monthly_cap")
+  globalDailyCap             Int    @default(5000) @map("global_daily_cap")
+  crossChannelCount          Boolean @default(true) @map("cross_channel_count")
+  effectiveLookbackDays      Int?   @map("effective_lookback_days")
+  holidaySkip                Boolean @default(false) @map("holiday_skip")
+  leadPackageCooldownDays    Int    @default(90) @map("lead_package_cooldown_days")
+  leadHouseCooldownDays      Int    @default(15) @map("lead_house_cooldown_days")
+  leadGateFailMode           String @default("open") @map("lead_gate_fail_mode") @db.VarChar(8)
+  status                     String @default("enabled") @db.VarChar(16)
+  windows                    PushFrequencyWindow[]
+
+  @@index([scopeType, status])
+  @@map("push_frequency_rule")
+}
+
+model PushFrequencyWindow {
+  id              BigInt             @id @default(autoincrement())
+  frequencyRuleId BigInt             @map("frequency_rule_id")
+  dayType         String             @default("all") @map("day_type") @db.VarChar(16)
+  windowStart     DateTime           @map("window_start") @db.Time
+  windowEnd       DateTime           @map("window_end") @db.Time
+  enabled         Boolean            @default(true)
+  sortOrder       Int                @default(0) @map("sort_order")
+  rule            PushFrequencyRule  @relation(fields: [frequencyRuleId], references: [id])
+
+  @@unique([frequencyRuleId, dayType, windowStart], map: "uq_freq_window_start")
+  @@index([frequencyRuleId, dayType, windowStart])
+  @@map("push_frequency_window")
+}
+
+model SuppressionList {
+  id          BigInt    @id @default(autoincrement())
+  listType    String    @map("list_type") @db.VarChar(16)
+  targetType  String    @map("target_type") @db.VarChar(16)
+  targetValue String    @map("target_value") @db.VarChar(128)
+  source      String    @default("manual") @db.VarChar(64)
+  expiresAt   DateTime? @map("expires_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  @@unique([listType, targetType, targetValue])
+  @@index([targetValue])
+  @@map("suppression_list")
+}
+
+model PosterTemplate {
+  id               BigInt         @id @default(autoincrement())
+  name             String         @unique @db.VarChar(128)
+  packageId        BigInt?        @map("package_id")
+  width            Int            @default(750)
+  height           Int            @default(1600)
+  backgroundOssKey String?        @map("background_oss_key")
+  svgSpec          Json           @map("svg_spec")
+  status           String         @default("draft") @db.VarChar(16)
+  package          ProductPackage? @relation(fields: [packageId], references: [id])
+  pushDetails      PushDetail[]
+
+  @@index([packageId, status])
+  @@map("poster_template")
+}
+
+model OperationAudit {
+  id          BigInt   @id @default(autoincrement())
+  operatorId  BigInt?  @map("operator_id")
+  action      String   @db.VarChar(64)
+  targetType  String   @map("target_type") @db.VarChar(32)
+  targetId    String?  @map("target_id") @db.VarChar(64)
+  beforeJson  Json?    @map("before_json")
+  afterJson   Json?    @map("after_json")
+  ip          String?  @db.Inet
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([operatorId, createdAt])
+  @@index([action, createdAt])
+  @@map("operation_audit")
+}
+
+model DailySendCounter {
+  statDate   DateTime @id @map("stat_date") @db.Date
+  sentCount  Int      @default(0) @map("sent_count")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("daily_send_counter")
+}
+
+model LeadRecord {
+  id                     BigInt      @id @default(autoincrement())
+  leadId                 String      @unique @map("lead_id") @db.VarChar(64)
+  customerKey            String      @map("customer_key") @db.VarChar(128)
+  customerKeyType        String      @map("customer_key_type") @db.VarChar(16)
+  houseId                String?     @map("house_id") @db.VarChar(64)
+  houseMatchType         String?     @map("house_match_type") @db.VarChar(16)
+  productPackageId       BigInt?     @map("product_package_id")
+  externalPackageCode    String?     @map("external_package_code") @db.VarChar(64)
+  packageSource          String      @default("none") @map("package_source") @db.VarChar(16)
+  leadGrade              String?     @map("lead_grade") @db.VarChar(16)
+  leadStatus             String?     @map("lead_status") @db.VarChar(24)
+  leadQuality            String?     @map("lead_quality") @db.VarChar(8)
+  isValidForReno         Boolean     @default(false) @map("is_valid_for_reno")
+  isValidForRepair       Boolean     @default(false) @map("is_valid_for_repair")
+  staleInSource          Boolean     @default(false) @map("stale_in_source")
+  latestDealAt           DateTime?   @map("latest_deal_at") @db.Timestamptz
+  orderCnt               Int         @default(0) @map("order_cnt")
+  performanceAmount      Decimal?    @map("performance_amount") @db.Decimal(18, 2)
+  sourceChannel          String?     @map("source_channel") @db.VarChar(24)
+  firstTouchPushId       BigInt?     @map("first_touch_push_id")
+  lastTouchPushId        BigInt?     @map("last_touch_push_id")
+  attributionWindowDays  Int?        @map("attribution_window_days")
+  attributedAt           DateTime?   @map("attributed_at") @db.Timestamptz
+  leadCreatedAt          DateTime    @map("lead_created_at") @db.Timestamptz
+  statDate               DateTime    @map("stat_date") @db.Date
+  syncedAt               DateTime    @map("synced_at") @db.Timestamptz
+  createdAt              DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  productPackage         ProductPackage? @relation(fields: [productPackageId], references: [id])
+
+  @@index([customerKey, leadCreatedAt])
+  @@index([customerKey, productPackageId, leadCreatedAt])
+  @@index([productPackageId, leadCreatedAt])
+  @@index([packageSource])
+  @@index([leadCreatedAt])
+  @@index([houseId])
+  @@index([firstTouchPushId])
+  @@index([lastTouchPushId])
+  @@index([leadGrade])
+  @@index([leadStatus])
+  @@index([leadQuality])
+  @@index([houseMatchType])
+  @@map("lead_record")
+}
+
+model LeadAttributionRun {
+  id           BigInt    @id @default(autoincrement())
+  statDate     DateTime  @unique @map("stat_date") @db.Date
+  windowDays   Int       @map("window_days")
+  leadScanned  Int       @default(0) @map("lead_scanned")
+  attributed   Int       @default(0)
+  unattributed Int       @default(0)
+  status       String    @default("running") @db.VarChar(16)
+  errorMessage String?   @map("error_message")
+  startedAt    DateTime  @default(now()) @map("started_at") @db.Timestamptz
+  finishedAt   DateTime? @map("finished_at") @db.Timestamptz
+
+  @@map("lead_attribution_run")
+}

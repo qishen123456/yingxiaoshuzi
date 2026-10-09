@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  background: #f0f2f5;
+}
+
+/* 停用规则行视觉淡化（不禁用拖拽与查看，仅表达不参与跑批） */
+.rule-row-disabled > td {
+  background: #fafafa !important;
+  color: rgba(0, 0, 0, 0.45);
+}

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研选营销智能推送系统 · 开发 Kickoff 会议材料包</title>
+<style>
+  :root{
+    --primary:#1D5A96; --primary-d:#17497B; --primary-bg:#E8F0F8; --primary-line:#C6DAEC;
+    --fg:#131A22; --fg2:#3D4854; --muted:#5B6675; --meta:#8A94A3;
+    --border:#DFE4EA; --bg:#F5F7FA; --sunken:#EEF1F5;
+    --success:#0F7A48; --success-bg:#E8F5EE; --warn:#B4530A; --warn-bg:#FDF3E3;
+    --danger:#B3261E; --danger-bg:#FBEDEC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.55;padding:24px 12px;font-size:13.5px}
+  .sheet{max-width:1000px;margin:0 auto 22px;background:#fff;border:1px solid var(--border);
+    border-radius:10px;padding:32px 40px;box-shadow:0 1px 2px rgba(19,26,34,.06),0 10px 30px rgba(19,26,34,.07)}
+  .sheet:last-child{margin-bottom:0}
+  .kicker{font-size:11.5px;letter-spacing:.12em;color:var(--meta);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+  h1{font-size:27px;font-weight:650;letter-spacing:-.01em}
+  h2{font-size:19px;font-weight:620;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  h2 .no{flex:0 0 26px;height:26px;border-radius:6px;background:var(--primary);color:#fff;
+    font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:600}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+  /* 封面信息 */
+  .cover-head{border-bottom:2px solid var(--primary);padding-bottom:18px;margin-bottom:20px}
+  .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 30px;margin-top:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .info-grid .ig{display:flex;border-bottom:1px solid var(--border);min-height:42px}
+  .info-grid .ig:nth-last-child(-n+2){border-bottom:none}
+  .info-grid .k{flex:0 0 110px;background:var(--sunken);padding:10px 14px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .info-grid .v{flex:1;padding:10px 14px;font-size:13px;color:var(--fg2)}
+  .fillblank{color:var(--meta);border-bottom:1px dashed var(--border-strong,#C7CFD8);display:inline-block;min-width:200px}
+  .goal{background:var(--primary-bg);border:1px solid var(--primary-line);border-radius:8px;padding:14px 18px;margin-top:18px;font-size:14px;line-height:1.7}
+  .goal b{color:var(--primary-d)}
+  /* 议程 */
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  th{background:var(--sunken);text-align:left;font-weight:600;font-size:12px;color:var(--muted);
+    padding:9px 11px;border-bottom:1px solid var(--border)}
+  td{padding:9px 11px;border-bottom:1px solid var(--border);color:var(--fg2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.tm{white-space:nowrap;color:var(--primary-d);font-weight:600;width:110px}
+  td.lead{white-space:nowrap;width:130px}
+  /* 流程 */
+  .flow{display:flex;align-items:stretch;gap:0;margin:8px 0 4px}
+  .fstep{flex:1;border:1px solid var(--border);border-radius:7px;padding:10px 8px;text-align:center;background:#fff}
+  .fstep .tm{font-size:11.5px;color:var(--primary);font-weight:700}
+  .fstep .tt{font-size:13px;font-weight:600;margin:3px 0 2px}
+  .fstep .dd{font-size:11.5px;color:var(--muted);line-height:1.45}
+  .fstep.hl{border-color:var(--primary);background:var(--primary-bg)}
+  .farr{flex:0 0 20px;display:flex;align-items:center;justify-content:center;color:var(--meta)}
+  /* 标签 */
+  .who{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:4px;background:var(--primary-bg);
+    color:var(--primary-d);border:1px solid var(--primary-line);white-space:nowrap;font-weight:600}
+  .who.biz{background:var(--warn-bg);color:var(--warn);border-color:#F2DCB8}
+  .who.data{background:var(--success-bg);color:var(--success);border-color:#Bfe0CC}
+  .blank-cell{color:var(--meta)}
+  /* 卡片 */
+  .note{border-left:3px solid var(--primary);background:var(--primary-bg);border-radius:0 8px 8px 0;
+    padding:11px 16px;font-size:12.5px;color:var(--fg2);margin-top:12px;line-height:1.65}
+  .note.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+  .note.danger{border-left-color:var(--danger);background:var(--danger-bg)}
+  /* 铁律 */
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .rule{border:1px solid var(--border);border-radius:8px;padding:11px 14px;background:#fff}
+  .rule .rt{font-size:13px;font-weight:650;margin-bottom:3px;display:flex;gap:8px;align-items:baseline}
+  .rule .rt .rn{flex:0 0 22px;height:22px;border-radius:50%;background:var(--danger-bg);color:var(--danger);
+    font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .rule .rd{font-size:12px;color:var(--muted);line-height:1.55;padding-left:30px}
+  /* 里程碑 */
+  .mile{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .m{border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:#fff}
+  .m .mh{display:flex;justify-content:space-between;align-items:baseline}
+  .m .mid{font-size:12px;font-weight:700;color:var(--primary)}
+  .m .mdt{font-size:11px;color:var(--meta)}
+  .m .mtt{font-size:13.5px;font-weight:650;margin:5px 0 6px}
+  .m ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+  .m li{font-size:11.5px;color:var(--fg2);padding-left:12px;position:relative;line-height:1.5}
+  .m li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--primary-line)}
+  .m .acc{margin-top:8px;padding-top:7px;border-top:1px dashed var(--border);font-size:11.5px;color:var(--success)}
+  /* 会后行动 */
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .act{border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .act .at{font-size:13px;font-weight:650;margin-bottom:5px}
+  .act ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+  .act li{font-size:12.5px;color:var(--fg2);padding-left:14px;position:relative;line-height:1.55}
+  .act li::before{content:"□";position:absolute;left:0;color:var(--meta)}
+  .pagefoot{margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--meta);
+    display:flex;justify-content:space-between}
+  .hl{color:var(--primary);font-weight:600}
+  .warn-t{color:var(--warn);font-weight:600}
+  .danger-t{color:var(--danger);font-weight:600}
+  @media print{
+    body{background:#fff;padding:0}
+    .sheet{box-shadow:none;border:none;border-radius:0;max-width:none;margin:0;page-break-after:always;padding:14mm 15mm}
+    .sheet:last-child{page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 封面 ============ -->
+<div class="sheet">
+  <div class="cover-head">
+    <div class="kicker">Development Kickoff · 会议材料包</div>
+    <h1>研选营销智能推送系统 · 开发启动会</h1>
+    <div class="sub" style="margin-top:8px">目标：对齐范围与分工、关闭阻塞开发的 10 个开放项、锁定排期与验收口径。会议产出即开发基线。</div>
+    <div class="info-grid">
+      <div class="ig"><div class="k">会议时间</div><div class="v"><span class="fillblank">____ 年 ____ 月 ____ 日　____ : ____（建议 60 分钟）</span></div></div>
+      <div class="ig"><div class="k">会议地点</div><div class="v"><span class="fillblank">________________________（线下 / 会议链接）</span></div></div>
+      <div class="ig"><div class="k">主持人</div><div class="v"><span class="fillblank">________________（产品经理）</span></div></div>
+      <div class="ig"><div class="k">纪要人</div><div class="v"><span class="fillblank">________________</span></div></div>
+      <div class="ig"><div class="k">必到角色</div><div class="v">后端、前端、数仓/DataWorks、外部通道对接人、业务方、合规（⑤ 项）</div></div>
+      <div class="ig"><div class="k">会前阅读</div><div class="v">一页纸方案摘要（5 分钟）；开发加读 PRD / ARCHITECTURE / openapi</div></div>
+    </div>
+    <div class="goal">
+      会议要拿到的 <b>3 个结果</b>：① 10 个开放项逐项有「结论或责任人 + 回复 deadline」；② 四个里程碑的负责人与验收标准确认；③ 开发确认已收到「可运行原型 + 契约文档」包，并知晓 8 条工程铁律。
+    </div>
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 1 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ 议程 ============ -->
+<div class="sheet">
+  <div class="kicker">Agenda</div>
+  <h2><span class="no">1</span>会议议程（60 分钟）</h2>
+  <div class="sub">前 25 分钟对齐共识，后 30 分钟只解决开放项——这是本场会的主体，不要压缩。</div>
+  <table>
+    <thead><tr><th style="width:110px">时间</th><th>环节</th><th style="width:240px">要点 / 产出</th><th style="width:130px">主讲</th></tr></thead>
+    <tbody>
+      <tr><td class="tm">00–05'</td><td>业务背景与目标</td><td>为什么做：人工链路 4 个断点（标准留不下/无频控/发完查不到/无法复盘）</td><td>产品经理</td></tr>
+      <tr><td class="tm">05–15'</td><td>现场演示可运行原型</td><td>演示库跑通全链路：规则配置 → 跑批 → 14 原因码记录 → 归因看板（比 PPT 有效）</td><td>产品经理</td></tr>
+      <tr><td class="tm">15–25'</td><td>系统全景与每日数据流</td><td>三源 02:00/02:10/02:30 → 跑批 07:30 → 归因 09:10；四端分工预览</td><td>架构/后端</td></tr>
+      <tr><td class="tm">25–50'</td><td><b>10 个开放项逐项过</b></td><td>每项 2–3 分钟：要什么结论、谁负责、几号回复；当场能拍的当场拍</td><td>产品经理主持</td></tr>
+      <tr><td class="tm">50–58'</td><td>里程碑与验收口径</td><td>M1–M4 负责人确认；DRY_RUN 摘除条件（覆盖率 ≥70%）共识</td><td>全员</td></tr>
+      <tr><td class="tm">58–60'</td><td>会后 48 小时行动确认</td><td>纪要 24h 发出；接口/探查请求 48h 内书面送出</td><td>产品经理</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">
+    <b>控场纪律：</b>开放项讨论中如出现新分歧，不在会上展开设计辩论——记入纪要、约定单独 ADR 评审时间。本场会的目标是「让开发明天能动工」，不是重新设计。
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 2 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ 全景+分工 ============ -->
+<div class="sheet">
+  <div class="kicker">Architecture & Roles</div>
+  <h2><span class="no">2</span>系统全景与四端分工</h2>
+  <div class="sub">每天全自动：数据夜里到位，早上圈选发送，上午归因复盘。营销日常只需维护规则与看记录。</div>
+
+  <div class="flow">
+    <div class="fstep"><div class="tm">02:00</div><div class="tt">房屋标签</div><div class="dd">MC 标签宽表<br>DataWorks 同步</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">02:10</div><div class="tt">补号</div><div class="dd">住儿 &gt; 企微 &gt; CRM<br>HMAC + AES 加密入库</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">02:30</div><div class="tt">线索</div><div class="dd">ADB 全量快照<br>产品包词典识别</div></div>
+    <div class="farr">→</div>
+    <div class="fstep hl"><div class="tm">07:30</div><div class="tt">跑批发送</div><div class="dd">规则圈选 → 14 闸门<br>窗口内经通道下发</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="tm">09:10</div><div class="tt">归因</div><div class="dd">15 天窗口<br>首触/末触回填</div></div>
+  </div>
+
+  <table style="margin-top:16px">
+    <thead><tr><th style="width:120px">角色</th><th>本阶段任务</th><th style="width:250px">交付物</th><th style="width:170px">依赖</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="who data">数仓 / DataWorks</span></td>
+        <td>3 个同步节点上线（dw_01 标签 / dw_02 补号 / dw_03 线索，SQL 已提供）；跑 GAP-1 覆盖率核查与 GAP-2/3/4 探查；保证上游生产 SQL 零改动</td>
+        <td>三节点日调成功；覆盖率报告；枚举盘点结果</td>
+        <td>无（最先启动）</td>
+      </tr>
+      <tr>
+        <td><span class="who">后端</span></td>
+        <td>以现有 NestJS 原型为基线对齐生产化：真实数据接入校验、通道适配器对接、海报 Sharp 位图、任务失败告警；契约字段以 openapi 为准</td>
+        <td>可部署服务 + 迁移脚本；接口联调环境</td>
+        <td>M1 数据链路；① 通道接口文档</td>
+      </tr>
+      <tr>
+        <td><span class="who">前端</span></td>
+        <td>以现有 React 原型为基线补全：频控配置页、线索时间线、完整看板、批次重推；严格遵循 UIUX §13（无 emoji、主色 #1D5A96）</td>
+        <td>管理后台四模块页面</td>
+        <td>后端联调环境（可先 mock）</td>
+      </tr>
+      <tr>
+        <td><span class="who biz">外部通道团队</span></td>
+        <td>提供短信/企微接口文档：同步异步、回执机制、带参短链、限流配额、撤回能力；配合联调与退订回流</td>
+        <td>接口文档 v1 + 测试账号 + 回执样例</td>
+        <td>无，<span class="warn-t">最先发起请求</span></td>
+      </tr>
+      <tr>
+        <td><span class="who biz">业务方 / 合规</span></td>
+        <td>拍板 6 项业务决议（③④⑤⑥等）；提供海报素材或指定设计方；确认营销授权与退订入口方案</td>
+        <td>书面结论（纪要即可）；素材包</td>
+        <td>产品经理组织</td>
+      </tr>
+      <tr>
+        <td><span class="who">产品经理</span></td>
+        <td>催办全部开放项；验收跑批结果与原因码分布；DRY_RUN 摘除前确认覆盖率与合规两项门槛</td>
+        <td>每周进度同步；上线检查单签字</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <b>给开发的第一句话：</b>backend/ 与 frontend/ 不是废 demo——规则引擎、14 闸门链、归因、GAP-2 保护已在演示库实测通过。可以基于它继续做，也可以照契约重写，但 <b>openapi 字段、14 原因码、闸门时序、时区口径必须一致</b>，重写不等于可以重新设计。
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 3 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ OPEN 清单 ============ -->
+<div class="sheet">
+  <div class="kicker">Open Items · 本场会主体</div>
+  <h2><span class="no">3</span>10 个开放项决策清单</h2>
+  <div class="sub">分三组：A 通道（外部）、B 业务（拍板）、C 数据（探查）。会上逐行念，结论或责任人+日期缺一不可，纪要照此表回填。</div>
+  <table>
+    <thead><tr><th style="width:34px">#</th><th style="width:150px">事项</th><th>需要的结论</th><th style="width:105px">对象</th><th style="width:150px">不答复的后果</th><th style="width:120px">建议时限</th><th style="width:150px">会上结论 / 责任人</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><b>A1 通道接口协议</b></td><td>同步还是异步、回执如何回传、是否支持带参短链（决定点击数据）、限流配额</td><td><span class="who">通道团队</span></td><td>发送层无法联调；点击归因做不做无法定</td><td>10/15 前给文档</td><td>　</td></tr>
+      <tr><td>2</td><td><b>A2 通道撤回能力</b></td><td>是否支持 channelRecall；不支持则 UI 永不出现撤回入口</td><td><span class="who">通道团队</span></td><td>默认不做，影响小；但需书面确认闭环</td><td>随 A1 一并</td><td>　</td></tr>
+      <tr><td>3</td><td><b>B1 海报方案降级</b></td><td>原始诉求「生成式 AI 海报」降级为「模板套版 + Sharp 合成」，请业务负责人书面接受</td><td><span class="who biz">业务负责人</span></td><td>需求实质变更未签字，验收返工</td><td>会上拍板</td><td>　</td></tr>
+      <tr><td>4</td><td><b>B2 一户一包</b></td><td>确认一个周期一套房只收一个产品包（当前规则模型与频控按此建）</td><td><span class="who biz">业务负责人</span></td><td>改多包需返工规则模型与频控</td><td>会上拍板</td><td>　</td></tr>
+      <tr><td>5</td><td><b>B3 频控合规口径</b></td><td>房屋冷却 7 天、同包 30 天、日 1 / 周 2 / 月 4、禁发 22:00–08:00，合规是否认可</td><td><span class="who biz">业务/合规</span></td><td>无合规背书，营销短信有封号风险</td><td>10/16 前</td><td>　</td></tr>
+      <tr><td>6</td><td><b>B4 退订与授权</b></td><td>营销授权来源、退订入口形态、退订名单回流方式与时效</td><td><span class="who biz">业务方</span></td><td>合规命门，无退订闭环不能正式发送</td><td>10/16 前</td><td>　</td></tr>
+      <tr><td>7</td><td><b>B5 海报素材来源</b></td><td>模板与视觉素材由业务方还是设计方提供、交付时间</td><td><span class="who biz">业务/设计</span></td><td>模板规格无法冻结，海报只能占位</td><td>10/23 前</td><td>　</td></tr>
+      <tr><td>8</td><td><b>C1 补号覆盖率核查（GAP-1）</b></td><td>跑 DATA-CONTRACT §8 Q1 核查 SQL，给出三源合并后的真实覆盖率</td><td><span class="who data">数仓</span></td><td><b class="danger-t">低于 70% 不允许摘 DRY_RUN</b>，只能生成清单不能发</td><td>M1 结束前</td><td>　</td></tr>
+      <tr><td>9</td><td><b>C2 浴缸户型标签（GAP-2）</b></td><td>探查入户问卷/房屋问题标签/装修备案三候选源，确认能否产出浴缸标签</td><td><span class="who data">数仓/业务</span></td><td>浴改淋规则永远锁定停用，该包无法上线</td><td>M1 结束前</td><td>　</td></tr>
+      <tr><td>10</td><td><b>C3 枚举盘点（GAP-3/4）</b></td><td>线索二级意向真实枚举（冻结 external 词表）、价格敏感标签取值域</td><td><span class="who data">数仓/运营</span></td><td>external 命中率虚低、价格规则可能配出空命中</td><td>M1 结束前</td><td>　</td></tr>
+    </tbody>
+  </table>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 4 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ 里程碑 ============ -->
+<div class="sheet">
+  <div class="kicker">Milestones</div>
+  <h2><span class="no">4</span>里程碑与验收标准</h2>
+  <div class="sub">日期为建议值，会上可调整；验收标准不可协商降级。</div>
+  <div class="mile">
+    <div class="m">
+      <div class="mh"><span class="mid">M1</span><span class="mdt">10/12 – 10/23</span></div>
+      <div class="mtt">数据链路</div>
+      <ul>
+        <li>三源同步节点日调成功</li>
+        <li>就绪接口三灯：标签/线索/覆盖率</li>
+        <li>C1–C3 探查结论回填</li>
+      </ul>
+      <div class="acc">验收：连续 3 天快照新鲜、merge 无明文残留、覆盖率有数字</div>
+    </div>
+    <div class="m">
+      <div class="mh"><span class="mid">M2</span><span class="mdt">10/26 – 10/30</span></div>
+      <div class="mtt">圈选跑批</div>
+      <ul>
+        <li>真实数据规则圈选+命中预览</li>
+        <li>14 闸门全量、同户去重、幂等</li>
+        <li>海报模板套版合成</li>
+      </ul>
+      <div class="acc">验收：dry-run 跑批结果与原因码分布经 PM 逐码核对</div>
+    </div>
+    <div class="m">
+      <div class="mh"><span class="mid">M3</span><span class="mdt">11/02 – 11/13</span></div>
+      <div class="mtt">通道联调</div>
+      <ul>
+        <li>短信/企微适配器+回执入库</li>
+        <li>退订回流闭环</li>
+        <li>小批量真实发送</li>
+      </ul>
+      <div class="acc">验收：回执成功率、退订拦截实测；B3/B4 书面结论齐备方可摘 DRY_RUN</div>
+    </div>
+    <div class="m">
+      <div class="mh"><span class="mid">M4</span><span class="mdt">11/16 – 11/27</span></div>
+      <div class="mtt">归因 + 试运行</div>
+      <ul>
+        <li>T+1 首/末触归因回填</li>
+        <li>看板含归因局限标注</li>
+        <li>小流量试运行 2 周</li>
+      </ul>
+      <div class="acc">验收：抽样 20 条归因链路可追溯；inferred 与 external 分列</div>
+    </div>
+  </div>
+  <div class="note danger">
+    <b>摘 DRY_RUN（从模拟发送切真实发送）的两个硬门槛，PM 签字制：</b><br>
+    ① 数据门槛：补号覆盖率 ≥ 70%（C1 实测数字，不是估的）；② 合规门槛：B3 频控口径、B4 退订授权两项书面结论到位。缺一不切。
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 5 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ 铁律 ============ -->
+<div class="sheet">
+  <div class="kicker">Engineering Constraints</div>
+  <h2><span class="no">5</span>交底给开发的 8 条铁律</h2>
+  <div class="sub">都是前期设计与原型实测中踩过坑、吵过架定论的东西，直接照做，不要在开发期重新发明。</div>
+  <div class="rules">
+    <div class="rule"><div class="rt"><span class="rn">1</span>上游生产 SQL 一字不改</div><div class="rd">只允许在 DataWorks 新增同步节点与本系统侧文件，数仓现有表与脚本只读。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">2</span>PostgreSQL 不用分区表</div><div class="rd">push_detail 等一律普通表 + 时间索引；金额一律 numeric(18,2)。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">3</span>日期时间统一上海口径</div><div class="rd">Prisma 的 date/time 列按 UTC 编解码有坑，写 date 必须走 shanghaiCalendarDay()、读 time 用 getUTC*（time.util.ts 已收口，照抄）。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">4</span>HMAC 同算法同密钥是命根子</div><div class="rd">线索/推送/房屋三侧客户键必须 join 得上；密钥不下发 ADB、不进代码库，走配置中心；merge 后物理删除明文手机号。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">5</span>14 个原因码冻结</div><div class="rd">人工中止只写 failReason=MANUAL_HALT，不准新增原因码；NO_MOBILE 是数据缺口、与频控分列。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">6</span>浴改淋规则锁死禁用</div><div class="rd">GAP-2 数据源确认前前后端都不得手工启用；服务端 400 是唯一权威，前端提示只是提前解释。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">7</span>通知类豁免频控</div><div class="rd">msg_type=notice 短路跳过全部频控与禁发窗口——业主不能因为营销冷却收不到维修进度通知。</div></div>
+    <div class="rule"><div class="rt"><span class="rn">8</span>运行时用 SWC 不用 tsx</div><div class="rd">tsx 不发射装饰器元数据，NestJS 依赖注入会静默失效；脚本加载器统一 @swc-node/register。</div></div>
+  </div>
+  <div class="note warn">
+    <b>变更纪律：</b>开发中如发现契约字段/时序「实现起来别扭」，不准私自改——走 ADR 流程，由产品+架构评审。这些诱惑在设计期全部已经吵过一遍，登记在 OPEN-DECISIONS.md 与 ADR-001~013。
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0</span><span>第 6 页 / 共 7 页</span></div>
+</div>
+
+<!-- ============ 会后 ============ -->
+<div class="sheet">
+  <div class="kicker">Next 48 Hours</div>
+  <h2><span class="no">6</span>会后 48 小时行动清单</h2>
+  <div class="sub">会议结束不是终点，48 小时内把「口头共识」全部变成「书面请求与排期」。</div>
+  <div class="actions">
+    <div class="act">
+      <div class="at">产品经理</div>
+      <ul>
+        <li>24h 内发出会议纪要：10 项开放项逐条带责任人与 deadline</li>
+        <li>向通道团队发出书面接口信息请求（A1/A2，附期望字段清单）</li>
+        <li>约业务负责人单独确认 B1 海报降级、B2 一户一包</li>
+        <li>把材料包与原型启动方式发给全体开发（见下方）</li>
+      </ul>
+    </div>
+    <div class="act">
+      <div class="at">数仓</div>
+      <ul>
+        <li>认领三个 DataWorks 同步节点，确认资源与上线窗口</li>
+        <li>启动 C1 覆盖率核查 SQL，约定反馈日期</li>
+        <li>排期 C2/C3 探查（可与节点开发并行）</li>
+      </ul>
+    </div>
+    <div class="act">
+      <div class="at">后端</div>
+      <ul>
+        <li>拉取 backend/ 原型，按 README 式步骤本地跑通（PG 5434 / :3000）</li>
+        <li>对照 openapi.yaml 梳理接口差异清单，3 天内反馈</li>
+        <li>列出生产化缺口：部署、告警、日志、备份</li>
+      </ul>
+    </div>
+    <div class="act">
+      <div class="at">前端</div>
+      <ul>
+        <li>拉取 frontend/ 原型本地跑通（:5173，/api 已代理）</li>
+        <li>对照 UIUX.md 输出 Phase 2 页面拆分与工时估算</li>
+        <li>确认设计素材衔接人（B5 结论联动）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note" style="margin-top:16px">
+    <b>原型启动方式（转发给开发即可）：</b>docker compose -p yanxuan-marketing up -d 启动 PG16（宿主端口 5434）；backend 目录 npm install 后 npm run seed:sql、npm run dev（:3000）；frontend 目录 npm install 后 npm run dev（:5173）。演示数据：npm run demo:data（仅独占演示库可用，脚本会清空跑批四表）。
+  </div>
+  <div class="pagefoot"><span>研选营销智能推送系统 · Kickoff 材料包 v1.0 · 2026-10</span><span>第 7 页 / 共 7 页</span></div>
+</div>
+
+</body>
+</html>
