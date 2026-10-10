@@ -1245,6 +1245,79 @@
 @media(max-width:1100px){.doc-short-flow .flow-track{grid-template-columns:1fr;gap:5px}.doc-short-flow .arrow{height:12px;transform:rotate(90deg)}.doc-lead-display{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.doc-actual-tags,.doc-short-rules,.doc-lead-display{grid-template-columns:1fr}.doc-short-flow{padding:10px}}
 
+
+  /* Product requirements page */
+  .prd-page{display:flex;flex-direction:column;gap:18px;color:#22364b}
+  .prd-hero{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(240px,.65fr);gap:24px;align-items:center;padding:28px 30px;border-radius:17px;color:#fff;background:linear-gradient(125deg,#153d63 0%,#1d5a96 68%,#2a6cb0 100%);box-shadow:0 10px 25px rgba(16,52,86,.12)}
+  .prd-hero-kicker{font-size:10px;letter-spacing:1.5px;font-weight:800;opacity:.72;margin-bottom:10px}
+  .prd-hero h2{margin:0;font-size:27px;line-height:1.28;font-weight:800;letter-spacing:-.5px}
+  .prd-hero p{max-width:680px;font-size:13px;line-height:1.8;color:rgba(255,255,255,.83);margin:12px 0 15px}
+  .prd-hero-tags{display:flex;gap:7px;flex-wrap:wrap}
+  .prd-hero-tags span{font-size:11px;padding:5px 9px;border:1px solid rgba(255,255,255,.23);border-radius:999px;background:rgba(255,255,255,.09)}
+  .prd-hero-aside{background:rgba(7,27,49,.24);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:17px}
+  .prd-hero-aside>span{display:block;font-size:11px;color:rgba(255,255,255,.7);margin-bottom:7px}
+  .prd-hero-aside strong{display:block;font-size:18px;margin-bottom:9px}
+  .prd-hero-aside small{display:block;font-size:11px;line-height:1.7;color:rgba(255,255,255,.77)}
+  .prd-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .prd-stat-grid article{padding:14px 16px;background:#fff;border:1px solid #e0e7ef;border-radius:11px;min-width:0}
+  .prd-stat-grid span{display:block;color:#75859a;font-size:11px;margin-bottom:6px}
+  .prd-stat-grid strong{display:block;font-size:17px;color:#193d60;line-height:1.4}
+  .prd-stat-grid small{display:block;color:#8592a3;font-size:10px;line-height:1.5;margin-top:5px}
+  .prd-section{margin:3px 0 0;background:#fff;border:1px solid #e2e8ef;border-radius:13px;padding:20px 21px;box-shadow:0 3px 12px rgba(28,53,82,.025)}
+  .prd-heading{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+  .prd-heading>span{display:flex;align-items:center;justify-content:center;flex:0 0 30px;height:30px;border-radius:9px;background:#edf4fa;color:#1d5a96;font-size:12px;font-weight:800}
+  .prd-heading h3{margin:1px 0 4px;color:#152b41;font-size:16px;font-weight:800}
+  .prd-heading p{margin:0;color:#7b8999;font-size:11px;line-height:1.65}
+  .prd-section-body{min-width:0}
+  .prd-grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .prd-grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+  .prd-card{padding:15px 16px;border:1px solid #e3eaf1;border-radius:10px;background:linear-gradient(180deg,#fff 0%,#fbfcfe 100%)}
+  .prd-kicker{display:inline-block;font-size:10px;color:#1d5a96;background:#edf4fa;border-radius:5px;padding:4px 7px;font-weight:700}
+  .prd-card h4{font-size:13px;color:#1b3046;margin:9px 0 6px}
+  .prd-card p{font-size:11px;line-height:1.8;color:#66768a;margin:0}
+  .prd-subtitle{font-size:12px;font-weight:800;color:#243b54;margin:17px 0 10px}
+  .prd-goal-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .prd-goal-list div{padding:11px 12px;background:#f7f9fc;border-radius:8px;border:1px solid #e9eef4}
+  .prd-goal-list b{display:block;font-size:11px;color:#344b63;margin-bottom:4px}
+  .prd-goal-list span{display:block;font-size:10px;line-height:1.6;color:#7a8797}
+  .prd-table-wrap{width:100%;overflow:auto;border:1px solid #e2e8ef;border-radius:9px}
+  .prd-table{width:100%;border-collapse:collapse;font-size:10.5px;line-height:1.7;min-width:700px}
+  .prd-table th{background:#f3f6fa;color:#51657b;font-weight:800;text-align:left;padding:10px 11px;white-space:nowrap;border-bottom:1px solid #e2e8ef}
+  .prd-table td{padding:10px 11px;color:#596b7f;vertical-align:top;border-bottom:1px solid #edf1f5}
+  .prd-table tr:last-child td{border-bottom:0}
+  .prd-table td:first-child{font-weight:700;color:#293f57}
+  .prd-table code{font-size:10px;color:#245c8b;background:#f0f5fa;padding:2px 4px;border-radius:4px;white-space:normal;word-break:break-word}
+  .prd-callout{margin-top:12px;padding:12px 14px;border-radius:8px;border:1px solid #b9d5ec;background:#f1f7fc}
+  .prd-callout b{font-size:11px;color:#1b507d}
+  .prd-callout p{margin:5px 0 0;font-size:10.5px;color:#5c7185;line-height:1.8}
+  .prd-callout-muted{border-color:#e0e6ed;background:#f8fafc}
+  .prd-callout-muted b{color:#40566c}
+  .prd-callout-warning{border-color:#f2d7a8;background:#fff9ef}
+  .prd-callout-warning b{color:#94590b}
+  .prd-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .prd-flow-step{position:relative;padding:15px 14px;border:1px solid #e0e8f0;border-radius:10px;background:#fbfcfe;min-height:112px}
+  .prd-flow-step>span{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;background:#1d5a96;color:#fff;border-radius:7px;font-size:10px;font-weight:800;margin-bottom:10px}
+  .prd-flow-step b{display:block;font-size:12px;color:#20384f;margin-bottom:5px}
+  .prd-flow-step p{font-size:10.5px;color:#6d7d90;line-height:1.75;margin:0}
+  .prd-note{font-size:10.5px;line-height:1.75;color:#6d7d90;background:#f6f8fb;border-radius:8px;padding:10px 12px;margin-top:11px}
+  .prd-list{padding-left:18px;margin:12px 0 0;color:#64758a;font-size:10.5px;line-height:1.95}
+  .prd-list li{margin:4px 0}
+  .prd-list-ordered{padding-left:20px}
+  .prd-acceptance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .prd-acceptance label{display:flex;gap:10px;align-items:flex-start;border:1px solid #e5ebf2;border-radius:9px;padding:11px 12px}
+  .prd-acceptance label>span{flex:0 0 25px;color:#1d5a96;font-size:10px;font-weight:800;padding-top:2px}
+  .prd-acceptance b{font-size:11px;color:#30465d}
+  .prd-acceptance p{font-size:10px;color:#748397;line-height:1.7;margin:4px 0 0}
+  .prd-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .prd-links a{display:flex;flex-direction:column;gap:7px;padding:13px;border:1px solid #e1e8f0;border-radius:9px;background:#fbfcfe;text-decoration:none;color:#2b4968}
+  .prd-links a:hover{border-color:#94b6d6;background:#f3f8fc}
+  .prd-links b{font-size:11px}
+  .prd-links span{font-size:10px;color:#718198}
+  .prd-footer{font-size:10px;color:#8995a4;text-align:center;padding:8px 0 3px;line-height:1.6}
+  @media(max-width:900px){.prd-hero{grid-template-columns:1fr}.prd-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prd-grid-3{grid-template-columns:1fr}.prd-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.prd-links{grid-template-columns:1fr}}
+  @media(max-width:600px){.prd-section{padding:15px}.prd-grid-2,.prd-flow,.prd-acceptance,.prd-goal-list{grid-template-columns:1fr}.prd-hero{padding:22px}.prd-hero h2{font-size:22px}}
+  @media print{.prd-hero,.prd-section,.prd-stat-grid article{box-shadow:none;break-inside:avoid}.prd-page{gap:10px}.prd-section{padding:12px}.prd-table{min-width:0}}
+
 </style>
 </head>
 <body>
@@ -2356,91 +2429,148 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 5：系统说明 ============ */
   function renderDoc() {
-    function section(no,title,desc) {
-      return '<div class="doc-section-heading"><span class="doc-section-no">'+no+'</span><div><h3>'+title+'</h3><p>'+desc+'</p></div></div>';
+    function section(no, title, desc, body) {
+      return '<section class="prd-section"><div class="prd-heading"><span>' + no + '</span><div><h3>' + title + '</h3><p>' + desc + '</p></div></div><div class="prd-section-body">' + body + '</div></section>';
     }
-    function actualTag(title,type,values) {
-      return '<article class="doc-actual-tag"><h4>'+title+'<small>'+type+'</small></h4><div class="actual-tag-chips">'+values.map(function(v){return '<span>'+v+'</span>';}).join("")+'</div></article>';
+    function table(headers, rows) {
+      return '<div class="prd-table-wrap"><table class="prd-table"><thead><tr>' +
+        headers.map(function (x) { return '<th>' + x + '</th>'; }).join('') +
+        '</tr></thead><tbody>' + rows.map(function (row) {
+          return '<tr>' + row.map(function (cell) { return '<td>' + cell + '</td>'; }).join('') + '</tr>';
+        }).join('') + '</tbody></table></div>';
     }
-    function node(title,desc,kind) {
-      return '<article class="flow-node '+kind+'"><b>'+title+'</b><span>'+desc+'</span></article>';
+    function card(kicker, title, body) {
+      return '<article class="prd-card"><span class="prd-kicker">' + kicker + '</span><h4>' + title + '</h4><p>' + body + '</p></article>';
+    }
+    function step(no, title, body) {
+      return '<article class="prd-flow-step"><span>' + no + '</span><b>' + title + '</b><p>' + body + '</p></article>';
     }
 
-    var tagDdl = "-- A. MaxCompute / ODPS：一房一标签值一行的圈选事实表\n-- 来源：weijia.dwd_yanxuan_responsible_project_hosue_label（每日全量宽表）\n-- 调度变量：${bizdate}；步骤 02 静态值字典先于本节点，动态值字典在本节点后回灌。\nCREATE TABLE IF NOT EXISTS weijia.dwd_yx_house_tag_detail (\n  house_code STRING COMMENT '战图房屋编码',\n  house_pride_code STRING COMMENT 'Pride 房屋编码，来源宽表 code',\n  region_name STRING COMMENT '大区',\n  city_group_name STRING COMMENT '城市分公司',\n  asset_code STRING COMMENT '责任盘项目编码',\n  asset_name STRING COMMENT '责任盘项目名称',\n  category_code STRING COMMENT '标签类别编码',\n  tag_value_code STRING COMMENT '枚举标签稳定值编码；动态值首轮可为空',\n  tag_value_name STRING COMMENT '枚举标签中文值；数值类为空',\n  tag_value_num DECIMAL(38,4) COMMENT '数值标签值，如房龄、面积、维修次数'\n)\nCOMMENT '研选房屋标签明细长表；每日一分区，一房一类别一值一行'\nPARTITIONED BY (pt STRING COMMENT '业务日期 yyyyMMdd');";
-    var tagInsert = "-- B. 每日写入标签明细长表：多值拆行、单值一行、数值单独落列\nINSERT OVERWRITE TABLE weijia.dwd_yx_house_tag_detail\nPARTITION (pt = '${bizdate}')\nSELECT DISTINCT\n  house_code, house_pride_code, region_name, city_group_name,\n  asset_code, asset_name, category_code, tag_value_code, tag_value_name, tag_value_num\nFROM (\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'water_tags' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w1.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.shuilu_label, ''), ',')) w1 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'water_tags' AND v.value_name = TRIM(w1.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w1.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'electric_tags' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w2.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.dianlu_tag, ''), ',')) w2 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'electric_tags' AND v.value_name = TRIM(w2.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w2.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'appliance_tags' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w3.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.jiadian_tag, ''), ',')) w3 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'appliance_tags' AND v.value_name = TRIM(w3.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w3.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'env_tags' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w4.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.envir_tag, ''), ',')) w4 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'env_tags' AND v.value_name = TRIM(w4.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w4.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'residence_status' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.residence_status) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'residence_status' AND v.value_name = TRIM(d.residence_status)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.residence_status IS NOT NULL AND TRIM(d.residence_status) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'decorate_status' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.decorate_status) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'decorate_status' AND v.value_name = TRIM(d.decorate_status)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.decorate_status IS NOT NULL AND TRIM(d.decorate_status) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'family_structure' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.family_structure) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'family_structure' AND v.value_name = TRIM(d.family_structure)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.family_structure IS NOT NULL AND TRIM(d.family_structure) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'price_sensitivity' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.price_sensitivity_label) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.price_sensitivity_label IS NOT NULL AND TRIM(d.price_sensitivity_label) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'house_type_name' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.house_type_name) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.house_type_name IS NOT NULL AND TRIM(d.house_type_name) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'layout' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.layout) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.layout IS NOT NULL AND TRIM(d.layout) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'deliver_year' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(d.deliver_year AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> '' AND d.deliver_year IS NOT NULL\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'property_area' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(d.property_area AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> '' AND d.property_area IS NOT NULL\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_kitchen' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.kitchen_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_balcony' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.balcony_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_bathroom' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.bathroom_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n) all_tag;";
-    var houseDdl = "-- C. PostgreSQL / RDS：房屋明细查询表（项目已有 house_label_snapshot，DDL 与现有 Prisma 模型对齐）\n-- 一房一行，标签以 JSONB 保存；前端不直接扫描全量数据，后端按产品规则筛选、分页返回。\nCREATE TABLE IF NOT EXISTS house_label_snapshot (\n  id BIGSERIAL PRIMARY KEY,\n  house_id VARCHAR(64) NOT NULL UNIQUE,\n  zhantu_house_id VARCHAR(64),\n  house_name TEXT,\n  community_id VARCHAR(64),\n  community_name TEXT,\n  region TEXT,\n  city TEXT,\n  branch TEXT,\n  station TEXT,\n  station_code TEXT,\n  owner_name_masked TEXT,\n  contact_mobile_enc TEXT,\n  customer_key_hash VARCHAR(128),\n  labels JSONB NOT NULL DEFAULT '{}'::jsonb,\n  stat_date DATE NOT NULL,\n  synced_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  label_version VARCHAR(32) NOT NULL DEFAULT 'v1'\n);\nCOMMENT ON COLUMN house_label_snapshot.house_id IS 'Pride 房屋编码，应用系统房屋主键';\nCOMMENT ON COLUMN house_label_snapshot.zhantu_house_id IS '战图房屋编码，备用关联键';\nCOMMENT ON COLUMN house_label_snapshot.labels IS '动态 JSONB 标签，如水路多值数组、装修状态字符串、房龄/面积数值';\nCREATE INDEX IF NOT EXISTS idx_hls_city_community ON house_label_snapshot(city, community_id);\nCREATE INDEX IF NOT EXISTS idx_hls_org_scope ON house_label_snapshot(region, city, branch, station);\nCREATE INDEX IF NOT EXISTS idx_hls_labels_gin ON house_label_snapshot USING GIN (labels jsonb_path_ops);\nCREATE INDEX IF NOT EXISTS idx_hls_label_date ON house_label_snapshot(stat_date);";
-    var houseInsert = "-- D. 从 PostgreSQL staging 写入/更新房屋明细。\n-- 当前仓库的正式实现为 HouseSyncService.mergeHouseLabels() 批量 upsert；\n-- 本 SQL 用于说明映射契约/数据核对，不要与服务层并行双写。\nINSERT INTO house_label_snapshot (\n  house_id, zhantu_house_id, house_name, community_id, community_name,\n  region, city, branch, station, station_code, labels, stat_date, synced_at, label_version\n)\nSELECT\n  s.house_id,\n  s.zhantu_house_id,\n  s.house_name,\n  s.community_id,\n  s.community_name,\n  s.region,\n  s.city,\n  s.branch,\n  s.station,\n  s.station_code,\n  jsonb_strip_nulls(jsonb_build_object(\n    'water_tags', CASE WHEN NULLIF(BTRIM(s.water_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.water_tags_raw), '\\s*,\\s*')) END,\n    'electric_tags', CASE WHEN NULLIF(BTRIM(s.electric_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.electric_tags_raw), '\\s*,\\s*')) END,\n    'appliance_tags', CASE WHEN NULLIF(BTRIM(s.appliance_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.appliance_tags_raw), '\\s*,\\s*')) END,\n    'env_tags', CASE WHEN NULLIF(BTRIM(s.env_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.env_tags_raw), '\\s*,\\s*')) END,\n    'price_sensitivity', to_jsonb(NULLIF(BTRIM(s.price_sensitivity), '')),\n    'residence_status', to_jsonb(NULLIF(BTRIM(s.residence_status), '')),\n    'family_structure', to_jsonb(NULLIF(BTRIM(s.family_structure), '')),\n    'decorate_status', to_jsonb(NULLIF(BTRIM(s.decorate_status), '')),\n    'house_type_name', to_jsonb(NULLIF(BTRIM(s.house_type_name), '')),\n    'deliver_year', to_jsonb(s.deliver_year),\n    'property_area', to_jsonb(s.property_area),\n    'layout', to_jsonb(NULLIF(BTRIM(s.layout), '')),\n    'repair_kitchen', CASE WHEN s.repair_kitchen > 0 THEN to_jsonb(s.repair_kitchen) END,\n    'repair_balcony', CASE WHEN s.repair_balcony > 0 THEN to_jsonb(s.repair_balcony) END,\n    'repair_bathroom', CASE WHEN s.repair_bathroom > 0 THEN to_jsonb(s.repair_bathroom) END\n  )) AS labels,\n  s.stat_date,\n  now(),\n  'v1'\nFROM house_label_staging s\nWHERE s.stat_date = DATE '${bizdate}'\nON CONFLICT (house_id) DO UPDATE SET\n  zhantu_house_id = EXCLUDED.zhantu_house_id,\n  house_name = EXCLUDED.house_name,\n  community_id = EXCLUDED.community_id,\n  community_name = EXCLUDED.community_name,\n  region = EXCLUDED.region,\n  city = EXCLUDED.city,\n  branch = EXCLUDED.branch,\n  station = EXCLUDED.station,\n  station_code = EXCLUDED.station_code,\n  labels = EXCLUDED.labels,\n  stat_date = EXCLUDED.stat_date,\n  synced_at = EXCLUDED.synced_at,\n  label_version = EXCLUDED.label_version;";
+    var dataRows = [
+      ['房屋标签快照', '<code>house_label_snapshot</code>', '数据侧负责抽取与同步；开发侧负责接入和就绪校验。', 'T+1；每次刷新覆盖为最新快照。', '房屋编码、组织/项目、标签 JSON、数据日期。'],
+      ['标签配置字典', '<code>tag_dictionary</code> + <code>tag_value</code>', '业务维护类别、名称、类型和可选值；开发提供动态读取能力。', '人工维护；不随房屋快照刷新。', '类别是否可用于规则配置、值是否启用、上游来源字段。'],
+      ['产品标签映射', '<code>mapping_rule</code>', '营销定义产品匹配规则，开发维护配置能力与规则引擎。', '人工配置、审核后启停。', '必选条件、加分/组合条件、优先级、互斥和启用状态。'],
+      ['既有线索明细', '<code>yanxuan.ads_yx_clue_full_detail</code> / 应用镜像 <code>lead_record</code>', '不重复造源表；开发按房屋编码查询，并展示线索与成交信息。', '当前上游契约为 T+1 快照；查询动作可实时发起。', 'Pride 编码优先，战图编码备用；展示最近线索、意向、等级、状态。'],
+      ['推送执行记录', '<code>push_task</code> / <code>push_detail</code>', '开发落执行结果；营销确认状态口径与回写字段。', '按任务新增；保留历史。', '候选数、发送成功/失败、拦截原因、通道消息 ID、发送时间。']
+    ];
 
-    var labels =
-      '<div class="doc-actual-tags">'+
-      actualTag('水路标签','多选',['卫生间漏水','厨房漏水','阳台漏水','水管老化'])+
-      actualTag('环境标签','多选',['墙面发霉','渗水/返潮','厨房老化','卫生间老化','阳台老化','瓷砖开裂空鼓'])+
-      actualTag('家庭结构','单选',['三代同堂','多孩之家','二孩之家','三口之家','二人世界'])+
-      actualTag('装修状态','单选',['未装修','一年以内','1-5年','5-10年','10年及以上'])+
-      actualTag('电路标签','多选',['跳闸','插座故障','电路老化'])+
-      actualTag('家电标签','多选',['空调故障','热水器故障','冰箱故障'])+
-      actualTag('居住状态','单选',['未知','自住-常住','自住-非常住','出租中','空置'])+
-      actualTag('价格敏感标签','单选',['性价比优先'])+
-      '</div><div class="doc-real-note">这些是项目已有字典中维护的实际枚举内容。是否可被产品规则搜索，还取决于类别的 rule_enabled 配置；房龄、面积和维修次数是数值字段，不属于固定标签清单。</div>';
+    var roleRows = [
+      ['业务需求与验收口径', '你 / 产品负责人', '确认标签业务含义、产品映射规则、命中与排除口径，组织数据对账和验收。'],
+      ['上游房屋标签数据', '数据 / 数仓团队', '确认字段来源、Pride 与战图编码、T+1 调度、数据量波动和质量告警。'],
+      ['标签字典和规则能力', '开发团队', '建设数据库表、配置接口、动态标签选择器、规则校验、命中预览与留痕。'],
+      ['海报和营销内容', '营销部门主责，开发配合', '确认海报是模板合成还是 AI 生成；提供素材、文案、动态字段、审核和异常兜底方案。'],
+      ['定时推送、通道和回写', '营销与开发共同对接', '营销确认推送时段、渠道、目标范围与结果口径；开发接入调度、发送 API、回执、重试与状态回写。'],
+      ['线索查询和字段映射', '开发主责，数据团队配合', '打通房屋编码关联，约定线索源刷新频率、可查询字段、权限、脱敏和关联失败处理。']
+    ];
 
-    var house =
-      '<div class="doc-house-table-wrap"><table class="doc-house-table"><thead><tr>'+
-      '<th>房屋名称</th><th>战图房屋编码</th><th>房屋年限</th><th>房屋类型</th><th>项目编码</th><th>项目名称</th><th>水路</th><th>电路</th><th>家电</th><th>环境</th><th>价格</th><th>居住状态</th><th>装修状态</th><th>厨房维修次数</th>'+
-      '</tr></thead><tbody><tr>'+
-      '<td class="em">期6栋2单元1404</td><td>5101040352018060000140214043</td><td>8.28 年</td><td>住宅</td><td>CN510104010043</td><td class="em">成都锦城五期</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>自住-常住</td><td>未装修</td><td>0</td>'+
-      '</tr></tbody></table></div><div class="doc-real-note">以上一行来自你发来的房屋明细截图。页面实际需要展示的是这种可读的房屋数据，而不是字段名清单；其余列包括家庭结构、阳台维修和卫生间维修次数等。</div>';
+    var featureRows = [
+      ['标签配置', '动态读取已启用的标签类别和值；支持搜索、单选/多选/数值类型；新增配置不能自动替代新增物理字段的数据接入。', '新增一个已接入字段的标签值后，页面可读到新值，不改前端枚举代码。'],
+      ['产品映射配置', '按产品维护规则条件、优先级和启停状态；保存前校验空条件、无效标签和不支持的操作符。', '配置保存后，命中预览使用同一规则口径计算；禁用规则不参与命中。'],
+      ['命中清单', '输出符合启用规则的房屋、命中产品/规则及标签数据日期；支持按城市、项目和产品查看。', '同一房屋多规则命中时，可查看原始命中与最终择优规则，计数口径可解释。'],
+      ['推送候选清单', '结合最终命中规则、项目范围、联系方式覆盖和线索静默初筛生成候选清单。', '无联系方式或线索静默拦截时，展示原因；预览清单不得绕过正式频控直接发送。'],
+      ['线索详情', '从房屋编码进入既有线索明细，展示最近线索、意向产品、客户等级、业务状态与成交信号。', 'Pride 编码优先；无法匹配时尝试战图编码并记录匹配方式；未匹配线索可复核。'],
+      ['海报、定时和回写', '一期需求先定义接口契约与责任人，具体技术方案由营销与开发评审后定稿。', '正式发送必须可追踪任务、请求、返回状态与失败原因；不把静态页面模拟结果当作真实回执。']
+    ];
 
-    var leads =
-      '<div class="doc-lead-display">'+
-      '<article class="doc-lead-block"><small>意向产品</small><strong>局部改造｜浴缸改淋浴</strong><p>由线索一级意向和二级意向组合识别。</p></article>'+
-      '<article class="doc-lead-block"><small>客户等级</small><strong>A类、B类、C类、D类、E类</strong><p>保留上游 customer_level 原值。</p></article>'+
-      '<article class="doc-lead-block"><small>线索状态</small><strong>已成交、有需求未成交、跟进中、无需求、待清洗、其他</strong><p>保留上游业务状态，用于详情和质量判断。</p></article>'+
-      '<article class="doc-lead-block"><small>来源与成交</small><strong>物业联动、朴邻联动、PA 自拓、NPS</strong><p>同时展示创建时间、最近成交、订单数和业绩金额。</p></article>'+
-      '</div><div class="doc-real-note">房屋详情按 house_id 关联线索，按创建时间倒序展示。未关联到房屋的线索应保留在独立线索列表。号码使用 HMAC 去重，详情页不展示原始手机号。</div>';
+    var acceptanceRows = [
+      ['数据准确', '房屋标签同步日期、总量、关键字段空值、编码唯一性均有检查；异常时阻断正式跑批并告警。'],
+      ['规则一致', '同一组测试房屋在 SQL 验数、页面预览和后端规则引擎中的命中结果一致；空条件不命中。'],
+      ['映射可维护', '标签元信息与产品映射通过数据库配置；已接入字段新增值不要求修改前端固定枚举。'],
+      ['线索可关联', '抽样核对 Pride / 战图两套编码关联结果；展示最新线索时间，并明确源数据的 T+1 时效。'],
+      ['触达有保护', '未通过联系方式、退订/黑名单、线索静默、频控和发送窗口检查的对象不得进入真实发送。'],
+      ['结果可追溯', '每条候选和发送明细能查到规则、产品、任务、发送状态、回执 ID 和失败原因。'],
+      ['权限与隐私', '列表按权限控制数据范围；手机号不在普通页面明文展示；关键配置变更保留审计记录。']
+    ];
 
-    var workflow =
-      '<div class="doc-short-flow"><div class="lane">数据准备</div>'+
-      '<div class="flow-track">'+
-      node('房屋标签宽表','组织、责任盘及房屋标签。','flow-source')+'<span class="arrow">→</span>'+
-      node('线索全量宽表','意向、等级、状态、渠道与成交。','flow-source')+'<span class="arrow">→</span>'+
-      node('每日同步','T+1、字段映射、数据校验及号码保护。','flow-data')+'<span class="arrow">→</span>'+
-      node('应用明细','房屋快照、线索明细、标签目录。','flow-data')+'<span class="arrow">→</span>'+
-      node('产品规则','动态标签、必选 / 加分、优先级。','flow-rule')+
-      '</div><div class="flow-bridge">↓ 按配置规则筛选房屋并分页返回</div><div class="lane">推送执行</div>'+
-      '<div class="flow-track">'+
-      node('选择范围','先选城市，可整城推送或精确选项目。','flow-rule')+'<span class="arrow">→</span>'+
-      node('客户去重','同一客户的多套房屋避免重复触达。','flow-rule')+'<span class="arrow">→</span>'+
-      node('频控检查','同模式 30 天、跨模式 7 天。','flow-rule')+'<span class="arrow">→</span>'+
-      node('定时触达','匹配素材、执行计划、记录结果。','flow-send')+'<span class="arrow">→</span>'+
-      node('线索回流','触达明细关联线索及成交信号。','flow-send')+
-      '</div></div>';
-
-    var rules =
-      '<div class="doc-short-rules">'+
-      '<article class="doc-short-rule"><strong>产品命中</strong><p>必选条件必须满足；同类别所选多个值按 OR，不同类别之间按 AND；加分条件按命中类别组数判断，再结合优先级择优。</p></article>'+
-      '<article class="doc-short-rule"><strong>范围控制</strong><p>支持单城市全推、多城市组合，也支持在选中城市下搜索并缩小到部分项目。</p></article>'+
-      '<article class="doc-short-rule"><strong>执行保护</strong><p>先校验数据就绪、项目范围、客户去重、频控和素材；发送状态及失败原因进入推送明细。</p></article>'+
+    var functionLinks =
+      '<div class="prd-links">' +
+      '<a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/sql/06_business_tables_ddl.sql" target="_blank" rel="noreferrer"><b>SQL 06</b><span>基础表建表语句 ↗</span></a>' +
+      '<a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/sql/07_rule_hit_push_queries.sql" target="_blank" rel="noreferrer"><b>SQL 07</b><span>命中、候选及线索查询 ↗</span></a>' +
+      '<a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/docs/DATA-CONTRACT.md" target="_blank" rel="noreferrer"><b>数据契约</b><span>上游字段与编码映射 ↗</span></a>' +
       '</div>';
 
-    var appendix =
-      '<section class="doc-section">'+section('05','开发 SQL 附录','下面保留建表和每日写入语句，默认折叠；正文只展示开发和运营需要理解的实际数据。')+
-      '<details class="doc-sql-appendix"><summary>① 标签明细长表 · MaxCompute 建表 SQL</summary><pre><code>'+escapeHtml(tagDdl)+'</code></pre></details>'+
-      '<details class="doc-sql-appendix"><summary>② 标签明细长表 · 每日写入 SQL</summary><pre><code>'+escapeHtml(tagInsert)+'</code></pre></details>'+
-      '<details class="doc-sql-appendix"><summary>③ 房屋筛选快照 · PostgreSQL 建表 SQL</summary><pre><code>'+escapeHtml(houseDdl)+'</code></pre></details>'+
-      '<details class="doc-sql-appendix"><summary>④ 房屋筛选快照 · staging 写入 / upsert SQL</summary><pre><code>'+escapeHtml(houseInsert)+'</code></pre></details>'+
-      '<div class="doc-sql-link"><span>完整 SQL 文件</span><a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/sql/02_house_tag_detail_and_snapshot.sql" target="_blank" rel="noreferrer">打开 SQL ↗</a></div></section>';
-
-    return ''+
-      '<section class="doc-hero"><div class="doc-hero-copy"><div class="doc-eyebrow">PROJECT GUIDE</div><h2>营销智能推送｜数据与业务一览</h2>'+
-      '<p>先看系统里有哪些标签、房屋和线索，再看这些数据如何进入产品规则并完成推送。</p>'+
-      '<div class="doc-hero-tags"><span>标签库</span><span>房屋明细</span><span>线索详情</span><span>推送流程</span></div></div>'+
-      '<div class="doc-hero-side"><div class="dhs-label">当前版本</div><div class="dhs-value">功能原型</div><div class="dhs-caption">标签展示依据项目字典；房屋行取自你提供的截图。真实生产查询及发送效果需在后端联调后验收。</div></div></section>'+
-      '<section class="doc-section">'+section('01','标签库里的实际内容','这里展示的是可读标签值，不是数据库字段。')+labels+'</section>'+
-      '<section class="doc-section">'+section('02','房屋明细与线索详情','房屋列表展示实际业务列；进入详情后，再查看这套房屋关联的线索。')+house+'<div style="margin-top:15px">'+leads+'</div></section>'+
-      '<section class="doc-section">'+section('03','系统规则与推送限制','简要说明运营配置什么，以及系统执行前需要控制什么。')+rules+'</section>'+
-      '<section class="doc-section">'+section('04','完整流程','两路来源独立同步，再汇入产品筛选、范围控制、频控和结果回流。')+workflow+'</section>'+
-      appendix+
-      '<div class="doc-footer">标签值以现有字典初始化 SQL 为准；房屋行来自用户截图；线索值域来自数据契约。示例不是实时生产查询结果。</div>';
+    return '<div class="prd-page">' +
+      '<section class="prd-hero">' +
+        '<div><div class="prd-hero-kicker">PRODUCT REQUIREMENTS DOCUMENT · V1.0</div>' +
+        '<h2>责任盘营销智能推送系统</h2>' +
+        '<p>产品需求文档 · 以房屋标签和产品映射规则形成可解释的人群清单，并为后续营销触达提供可复核的数据基础。</p>' +
+        '<div class="prd-hero-tags"><span>数据驱动圈人</span><span>规则可配置</span><span>触达可追踪</span><span>结果可验收</span></div></div>' +
+        '<aside class="prd-hero-aside"><span>文档状态</span><strong>需求评审稿</strong><small>本页面是产品需求与交互原型说明，不代表真实发送链路已经上线。海报技术方案、推送接口和回执协议需由营销与开发评审确认。</small></aside>' +
+      '</section>' +
+      '<div class="prd-stat-grid">' +
+        '<article><span>核心对象</span><strong>房屋</strong><small>以房屋编码作为数据关联主线</small></article>' +
+        '<article><span>圈选依据</span><strong>标签 × 规则</strong><small>数据事实与业务规则分开维护</small></article>' +
+        '<article><span>数据刷新</span><strong>T+1</strong><small>房屋标签及当前上游线索快照</small></article>' +
+        '<article><span>一期重点</span><strong>准确、可查、可控</strong><small>先打通数据与规则，再接真实触达</small></article>' +
+      '</div>' +
+      section('01', '需求背景与目标', '先解决人群判断口径分散、每次圈人依赖人工、结果无法复核的问题。', 
+        '<div class="prd-grid-2">' +
+          card('现状问题', '规则依赖个人经验', '房屋标签、产品适配经验和推送限制分散在不同表格或人员经验中，临时调整难以统一口径，也难以解释一套房屋为什么命中或未命中。') +
+          card('产品目标', '建立可配置的圈选工作流', '把标签数据、产品映射、命中结果、线索状态与执行记录串联起来，让业务能配置策略、查看命中原因，开发能按统一规则执行和追溯。') +
+          '</div><div class="prd-subtitle">一期成功标准</div>' +
+          '<div class="prd-goal-list">' +
+            '<div><b>数据有据可依</b><span>标签来源、刷新日期、编码和空值情况可核对。</span></div>' +
+            '<div><b>规则可维护</b><span>业务新增或调整产品映射不需要每次改页面逻辑。</span></div>' +
+            '<div><b>结果可解释</b><span>能回答命中多少套、依据哪条规则、为什么被拦截。</span></div>' +
+            '<div><b>执行可追踪</b><span>真实触达方案确认后，任务、发送结果和失败原因可以回查。</span></div>' +
+          '</div>') +
+      section('02', '用户角色与职责边界', '按职责拆分业务决策、数据供给、系统实现和营销触达，避免把接口依赖误当成单人待办。', table(['工作事项', '主责角色', '责任说明'], roleRows)) +
+      section('03', '数据对象与刷新策略', '这是开发实现的基础契约。房屋数据、标签元信息、产品规则和线索事实不是同一类数据。', 
+        table(['数据对象', '建议表 / 来源', '维护责任', '刷新方式', '关键口径'], dataRows) +
+        '<div class="prd-callout"><b>关键时效说明</b><p>页面打开时可以实时发起线索查询，但如果查询的数据源本身只在 T+1 重刷，返回的仍是最新快照，不是分钟级实时数据。若业务要求当天新增线索立即生效，必须由数据与开发确认 API 直连或提高同步频率，并写入验收标准。</p></div>' +
+        '<div class="prd-callout prd-callout-muted"><b>新增标签的两种情况</b><p>新增既有字段下的枚举值：维护标签字典和值表即可；新增上游从未接入的物理字段：还需数据侧补取数、开发补字段映射和数据校验，不能仅靠手工加配置实现命中。</p></div>') +
+      section('04', '主业务流程', '建议按数据就绪、规则圈选、执行前保护、触达和结果回写的顺序实施。', 
+        '<div class="prd-flow">' +
+          step('01', '同步房屋标签', 'T+1 读取上游房屋标签，完成字段映射、编码标准化和数据质量检查。') +
+          step('02', '维护标签配置', '标签类别与可选值由数据库提供，新增和停用均有状态。') +
+          step('03', '配置产品映射', '营销维护必选标签、组合逻辑、优先级及启停状态。') +
+          step('04', '生成命中清单', '规则引擎输出命中房屋、命中产品和规则原因，支持数量与样本核对。') +
+          step('05', '形成推送候选', '收敛为最终产品，再校验联系方式、既有线索、范围、黑名单和频控。') +
+          step('06', '触达与回写', '通道接入后执行定时发送，记录回执、失败原因，并关联后续线索。') +
+        '</div><div class="prd-note">第 06 步依赖营销提供海报与渠道要求、开发提供真实接口与回执能力；接口未确认前只能验收清单和模拟流程。</div>') +
+      section('05', '功能需求与验收结果', '以业务可操作和结果可核验为验收目标，不以页面按钮存在作为完成标准。', table(['功能模块', '需求说明', '验收标准'], featureRows)) +
+      section('06', '规则口径与清单定义', '“命中”和“可发送”是两个不同状态，应分别统计与解释。', 
+        '<div class="prd-grid-2">' +
+          card('命中清单', '展示规则匹配事实', '统计所有启用规则匹配成功的房屋，并展示产品、规则、优先级和数据日期。用于调试规则和核对覆盖范围，不表示该房屋一定会发送。') +
+          card('最终命中', '每套房屋确定一个产品', '按优先级数值升序选择，数值越小优先级越高；同优先级按规则 ID 兜底。当前系统每套房屋只选择一个最终产品规则。') +
+          card('推送候选清单', '候选不等于已发送', '先按城市和项目限定范围，再做产品命中、联系方式和线索静默初筛；正式执行前还必须通过退订、黑名单、频控、发送时段和通道检查。') +
+          card('执行结果明细', '状态与原因必须留痕', '至少区分待发送、已发送、失败、拦截和顺延；失败需保存可读原因与通道回执标识，避免把模拟成功显示为真实发送成功。') +
+        '</div><div class="prd-subtitle">规则解释约定</div>' +
+        '<ul class="prd-list">' +
+          '<li>不同标签条件默认按 AND 组合；多值标签的 contains_any 表示所选值命中任意一个即可。</li>' +
+          '<li>同一房屋命中多条规则时，按优先级收敛为一条最终产品规则；空条件规则一律不命中。</li>' +
+          '<li>房屋标签数据日期和线索创建时间分开展示，避免把 T+1 快照误解为实时变化。</li>' +
+          '<li>线索静默、号码覆盖率、退订/黑名单与频控必须在真实发送之前生效，不允许仅凭命中清单直接群发。</li>' +
+        '</ul>') +
+      section('07', '异常场景与保护措施', '系统需要对数据缺失、编码错配、规则空命中和外部接口失败给出确定行为。', 
+        table(['异常场景', '处理要求'], [
+          ['房屋标签未完成同步、数据量异常或日期过期', '阻断正式跑批，提示失败节点和数据日期；不使用未验证的新旧混合快照发送。'],
+          ['新配置的标签在房屋数据中不存在', '配置保存可以提示，但规则启用前应校验来源字段与数据覆盖；缺数据时不得静默全量空命中。'],
+          ['Pride 房屋编码无法关联线索', '尝试战图编码备用关联；仍失败则保留关联失败记录供排查，不得静默丢弃线索。'],
+          ['联系方式缺失或线索静默命中', '保留在命中/拦截结果中并展示原因，不进入可发送队列。'],
+          ['海报生成或渠道发送失败', '按营销与开发约定记录失败状态、错误码和重试次数；未获明确通道回执时不得显示成功。'],
+          ['重复触发同一计划', '同一业务日期或任务必须幂等；重复触发不应造成重复触达。']
+        ]) +
+        '<div class="prd-callout prd-callout-warning"><b>上线前必须确认</b><p>数据刷新时点、手机号覆盖率门槛、线索静默天数、发送时间窗、每房屋/客户频控上限、失败重试规则、海报方案及通道回执字段，均需责任方书面确认后进入生产配置。</p></div>') +
+      section('08', '上线验收清单', '以下项目全部完成并有测试证据后，再申请真实定时推送。', 
+        '<div class="prd-acceptance">' + acceptanceRows.map(function (row, i) {
+          return '<label><span>' + String(i + 1).padStart(2, '0') + '</span><div><b>' + row[0] + '</b><p>' + row[1] + '</p></div></label>';
+        }).join('') + '</div>') +
+      section('09', '一期范围、非目标与待决事项', '先保证数据和规则能跑通；对外部依赖，不提前假设技术方案。', 
+        '<div class="prd-grid-3">' +
+          card('一期纳入', '数据与圈选基础', '房屋标签快照接入、标签字典维护、产品映射配置、命中预览、推送候选、房屋线索查询和执行记录数据结构。') +
+          card('方案待确认', '海报与真实触达', '海报采用模板套版还是 AI 生成，是否要人工审核，使用什么存储；定时调度部署位置、推送 API、异步回执与重试机制。') +
+          card('暂不承诺', '效果归因看板', '在推送记录、线索来源和成交字段完成可靠关联前，不承诺真实转化归因或 ROI 数字，避免使用无法核验的指标。') +
+        '</div><div class="prd-subtitle">需形成会议结论的事项</div>' +
+        '<ol class="prd-list prd-list-ordered">' +
+          '<li>营销部门提供海报样例、动态字段、审核要求、推送渠道和允许触达时段。</li>' +
+          '<li>开发确认发送接口、鉴权方式、速率限制、回执机制、状态回写字段与失败重试策略。</li>' +
+          '<li>数据团队确认标签和线索源刷新时间、编码关联率、联系方式覆盖率与异常告警阈值。</li>' +
+          '<li>业务负责人确认每个产品的圈选条件、优先级、线索静默和频控口径，并对规则结果签字验收。</li>' +
+        '</ol>') +
+      section('附录', '开发参考材料', '以下 SQL 用于评审、建表和结果核对；生产表结构以当前应用 migration 为准。', functionLinks) +
+      '<footer class="prd-footer">文档版本：v1.0 · 适用阶段：需求评审与开发联调 · 页面中的示例不等同于真实生产发送结果。</footer>' +
+    '</div>';
   }
 
   /* ============ 渲染与路由 ============ */
