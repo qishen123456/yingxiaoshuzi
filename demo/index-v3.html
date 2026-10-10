@@ -1318,6 +1318,76 @@
   @media(max-width:600px){.prd-section{padding:15px}.prd-grid-2,.prd-flow,.prd-acceptance,.prd-goal-list{grid-template-columns:1fr}.prd-hero{padding:22px}.prd-hero h2{font-size:22px}}
   @media print{.prd-hero,.prd-section,.prd-stat-grid article{box-shadow:none;break-inside:avoid}.prd-page{gap:10px}.prd-section{padding:12px}.prd-table{min-width:0}}
 
+
+  /* Detailed system architecture diagram for PRD review */
+  .arch-legend{display:flex;flex-wrap:wrap;gap:8px 16px;padding:11px 13px;margin-bottom:12px;border:1px solid #e2e8ef;border-radius:9px;background:#fafbfd}
+  .arch-legend span{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:#617187}
+  .arch-dot{display:inline-block;width:9px;height:9px;border-radius:3px}
+  .arch-dot-source{background:#4e85b8}.arch-dot-data{background:#30977a}.arch-dot-service{background:#8266bc}.arch-dot-external{background:#d89032}
+  .arch-line-sample{width:20px;height:0;border-top:2px dashed #cc8a2c;display:inline-block}
+  .arch-canvas{display:flex;flex-direction:column;gap:0;padding:13px;border-radius:13px;background:#f4f7fb;border:1px solid #dfe7f0;overflow:hidden}
+  .arch-layer{border:1px solid #dbe4ee;border-radius:11px;padding:14px;background:#fff;min-width:0}
+  .arch-layer-source{border-top:3px solid #4e85b8}.arch-layer-sync{border-top:3px solid #567fa9}.arch-layer-store{border-top:3px solid #30977a}.arch-layer-app{border-top:3px solid #8266bc}.arch-layer-ui{border-top:3px solid #1d5a96}.arch-layer-external{border-top:3px dashed #d89032;background:#fffdf8}
+  .arch-layer-head{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+  .arch-layer-index{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:0 0 30px;border-radius:8px;background:#edf3f9;color:#2b5e8a;font-size:11px;font-weight:900}
+  .arch-layer-head div{flex:1;min-width:0}
+  .arch-layer-head b{display:block;font-size:13px;color:#243a51}
+  .arch-layer-head small{display:block;font-size:10px;color:#7a899a;line-height:1.55;margin-top:3px}
+  .arch-layer-head em{font-style:normal;font-size:9px;color:#50677f;background:#f0f4f8;border:1px solid #e2e9f0;padding:5px 7px;border-radius:6px;white-space:nowrap}
+  .arch-layer-external .arch-layer-head em,.arch-service-pending em{color:#935d14;background:#fff1d8;border-color:#f1d3a0}
+  .arch-card-grid{display:grid;gap:9px;min-width:0}
+  .arch-grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .arch-grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .arch-grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .arch-card{border:1px solid #e1e8ef;border-radius:8px;padding:11px 11px 10px;min-width:0;background:#fff}
+  .arch-source-card{background:#f8fbfe;border-color:#d7e5f2}
+  .arch-sync-card{background:#f8fbff;border-color:#d9e4ef}
+  .arch-store-card{background:#f7fcf9;border-color:#d5eade}
+  .arch-external-card{background:#fffaf0;border-color:#f0dfbf}
+  .arch-card-top{display:flex;gap:7px;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+  .arch-card-top b{font-size:11px;line-height:1.5;color:#263d54}
+  .arch-card-top span{font-size:9px;color:#718197;white-space:nowrap;background:#edf2f7;border-radius:4px;padding:3px 5px}
+  .arch-card code,.arch-service code,.arch-card li code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px;color:#315d86;overflow-wrap:anywhere}
+  .arch-card>code{display:block;line-height:1.6;padding:6px;background:#eff4f8;border-radius:5px;margin-bottom:7px}
+  .arch-card p{font-size:9.5px;line-height:1.7;color:#66778b;margin:0}
+  .arch-card-meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+  .arch-card-meta span{font-size:8.5px;line-height:1.5;color:#66778b;border:1px solid #e1e8ef;background:#fff;border-radius:4px;padding:3px 5px}
+  .arch-connector{height:38px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#60758b;font-size:9px;text-align:center}
+  .arch-connector i{height:12px;width:1px;background:#91a8bd;position:relative;display:block}
+  .arch-connector i:after{content:"";position:absolute;width:6px;height:6px;border-right:1.5px solid #91a8bd;border-bottom:1.5px solid #91a8bd;transform:rotate(45deg);left:-3px;bottom:0}
+  .arch-connector-external i{background:repeating-linear-gradient(to bottom,#d89032 0,#d89032 3px,transparent 3px,transparent 6px)}
+  .arch-connector-external i:after{border-color:#d89032}
+  .arch-gate-note{margin-top:10px;padding:9px 11px;font-size:9.5px;line-height:1.7;background:#fff8e9;border:1px solid #f1dfb8;border-radius:7px;color:#816128}
+  .arch-gate-note b{color:#77500b}
+  .arch-store-foot,.arch-ui-foot{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;margin-top:10px;padding:9px 10px;border-radius:6px;background:#edf6f1;font-size:9px;line-height:1.6;color:#597867}
+  .arch-card ul{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:4px}
+  .arch-card li{font-size:9px;color:#5c7183;line-height:1.5;overflow-wrap:anywhere}
+  .arch-card li:before{content:"•";color:#30977a;margin-right:5px}
+  .arch-service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+  .arch-service{position:relative;min-width:0;border:1px solid #e2dcf0;background:#fbfaff;border-radius:8px;padding:11px}
+  .arch-service>b{display:block;font-size:10.5px;color:#3c315d;line-height:1.55;margin-bottom:6px}
+  .arch-service>p{font-size:9.5px;line-height:1.7;color:#707088;margin:6px 0 0}
+  .arch-service-pending{border-style:dashed;border-color:#e5c88f;background:#fffaf0}
+  .arch-service-pending>b{color:#77501c}
+  .arch-service-pending em{display:inline-block;font-size:8px;font-style:normal;margin-top:7px;padding:3px 5px;border:1px solid #f1d3a0;border-radius:4px}
+  .arch-ui-card{background:#f8fbff;border:1px solid #d9e6f3;padding:11px;border-radius:8px;min-width:0}
+  .arch-ui-card b{display:block;font-size:10.5px;line-height:1.6;color:#24496a;margin-bottom:5px}
+  .arch-ui-card p{font-size:9.5px;line-height:1.65;color:#6d8094;margin:0}
+  .arch-ui-pending{border-style:dashed;border-color:#e5c88f;background:#fffaf0}
+  .arch-ui-pending b{color:#81551b}
+  .arch-ui-foot{background:#f0f5fb;color:#5e7188}
+  .arch-ui-foot b{color:#2f5d86}
+  .arch-return-path{display:flex;gap:8px 10px;flex-wrap:wrap;align-items:center;margin-top:11px;padding:11px;border-radius:8px;border:1px dashed #e5c88f;background:#fff9ed;color:#80602a;font-size:9.5px}
+  .arch-return-path b{color:#704a12;margin-right:5px}
+  .arch-return-path span{background:#fff;border:1px solid #f1dfbf;border-radius:5px;padding:5px 7px;color:#7d602e}
+  .arch-return-path i{font-style:normal;color:#ca8c35;font-weight:800}
+  .arch-return-path code{font-size:9px}
+  .arch-caption{font-size:10px;line-height:1.8;color:#718094;margin-top:10px;padding:0 3px}
+  .arch-caption b{color:#52677e}
+  @media(max-width:1050px){.arch-grid-4,.arch-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arch-grid-5{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:700px){.arch-canvas{padding:7px}.arch-layer{padding:10px}.arch-grid-3,.arch-grid-4,.arch-grid-5,.arch-service-grid{grid-template-columns:1fr}.arch-layer-head{align-items:flex-start}.arch-layer-head em{white-space:normal;max-width:105px;text-align:center}.arch-layer-head small{font-size:9px}.arch-return-path{align-items:flex-start;flex-direction:column}.arch-return-path i{transform:rotate(90deg);margin-left:12px}}
+  @media print{.arch-canvas,.arch-layer,.arch-card,.arch-service{break-inside:avoid}.arch-canvas{overflow:visible}}
+
 </style>
 </head>
 <body>
@@ -2472,6 +2542,93 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       ['海报、定时和回写', '一期需求先定义接口契约与责任人，具体技术方案由营销与开发评审后定稿。', '正式发送必须可追踪任务、请求、返回状态与失败原因；不把静态页面模拟结果当作真实回执。']
     ];
 
+    var architectureDiagram =
+      '<div class="arch-legend">' +
+        '<span><i class="arch-dot arch-dot-source"></i>既有上游资产</span>' +
+        '<span><i class="arch-dot arch-dot-data"></i>应用数据层</span>' +
+        '<span><i class="arch-dot arch-dot-service"></i>系统服务层</span>' +
+        '<span><i class="arch-dot arch-dot-external"></i>外部依赖</span>' +
+        '<span><i class="arch-line-sample"></i>待接口评审 / 联调</span>' +
+      '</div>' +
+      '<div class="arch-canvas">' +
+        '<div class="arch-layer arch-layer-source">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">01</span><div><b>上游数据资产层</b><small>公司现有数据源，只读消费，不改造上游生产 SQL</small></div><em>已有数据资产</em></div>' +
+          '<div class="arch-card-grid arch-grid-3">' +
+            '<article class="arch-card arch-source-card"><div class="arch-card-top"><b>房屋标签宽表</b><span>MaxCompute</span></div><code>weijia.dwd_yanxuan_responsible_project_hosue_label</code><p>房屋编码、责任盘项目、组织字段、枚举标签、多值标签、房龄/面积/维修次数等。</p><div class="arch-card-meta"><span>T+1 全量覆盖</span><span>约 125.7 万行（历史契约口径）</span></div></article>' +
+            '<article class="arch-card arch-source-card"><div class="arch-card-top"><b>线索全量明细</b><span>ADB PostgreSQL</span></div><code>yanxuan.ads_yx_clue_full_detail</code><p>线索 ID、房屋编码、一级/二级意向、客户等级、业务状态、创建时间、成交信号。</p><div class="arch-card-meta"><span>T+1 快照</span><span>以 clue_id 幂等同步</span></div></article>' +
+            '<article class="arch-card arch-source-card"><div class="arch-card-top"><b>联系方式辅助源</b><span>ADB PostgreSQL</span></div><code>meiju.*user_house / *user_phone<br>caster.cas_qywx_customer*</code><p>补充房屋对应手机号。优先级、号码归一化、加密与客户 HMAC 统一由数据契约约定。</p><div class="arch-card-meta"><span>住儿 / 企微等</span><span>只输出必要结果</span></div></article>' +
+          '</div>' +
+        '</div>' +
+        '<div class="arch-connector"><span>DataWorks 数据集成 · 按业务日期打标 · 源与目标分离</span><i></i></div>' +
+        '<div class="arch-layer arch-layer-sync">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">02</span><div><b>数据同步与质量闸门</b><small>三个独立同步节点；某个节点失败应影响对应能力，不得静默使用错误数据</small></div><em>计划调度 / 待环境验收</em></div>' +
+          '<div class="arch-card-grid arch-grid-3">' +
+            '<article class="arch-card arch-sync-card"><div class="arch-card-top"><b>节点 A · 房屋标签同步</b><span>02:00</span></div><code>dw_01_house_label_extract.sql</code><p>MaxCompute → house_label_staging → house_label_snapshot；多值逗号串转标准标签数组，统一 Pride / 战图房屋编码。</p><div class="arch-card-meta"><span>按 house_id 合并</span><span>校验日期、行数与波动</span></div></article>' +
+            '<article class="arch-card arch-sync-card"><div class="arch-card-top"><b>节点 B · 联系方式补齐</b><span>02:10</span></div><code>dw_02_house_mobile_resolve.sql</code><p>手机号源合并、选择优先联系方式；应用侧保存密文与 HMAC，用于发送及去重，不在页面暴露原始号码。</p><div class="arch-card-meta"><span>覆盖率门槛</span><span>原始号码清理策略待验收</span></div></article>' +
+            '<article class="arch-card arch-sync-card"><div class="arch-card-top"><b>节点 C · 线索同步</b><span>02:30</span></div><code>dw_03_lead_extract.sql</code><p>ADB → lead_record_staging → lead_record；保留线索与成交字段，归因回填字段不得被上游同步覆盖。</p><div class="arch-card-meta"><span>clue_id 幂等</span><span>线索源当前为 T+1</span></div></article>' +
+          '</div>' +
+          '<div class="arch-gate-note"><b>数据就绪闸门：</b>校验最新业务日期、记录数、关键编码、数据波动与线索新鲜度；标签不就绪时中止跑批，手机号覆盖不足时只生成预览、不真实下发。阈值以数据契约及最终业务确认值为准。</div>' +
+        '</div>' +
+        '<div class="arch-connector"><span>写入 / 合并到应用库 · T+1 快照与人工配置分开维护</span><i></i></div>' +
+        '<div class="arch-layer arch-layer-store">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">03</span><div><b>应用数据层 · RDS PostgreSQL</b><small>事实数据、人工配置、执行记录分表存储；前端不直接连数据库</small></div><em>持久化存储</em></div>' +
+          '<div class="arch-card-grid arch-grid-4">' +
+            '<article class="arch-card arch-store-card"><div class="arch-card-top"><b>房屋数据域</b><span>事实快照</span></div><ul><li><code>house_label_staging</code></li><li><code>house_mobile_staging</code></li><li><code>house_mobile_resolve</code></li><li><strong><code>house_label_snapshot</code></strong></li></ul><p>一房一行；Pride 编码为主键，战图码备用；标签以 JSONB 结构化存储，保留 stat_date / synced_at。</p></article>' +
+            '<article class="arch-card arch-store-card"><div class="arch-card-top"><b>标签与规则域</b><span>人工维护</span></div><ul><li><code>tag_dictionary</code> + <code>tag_value</code></li><li><code>product_package</code> + item</li><li><strong><code>mapping_rule</code></strong></li><li><code>mutex_group</code></li></ul><p>标签类型、来源字段、可选值、产品映射、匹配条件、优先级和互斥关系均可追溯。</p></article>' +
+            '<article class="arch-card arch-store-card"><div class="arch-card-top"><b>线索数据域</b><span>线索联动</span></div><ul><li><code>lead_record_staging</code></li><li><strong><code>lead_record</code></strong></li><li><code>lead_attribution_run</code></li></ul><p>保留线索状态、等级、来源、创建与成交信号；关联优先 Pride 码，必要时回落战图码并记录匹配类型。</p></article>' +
+            '<article class="arch-card arch-store-card"><div class="arch-card-top"><b>推送执行域</b><span>可审计</span></div><ul><li><code>campaign_task</code> / <code>push_task</code></li><li><strong><code>push_detail</code></strong></li><li><code>push_frequency_rule/window</code></li><li><code>suppression_list</code> / <code>daily_send_counter</code></li><li><code>poster_template</code> / <code>operation_audit</code></li></ul><p>保存任务批次、候选房屋、产品与规则、发送状态、拦截原因、通道消息 ID 和操作审计。</p></article>' +
+          '</div>' +
+          '<div class="arch-store-foot"><span>索引策略：房屋编码唯一键 · 城市/项目索引 · 标签 JSONB GIN · 任务状态与发送时间索引</span><span>数据表 DDL 与现有 Prisma migration 需由开发合并核对，不能跳过迁移直接建生产表</span></div>' +
+        '</div>' +
+        '<div class="arch-connector"><span>Prisma 数据访问 · API / 定时作业调用 Service · 规则与频控统一执行</span><i></i></div>' +
+        '<div class="arch-layer arch-layer-app">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">04</span><div><b>应用服务层 · 单体后端</b><small>NestJS 模块化组织，不拆微服务；依赖方向为 Controller → Service → Repository → DB</small></div><em>内部系统能力</em></div>' +
+          '<div class="arch-service-grid">' +
+            '<article class="arch-service"><b>API 与权限</b><code>/api/v1</code><p>登录鉴权、角色/组织范围、参数校验、审计留痕；前端不直连数据库。</p></article>' +
+            '<article class="arch-service"><b>标签 / 产品 / 规则服务</b><p>读取标签字典与可选值；维护产品映射、规则条件、状态、优先级与命中预览。</p></article>' +
+            '<article class="arch-service"><b>规则引擎</b><p>解释 eq / in / contains_any / 数值比较等条件；同房屋多规则按优先级与互斥关系择一。</p></article>' +
+            '<article class="arch-service"><b>跑批编排 + 数据闸门</b><code>DailyJob / CampaignRunner</code><p>检查同步就绪、分页扫描、加载规则、生成命中与候选结果；同一业务日幂等控制。</p></article>' +
+            '<article class="arch-service"><b>频控与排除服务</b><p>检查联系方式、退订/黑名单、线索静默、房屋/产品冷却期、日周月上限与发送窗口。</p></article>' +
+            '<article class="arch-service"><b>线索查询 / 归因</b><p>按房屋编码查询线索时间线，关联线索与推送记录；按最终确定的范围提供效果回流能力。</p></article>' +
+            '<article class="arch-service arch-service-pending"><b>海报渲染服务</b><p>当前代码包含模板变量与 SVG 占位渲染；正式 PNG 合成、素材存储与 OSS 上传仍需开发联调验收。</p><em>待完成生产实现</em></article>' +
+            '<article class="arch-service arch-service-pending"><b>触达通道适配器</b><p>统一封装企微 / 短信发送与回执；当前默认 DRY_RUN，真实通道尚需外部 API、鉴权、限流与回执协议。</p><em>待营销 + 开发对接</em></article>' +
+          '</div>' +
+        '</div>' +
+        '<div class="arch-connector"><span>内部 API 调用 · 用户操作 / 定时触发 · 状态落库</span><i></i></div>' +
+        '<div class="arch-layer arch-layer-ui">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">05</span><div><b>管理后台与业务操作层</b><small>营销运营人员通过 Web 工作台配置策略、预览人群、管理素材与跟踪结果</small></div><em>交互原型 / 联调中</em></div>' +
+          '<div class="arch-card-grid arch-grid-5">' +
+            '<article class="arch-ui-card"><b>产品标签映射</b><p>查阅标签、配置必选/组合条件、优先级和启停状态。</p></article>' +
+            '<article class="arch-ui-card"><b>命中清单 / 筛选推送</b><p>按城市、项目、产品查看命中数、抽样房屋和候选状态。</p></article>' +
+            '<article class="arch-ui-card"><b>房屋详情 / 线索</b><p>展示房屋属性、标签、线索记录和数据更新时间。</p></article>' +
+            '<article class="arch-ui-card arch-ui-pending"><b>海报配置</b><p>模板、文案、变量、素材、二维码和审核状态。</p></article>' +
+            '<article class="arch-ui-card arch-ui-pending"><b>定时推送 / 任务回查</b><p>计划启停、执行批次、发送结果与失败原因。</p></article>' +
+          '</div>' +
+          '<div class="arch-ui-foot"><b>已明确的产品边界：</b>新增字典值可以动态展示；新增底层物理字段仍需补数据抽取映射。清单预览不等于触达授权，真实发送只能由后端统一闸门放行。</div>' +
+        '</div>' +
+        '<div class="arch-connector arch-connector-external"><span>外部接口（虚线表示接口协议 / 资源尚待双方确认）</span><i></i></div>' +
+        '<div class="arch-layer arch-layer-external">' +
+          '<div class="arch-layer-head"><span class="arch-layer-index">06</span><div><b>营销资源与外部触达层</b><small>由营销明确业务内容与渠道要求，开发负责接入、状态回写和异常处理</small></div><em>外部依赖待确认</em></div>' +
+          '<div class="arch-card-grid arch-grid-3">' +
+            '<article class="arch-card arch-external-card"><div class="arch-card-top"><b>营销素材与活动规则</b><span>营销主责</span></div><p>海报样例、品牌素材、二维码、动态文案字段、活动有效期、社会证明数据及审核标准。</p><div class="arch-card-meta"><span>交付：模板/素材/字段契约</span></div></article>' +
+            '<article class="arch-card arch-external-card"><div class="arch-card-top"><b>对象存储 OSS</b><span>资源存储</span></div><p>正式方案确认后存放背景图、二维码及渲染后的海报；记录对象 key / URL，设置访问与生命周期策略。</p><div class="arch-card-meta"><span>待确认上传与访问方式</span></div></article>' +
+            '<article class="arch-card arch-external-card"><div class="arch-card-top"><b>公司现有触达通道</b><span>企微 / 短信等</span></div><p>提交消息、接收同步受理结果、处理异步回执/失败码；回执按消息 ID 与 push_detail 幂等关联。</p><div class="arch-card-meta"><span>API / 鉴权 / 限流 / 回调待对接</span></div></article>' +
+          '</div>' +
+          '<div class="arch-return-path"><b>结果回写闭环</b><span>发送请求</span><i>→</i><span>通道受理 / 成功 / 失败回执</span><i>→</i><span><code>push_detail</code> 状态更新</span><i>→</i><span>线索按房屋编码 / 客户 HMAC 关联</span><i>→</i><span>任务查询与效果复盘（范围待确认）</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="arch-caption"><b>读图方式：</b>数据自上而下进入应用库，后端规则引擎统一产生命中与候选；外部发送不是前端直接触发的数据库操作，必须经过频控、通道适配器、执行留痕和回执处理。实线表示系统内规划链路，虚线/琥珀状态表示需营销、数据或开发进一步确认的依赖。</div>';
+
+    var architectureInterfaces = table(['接口 / 链路', '触发与方向', '关键字段 / 处理约定', '失败策略与验收点'], [
+      ['房屋标签同步', 'DataWorks 每日任务 → staging → snapshot', 'Pride house_id 为主键；战图编码备用；多值标签转数组；记录 stat_date / synced_at。', '当日数据未就绪、行数异常或关键键异常时中止正式跑批；与上游抽样对账。'],
+      ['联系方式补齐', '补号源 → house_mobile_resolve → 房屋快照关联', '保存加密号码和 customer_key_hash；同房屋多号码按确认后的来源优先级选择。', '覆盖率低于最终门槛时只允许清单预览；不得把明文号码写入日志。'],
+      ['线索同步与查询', 'ADB 线索源 → lead_record；房屋详情按编码查询', 'clue_id 幂等；house_code（Pride）优先，zhantu_housecode 备用；保留 house_match_type。', '未匹配线索进入复核范围而不是静默丢弃；页面展示同步时间，明确当前源是 T+1 快照。'],
+      ['规则配置 / 命中预览', 'Web → /api/v1 → 标签 / 规则服务 → 规则引擎', '条件存放于 condition_json；数值越小优先级越高；同一房屋按互斥与优先级收敛。', '空条件不命中；引用未接入的字段不得启用；SQL 验数与后端引擎结果抽样一致。'],
+      ['定时圈选与频控', '调度触发 → CampaignRunner → FrequencyGuard → push_detail', '检查数据就绪、单房屋单产品规则、号码、退订/黑名单、线索静默、冷却期与时间窗口。', '同一业务日期幂等；异常时记录任务状态和错误原因；拦截/顺延原因可以查询。'],
+      ['海报生成与通道发送', '后端 → 海报服务 / 通道适配器 → 外部服务', '海报变量、模板 ID、OSS URL、channel_msg_id、状态码和失败原因由接口契约定义。', '当前真实通道未接入，DRY_RUN 不代表真实发送；正式上线前通过小批量端到端验收。'],
+      ['异步回执与线索回流', '外部通道回调 → 回调 API → 推送明细；线索任务关联推送', '按通道消息 ID 幂等；保留首/末次触达标识、线索创建时间和成交信号。', '重复回调不能重复计数；归因口径、时间窗和一期看板范围必须由业务签字确认。']
+    ]);
+
     var acceptanceRows = [
       ['数据准确', '房屋标签同步日期、总量、关键字段空值、编码唯一性均有检查；异常时阻断正式跑批并告警。'],
       ['规则一致', '同一组测试房屋在 SQL 验数、页面预览和后端规则引擎中的命中结果一致；空条件不命中。'],
@@ -2515,11 +2672,12 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
             '<div><b>执行可追踪</b><span>真实触达方案确认后，任务、发送结果和失败原因可以回查。</span></div>' +
           '</div>') +
       section('02', '用户角色与职责边界', '按职责拆分业务决策、数据供给、系统实现和营销触达，避免把接口依赖误当成单人待办。', table(['工作事项', '主责角色', '责任说明'], roleRows)) +
-      section('03', '数据对象与刷新策略', '这是开发实现的基础契约。房屋数据、标签元信息、产品规则和线索事实不是同一类数据。', 
+      section('03', '系统总体架构', '本节描述真实数据源、同步链路、数据库对象、应用服务和外部接口的依赖关系；状态标识用于区分既有资产、内部建设与待联调项。', architectureDiagram + '<div class="prd-subtitle">架构接口与处理契约</div>' + architectureInterfaces) +
+      section('04', '数据对象与刷新策略', '这是开发实现的基础契约。房屋数据、标签元信息、产品规则和线索事实不是同一类数据。', 
         table(['数据对象', '建议表 / 来源', '维护责任', '刷新方式', '关键口径'], dataRows) +
         '<div class="prd-callout"><b>关键时效说明</b><p>页面打开时可以实时发起线索查询，但如果查询的数据源本身只在 T+1 重刷，返回的仍是最新快照，不是分钟级实时数据。若业务要求当天新增线索立即生效，必须由数据与开发确认 API 直连或提高同步频率，并写入验收标准。</p></div>' +
         '<div class="prd-callout prd-callout-muted"><b>新增标签的两种情况</b><p>新增既有字段下的枚举值：维护标签字典和值表即可；新增上游从未接入的物理字段：还需数据侧补取数、开发补字段映射和数据校验，不能仅靠手工加配置实现命中。</p></div>') +
-      section('04', '主业务流程', '建议按数据就绪、规则圈选、执行前保护、触达和结果回写的顺序实施。', 
+      section('05', '主业务流程', '建议按数据就绪、规则圈选、执行前保护、触达和结果回写的顺序实施。', 
         '<div class="prd-flow">' +
           step('01', '同步房屋标签', 'T+1 读取上游房屋标签，完成字段映射、编码标准化和数据质量检查。') +
           step('02', '维护标签配置', '标签类别与可选值由数据库提供，新增和停用均有状态。') +
@@ -2528,8 +2686,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
           step('05', '形成推送候选', '收敛为最终产品，再校验联系方式、既有线索、范围、黑名单和频控。') +
           step('06', '触达与回写', '通道接入后执行定时发送，记录回执、失败原因，并关联后续线索。') +
         '</div><div class="prd-note">第 06 步依赖营销提供海报与渠道要求、开发提供真实接口与回执能力；接口未确认前只能验收清单和模拟流程。</div>') +
-      section('05', '功能需求与验收结果', '以业务可操作和结果可核验为验收目标，不以页面按钮存在作为完成标准。', table(['功能模块', '需求说明', '验收标准'], featureRows)) +
-      section('06', '规则口径与清单定义', '“命中”和“可发送”是两个不同状态，应分别统计与解释。', 
+      section('06', '功能需求与验收结果', '以业务可操作和结果可核验为验收目标，不以页面按钮存在作为完成标准。', table(['功能模块', '需求说明', '验收标准'], featureRows)) +
+      section('07', '规则口径与清单定义', '“命中”和“可发送”是两个不同状态，应分别统计与解释。', 
         '<div class="prd-grid-2">' +
           card('命中清单', '展示规则匹配事实', '统计所有启用规则匹配成功的房屋，并展示产品、规则、优先级和数据日期。用于调试规则和核对覆盖范围，不表示该房屋一定会发送。') +
           card('最终命中', '每套房屋确定一个产品', '按优先级数值升序选择，数值越小优先级越高；同优先级按规则 ID 兜底。当前系统每套房屋只选择一个最终产品规则。') +
@@ -2542,7 +2700,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
           '<li>房屋标签数据日期和线索创建时间分开展示，避免把 T+1 快照误解为实时变化。</li>' +
           '<li>线索静默、号码覆盖率、退订/黑名单与频控必须在真实发送之前生效，不允许仅凭命中清单直接群发。</li>' +
         '</ul>') +
-      section('07', '异常场景与保护措施', '系统需要对数据缺失、编码错配、规则空命中和外部接口失败给出确定行为。', 
+      section('08', '异常场景与保护措施', '系统需要对数据缺失、编码错配、规则空命中和外部接口失败给出确定行为。', 
         table(['异常场景', '处理要求'], [
           ['房屋标签未完成同步、数据量异常或日期过期', '阻断正式跑批，提示失败节点和数据日期；不使用未验证的新旧混合快照发送。'],
           ['新配置的标签在房屋数据中不存在', '配置保存可以提示，但规则启用前应校验来源字段与数据覆盖；缺数据时不得静默全量空命中。'],
@@ -2552,11 +2710,11 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
           ['重复触发同一计划', '同一业务日期或任务必须幂等；重复触发不应造成重复触达。']
         ]) +
         '<div class="prd-callout prd-callout-warning"><b>上线前必须确认</b><p>数据刷新时点、手机号覆盖率门槛、线索静默天数、发送时间窗、每房屋/客户频控上限、失败重试规则、海报方案及通道回执字段，均需责任方书面确认后进入生产配置。</p></div>') +
-      section('08', '上线验收清单', '以下项目全部完成并有测试证据后，再申请真实定时推送。', 
+      section('09', '上线验收清单', '以下项目全部完成并有测试证据后，再申请真实定时推送。', 
         '<div class="prd-acceptance">' + acceptanceRows.map(function (row, i) {
           return '<label><span>' + String(i + 1).padStart(2, '0') + '</span><div><b>' + row[0] + '</b><p>' + row[1] + '</p></div></label>';
         }).join('') + '</div>') +
-      section('09', '一期范围、非目标与待决事项', '先保证数据和规则能跑通；对外部依赖，不提前假设技术方案。', 
+      section('10', '一期范围、非目标与待决事项', '先保证数据和规则能跑通；对外部依赖，不提前假设技术方案。', 
         '<div class="prd-grid-3">' +
           card('一期纳入', '数据与圈选基础', '房屋标签快照接入、标签字典维护、产品映射配置、命中预览、推送候选、房屋线索查询和执行记录数据结构。') +
           card('方案待确认', '海报与真实触达', '海报采用模板套版还是 AI 生成，是否要人工审核，使用什么存储；定时调度部署位置、推送 API、异步回执与重试机制。') +
