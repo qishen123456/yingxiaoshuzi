@@ -1508,6 +1508,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   var CHAN_FREQ = ["每周", "每天", "仅一次"];
   var AUTO = { cities: [], projectIndexes: [], mode: 0, freq: "weekly", day: 2, time: "10:00", product: "all" };
   var SCHEDULE_PROJECT_QUERY = "";
+  var SCHEDULE_CATALOG_SOURCE = "demo";
+  var SCHEDULE_CATALOG = PROJECTS.map(function (projectName, i) { return { city: CITY_OF_PROJECT[i], projectId: "demo-" + i, projectName: projectName }; });
   var PLANS = [
     { id: 1, city: "东莞", project: "东莞金域松湖", mode: 0, freqText: "每周二 10:00", scope: "全部命中产品", target: 453, phones: 439, on: true },
     { id: 2, city: "深圳", project: "深圳第五园", mode: 2, freqText: "每周四 15:00", scope: "命中：浴改淋", target: 96, phones: 92, on: false }
@@ -1517,9 +1519,14 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   function autoEstimate() {
     if (!Array.isArray(AUTO.projectIndexes) || AUTO.projectIndexes.length === 0) return null;
     var mode = +AUTO.mode;
-    var selectedIndexes = AUTO.projectIndexes;
+    var selectedSampleKeys = AUTO.projectIndexes.map(function (i) {
+      var project = SCHEDULE_CATALOG[i];
+      return project ? project.city + "::" + project.projectName : "";
+    });
+    // HTML 内置房屋仅是演示样本；项目目录接入数据库后，命中数字仍只反映样本中可匹配的项目。
     var rows = allRows().filter(function (r) {
-      if (selectedIndexes.indexOf(r.h[0]) < 0) return false;
+      var sampleKey = CITY_OF_PROJECT[r.h[0]] + "::" + PROJECTS[r.h[0]];
+      if (selectedSampleKeys.indexOf(sampleKey) < 0) return false;
       if (AUTO.product !== "all") {
         if (AUTO.product === "none") return false;
         if (!r.winner || r.winner.rule.name !== AUTO.product) return false;
@@ -1550,15 +1557,15 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     var est = autoEstimate();
     var enabledPlans = PLANS.filter(function (p) { return p.on; });
     var pending = enabledPlans.reduce(function (sum, plan) { return sum + plan.phones; }, 0);
-    var cityList = Array.from(new Set(CITY_OF_PROJECT));
-    var scopedProjectIndexes = PROJECTS.map(function (_, i) { return i; }).filter(function (i) {
-      return AUTO.cities.indexOf(CITY_OF_PROJECT[i]) >= 0;
+    var cityList = Array.from(new Set(SCHEDULE_CATALOG.map(function (project) { return project.city; })));
+    var scopedProjectIndexes = SCHEDULE_CATALOG.map(function (_, i) { return i; }).filter(function (i) {
+      return AUTO.cities.indexOf(SCHEDULE_CATALOG[i].city) >= 0;
     });
     var selectedInScope = scopedProjectIndexes.filter(function (i) { return AUTO.projectIndexes.indexOf(i) >= 0; });
     var allProjectsSelected = scopedProjectIndexes.length > 0 && selectedInScope.length === scopedProjectIndexes.length;
     var query = String(SCHEDULE_PROJECT_QUERY || "").trim().toLocaleLowerCase();
     var visibleProjectIndexes = scopedProjectIndexes.filter(function (i) {
-      return (PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase().indexOf(query) >= 0;
+      return (SCHEDULE_CATALOG[i].projectName + " " + SCHEDULE_CATALOG[i].city).toLocaleLowerCase().indexOf(query) >= 0;
     });
     function asel(key, options) {
       return '<select onchange="window._autoSet(\'' + key + '\',this.value)">' +
@@ -1568,26 +1575,27 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     }
     var cityPanel = '<section class="schedule-scope-card"><div class="schedule-scope-head"><div><span class="schedule-scope-step">01 / CITY SCOPE</span><strong>先选择城市</strong><small>可选一个或多个城市；选中后默认纳入该城市全部项目。</small></div><span class="schedule-scope-count">已选 ' + AUTO.cities.length + ' 个城市</span></div><div class="schedule-city-list">' +
       (cityList.length ? cityList.map(function (city, index) {
-        var projectCount = CITY_OF_PROJECT.filter(function (value) { return value === city; }).length;
+        var projectCount = SCHEDULE_CATALOG.filter(function (project) { return project.city === city; }).length;
         return '<label class="schedule-city-choice"><input type="checkbox" ' + (AUTO.cities.indexOf(city) >= 0 ? "checked" : "") +
           ' onchange="window._toggleScheduleCityByIndex(' + index + ',this.checked)"/><span>' + escapeHtml(city) + '</span><small>' + projectCount + ' 项目</small></label>';
-      }).join("") : '<div class="schedule-city-empty">当前没有可选城市。</div>') +
+      }).join("") : '<div class="schedule-city-empty">暂未读取到项目目录，请检查后端接口或标签快照数据。</div>') +
       '</div></section>';
     var projectPanel = '<section class="schedule-scope-card"><div class="schedule-scope-head"><div><span class="schedule-scope-step">02 / PROJECT SCOPE</span><strong>再确认项目范围</strong><small>这里只显示上面选中城市的项目，支持按项目名称搜索。</small></div><span class="schedule-scope-count">已选 ' + selectedInScope.length + ' / ' + scopedProjectIndexes.length + '</span></div>' +
       '<div class="schedule-project-toolbar"><label><input type="checkbox" ' + (allProjectsSelected ? "checked" : "") +
       ' ' + (scopedProjectIndexes.length ? "" : "disabled") + ' onchange="window._autoSelectAllProjects(this.checked)"/> 全选所选城市的项目</label><span class="project-count">' + (allProjectsSelected ? "默认全城推送" : "可进一步缩小项目范围") + '</span></div>' +
       '<div class="schedule-project-search"><input type="search" autocomplete="off" value="' + escapeHtml(SCHEDULE_PROJECT_QUERY) +
-      '" placeholder="搜索项目名称…" oninput="window._scheduleProjectSearch(this.value)"/></div>' +
+      '" placeholder="搜索项目名称…" ' + (!AUTO.cities.length ? "disabled" : "") + ' oninput="window._scheduleProjectSearch(this.value)"/></div>' +
       '<div class="schedule-project-list" data-schedule-project-list>' +
       (!AUTO.cities.length ? '<div class="schedule-project-empty">先在左侧选择城市。选中后自动勾选该城市所有项目。</div>' :
        (!scopedProjectIndexes.length ? '<div class="schedule-project-empty">所选城市暂无项目数据。</div>' :
         scopedProjectIndexes.map(function (i) {
-          var searchText=(PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase();
-          var visible=!query||searchText.indexOf(query)>=0;
-          return '<label class="schedule-project-choice" data-project-search="' + escapeHtml(searchText) + '"' + (visible?'':' style="display:none"') + '>' +
+          var project = SCHEDULE_CATALOG[i];
+          var searchText = (project.projectName + " " + project.city).toLocaleLowerCase();
+          var visible = !query || searchText.indexOf(query) >= 0;
+          return '<label class="schedule-project-choice" data-project-search="' + escapeHtml(searchText) + '"' + (visible ? '' : ' style="display:none"') + '>' +
             '<input type="checkbox" ' + (AUTO.projectIndexes.indexOf(i) >= 0 ? "checked" : "") +
-            ' onchange="window._toggleScheduleProjectByIndex(' + i + ',this.checked)"/><span class="project-name">' + escapeHtml(PROJECTS[i]) +
-            '<span class="project-city">' + escapeHtml(CITY_OF_PROJECT[i]) + '</span></span></label>';
+            ' onchange="window._toggleScheduleProjectByIndex(' + i + ',this.checked)"/><span class="project-name">' + escapeHtml(project.projectName) +
+            '<span class="project-city">' + escapeHtml(project.city) + '</span></span></label>';
         }).join("") + (query && !visibleProjectIndexes.length ? '<div class="schedule-project-empty">没有找到匹配项目，请换一个关键词。</div>' : ''))) +
       '</div><div class="schedule-project-actions"><span>所选城市范围内共 ' + scopedProjectIndexes.length + ' 个项目</span>' +
       '<button type="button" onclick="window._clearScheduleProjects()">清空项目选择</button></div></section>';
@@ -1599,11 +1607,14 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       estHtml = '<div class="est-box"><div class="est-item" style="flex:1"><div class="t" style="font-size:13px;color:var(--ink-2)">先选择城市，系统会默认选中对应项目；如需部分项目，再搜索并取消不需要的项。</div></div></div>';
     } else {
       estHtml = '<div class="est-box">' +
-        '<div class="est-item"><div class="n">' + est.total + '</div><div class="t">命中房屋（目标范围）</div></div>' +
+        '<div class="est-item"><div class="n">' + est.total + '</div><div class="t">演示样本命中房屋（所选范围）</div></div>' +
         '<div class="est-item skip"><div class="n">' + est.skipSame + '</div><div class="t">跳过：30 天内同模式（' + CHAN[+AUTO.mode] + '）已推</div></div>' +
         '<div class="est-item skip"><div class="n">' + est.skipCross + '</div><div class="t">跳过：7 天内被其他模式推过</div></div>' +
-        '<div class="est-item ok"><div class="n">' + est.will + '</div><div class="t">实际将推（去重 ' + est.phones + ' 号码）</div></div></div>';
+        '<div class="est-item ok"><div class="n">' + est.will + '</div><div class="t">样本试算待推（去重 ' + est.phones + ' 号码）</div></div></div>';
     }
+    var sourceNote = SCHEDULE_CATALOG_SOURCE === "database"
+      ? "项目目录已从数据库读取；以上人数仅用于 HTML 内置演示样本试算，不能作为生产真实命中数。"
+      : "当前使用离线演示项目目录；连接后端后会自动读取数据库项目。";
     var html = '<div class="page-head"><h2>定时推送</h2><p>先勾选城市，再从这些城市的项目中搜索和调整范围。选中单个城市即可全城推送；跨城市计划也先选城市，不会直接展示所有城市的项目。</p></div>' +
       '<div class="grid-kpi">' +
         '<div class="kpi accent"><div class="k-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="k-body"><div class="k-label">推送计划</div><div class="k-value">' + PLANS.length + '</div><div class="k-sub">进行中 ' + enabledPlans.length + ' · 已暂停 ' + (PLANS.length - enabledPlans.length) + '</div></div></div>' +
@@ -1618,7 +1629,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
         '<input type="time" value="' + AUTO.time + '" onchange="window._autoSet(\'time\',this.value)" style="font-size:12.5px;padding:6.5px 10px;border:1px solid var(--line-2);border-radius:8px;background:#fff"/>' +
         '<div class="filter-result">' + (est ? ('已选 ' + AUTO.cities.length + ' 个城市 / ' + AUTO.projectIndexes.length + ' 个项目') : '请先选择城市') + '</div>' +
         '<button class="btn primary" ' + (est ? '' : 'disabled title="请先选择城市并确认项目范围"') + ' onclick="window._autoSave()">保存并启用计划</button></div>' +
-      estHtml + '<div class="freq-note">频控口径：<b>同模式 30 天</b>（' + CHAN.join(" / ") + ' 各自独立计数）；<b>跨模式 7 天</b>（任一模式推过，其余模式 7 天内静默）。同一号码名下多套房合并为一个推送对象。当前原型只做范围试算，不会真实发送。</div></div>' +
+      estHtml + '<div class="freq-note">' + sourceNote + ' 频控口径：<b>同模式 30 天</b>（' + CHAN.join(" / ") + ' 各自独立计数）；<b>跨模式 7 天</b>（任一模式推过，其余模式 7 天内静默）。当前原型只做范围试算，不会真实发送。</div></div>' +
       '<div class="card" style="margin-top:16px"><div class="sec-title" style="margin-bottom:12px">计划列表</div><div class="table-wrap"><table>' +
       '<thead><tr><th>城市 / 项目范围</th><th>推送模式</th><th>频率</th><th>目标范围</th><th>试算目标</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
       (PLANS.length ? PLANS.map(function(p,i){
@@ -1638,15 +1649,15 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     render();
   };
   window._toggleScheduleCityByIndex = function(cityIndex,on) {
-    var cities=Array.from(new Set(CITY_OF_PROJECT)),city=cities[Number(cityIndex)];
+    var cities=Array.from(new Set(SCHEDULE_CATALOG.map(function(project){return project.city;}))),city=cities[Number(cityIndex)];
     if(!city)return;
     var selectedCities=AUTO.cities.slice(),selectedProjects=AUTO.projectIndexes.slice(),idx=selectedCities.indexOf(city);
     if(on&&idx<0){
       selectedCities.push(city);
-      PROJECTS.forEach(function(_,projectIndex){if(CITY_OF_PROJECT[projectIndex]===city&&selectedProjects.indexOf(projectIndex)<0)selectedProjects.push(projectIndex);});
+      SCHEDULE_CATALOG.forEach(function(project,projectIndex){if(project.city===city&&selectedProjects.indexOf(projectIndex)<0)selectedProjects.push(projectIndex);});
     } else if(!on&&idx>=0){
       selectedCities.splice(idx,1);
-      selectedProjects=selectedProjects.filter(function(projectIndex){return CITY_OF_PROJECT[projectIndex]!==city;});
+      selectedProjects=selectedProjects.filter(function(projectIndex){return SCHEDULE_CATALOG[projectIndex]&&SCHEDULE_CATALOG[projectIndex].city!==city;});
     }
     AUTO.cities=selectedCities;
     AUTO.projectIndexes=selectedProjects;
@@ -1654,8 +1665,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   };
   window._toggleScheduleProjectByIndex = function(projectIndex,on) {
     projectIndex=Number(projectIndex);
-    if(projectIndex<0||projectIndex>=PROJECTS.length)return;
-    if(AUTO.cities.indexOf(CITY_OF_PROJECT[projectIndex])<0)return;
+    if(projectIndex<0||projectIndex>=SCHEDULE_CATALOG.length)return;
+    if(AUTO.cities.indexOf(SCHEDULE_CATALOG[projectIndex].city)<0)return;
     var selected=AUTO.projectIndexes.slice(),idx=selected.indexOf(projectIndex);
     if(on&&idx<0)selected.push(projectIndex);
     if(!on&&idx>=0)selected.splice(idx,1);
@@ -1663,7 +1674,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     render();
   };
   window._autoSelectAllProjects = function(on) {
-    var inScope=PROJECTS.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(CITY_OF_PROJECT[i])>=0;});
+    var inScope=SCHEDULE_CATALOG.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(SCHEDULE_CATALOG[i].city)>=0;});
     AUTO.projectIndexes=on?inScope:[];
     render();
   };
@@ -1685,15 +1696,48 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     if(!AUTO.cities.length){flash("请先选择至少一个城市");return;}
     if(!AUTO.projectIndexes.length){flash("所选城市当前没有选中的项目，请检查项目范围");return;}
     var est=autoEstimate();if(!est){flash("当前范围没有可试算的目标人群");return;}
-    var scopeIndexes=PROJECTS.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(CITY_OF_PROJECT[i])>=0;});
+    var scopeIndexes=SCHEDULE_CATALOG.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(SCHEDULE_CATALOG[i].city)>=0;});
     var everySelected=AUTO.projectIndexes.length===scopeIndexes.length&&scopeIndexes.every(function(i){return AUTO.projectIndexes.indexOf(i)>=0;});
-    var projectNames=AUTO.projectIndexes.map(function(i){return PROJECTS[i];});
+    var projectNames=AUTO.projectIndexes.map(function(i){return SCHEDULE_CATALOG[i].projectName;});
     var projectLabel=everySelected?"所选城市全部项目（"+AUTO.projectIndexes.length+"）":projectNames.join("、");
     PLANS.unshift({id:Date.now(),cities:AUTO.cities.slice(),city:AUTO.cities.length===1?AUTO.cities[0]:"多城市组合",
       projects:AUTO.projectIndexes.slice(),projectNames:projectNames.slice(),project:projectLabel,mode:+AUTO.mode,freqText:freqText(),
       scope:AUTO.product==="all"?"全部命中产品":"仅命中："+AUTO.product,target:est.will,phones:est.phones,on:true});
     render();
     flash("已保存："+AUTO.cities.join("、")+" · "+projectLabel+" · "+CHAN[+AUTO.mode]+" · "+freqText());
+  };
+
+  async function loadProjectCatalog() {
+    try {
+      var response = await fetch("/api/project-catalog", { headers: { "Accept": "application/json" } });
+      if (!response.ok) throw new Error("项目目录接口返回 " + response.status);
+      var rows = await response.json();
+      if (!Array.isArray(rows) || !rows.length) throw new Error("项目目录为空");
+      var normalized = rows.filter(function(row) {
+        return row && row.city && row.projectId && row.projectName;
+      }).map(function(row) {
+        return { city: String(row.city), projectId: String(row.projectId), projectName: String(row.projectName) };
+      });
+      if (!normalized.length) throw new Error("项目目录字段不完整");
+      var oldCatalog = SCHEDULE_CATALOG;
+      var oldCities = AUTO.cities.slice();
+      var oldSelected = AUTO.projectIndexes.map(function(i){return oldCatalog[i];}).filter(Boolean);
+      var oldScope = oldCatalog.map(function(_,i){return i;}).filter(function(i){return oldCities.indexOf(oldCatalog[i].city)>=0;});
+      var allWasSelected = oldScope.length>0 && oldScope.every(function(i){return AUTO.projectIndexes.indexOf(i)>=0;});
+      SCHEDULE_CATALOG = normalized;
+      SCHEDULE_CATALOG_SOURCE = "database";
+      AUTO.cities = oldCities.filter(function(city){return normalized.some(function(project){return project.city===city;});});
+      if (allWasSelected) {
+        AUTO.projectIndexes = normalized.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(normalized[i].city)>=0;});
+      } else {
+        var oldSelectedKeys=oldSelected.map(function(project){return project.city+"::"+project.projectName;});
+        AUTO.projectIndexes=normalized.map(function(_,i){return i;}).filter(function(i){return oldSelectedKeys.indexOf(normalized[i].city+"::"+normalized[i].projectName)>=0;});
+      }
+      render();
+    } catch (error) {
+      // 后端不可用时继续使用 HTML 内置演示项目，不阻塞其他页面。
+      SCHEDULE_CATALOG_SOURCE = "demo";
+    }
   };
 
 
@@ -1908,6 +1952,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   render();
   loadUpstreamTagDictionary();
+  loadProjectCatalog();
 })();
 </script>
 </body>
