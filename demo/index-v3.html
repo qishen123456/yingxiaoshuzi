@@ -777,29 +777,10 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* 字段目录来自数据库 tag_dictionary；以下是 API 不可用时的离线预览回退。 */
   var TAG_DICT = {
-    shuilu_label:{label:"水路标签",values:["卫生间漏水","厨房漏水","阳台漏水","水管老化"],tagKey:"water_tags",tagGroup:"water",valueType:"multi_enum",sourceColumn:"shuilu_label"},
-    dianlu_tag:{label:"电路标签",values:["跳闸","插座故障","电路老化"],tagKey:"electric_tags",tagGroup:"electric",valueType:"multi_enum",sourceColumn:"dianlu_tag"},
-    jiadian_tag:{label:"家电标签",values:["空调故障","热水器故障","冰箱故障"],tagKey:"appliance_tags",tagGroup:"appliance",valueType:"multi_enum",sourceColumn:"jiadian_tag"},
-    envir_tag:{label:"环境标签",values:["墙面发霉","渗水/返潮","厨房老化","卫生间老化","阳台老化","瓷砖开裂空鼓"],tagKey:"env_tags",tagGroup:"env",valueType:"multi_enum",sourceColumn:"envir_tag"},
-    price_sensitivity:{label:"价格敏感标签",values:["性价比优先"],tagKey:"price_sensitivity",tagGroup:"price",valueType:"enum",sourceColumn:"price_sensitivity_label"},
-    residence_status:{label:"居住状态",values:["未知","自住-常住","自住-非常住","出租中","空置"],tagKey:"residence_status",tagGroup:"residence",valueType:"enum",sourceColumn:"residence_status"},
-    family_structure:{label:"家庭结构",values:["A_三代同堂","B_多孩之家","C_二孩之家","D_三口之家","E_二人世界"],tagKey:"family_structure",tagGroup:"family",valueType:"enum",sourceColumn:"family_structure"},
-    decorate_status:{label:"装修状态",values:["未装修","一年以内","1-5年","5-10年","10年及以上"],tagKey:"decorate_status",tagGroup:"decoration",valueType:"enum",sourceColumn:"decorate_status"},
-    repair_kitchen:{label:"厨房维修次数",values:[],tagKey:"repair_kitchen",tagGroup:"repair",valueType:"number",sourceColumn:"kitchen_repair"},
-    repair_balcony:{label:"阳台维修次数",values:[],tagKey:"repair_balcony",tagGroup:"repair",valueType:"number",sourceColumn:"balcony_repair"},
-    repair_bathroom:{label:"卫生间维修次数",values:[],tagKey:"repair_bathroom",tagGroup:"repair",valueType:"number",sourceColumn:"bathroom_repair"},
-    house_type_name:{label:"房屋类型",values:[],tagKey:"house_type_name",tagGroup:"house",valueType:"string",sourceColumn:"house_type_name"},
-    deliver_year:{label:"房屋年限（年）",values:[],tagKey:"deliver_year",tagGroup:"house",valueType:"number",sourceColumn:"deliver_year"},
-    property_area:{label:"建筑面积（㎡）",values:[],tagKey:"property_area",tagGroup:"house",valueType:"number",sourceColumn:"property_area"},
-    layout:{label:"户型",values:[],tagKey:"layout",tagGroup:"house",valueType:"string",sourceColumn:"layout"},
-    house_feature_tags:{label:"房屋特征标签",values:["带浴缸户型"],tagKey:"house_feature_tags",tagGroup:"house",valueType:"multi_enum",sourceColumn:null},
-    region:{label:"大区",values:[],tagKey:"region",tagGroup:"org",valueType:"string",sourceColumn:"region_name"},
-    city:{label:"城市分公司",values:[],tagKey:"city",tagGroup:"org",valueType:"string",sourceColumn:"city_group_name"},
-    branch:{label:"营业部",values:[],tagKey:"branch",tagGroup:"org",valueType:"string",sourceColumn:"business_name"},
-    station:{label:"服务站",values:[],tagKey:"station",tagGroup:"org",valueType:"string",sourceColumn:"fwz_org"},
-    station_code:{label:"服务站编码",values:[],tagKey:"station_code",tagGroup:"org",valueType:"string",sourceColumn:"fwz_org_code"},
-    community_id:{label:"项目编码（责任盘）",values:[],tagKey:"community_id",tagGroup:"org",valueType:"string",sourceColumn:"asset_code"},
-    community_name:{label:"项目名称（责任盘）",values:[],tagKey:"community_name",tagGroup:"org",valueType:"string",sourceColumn:"asset_name"}
+    shuilu_label: { label: "水路标签", values: ["卫生间漏水", "厨房漏水", "阳台漏水", "水管老化"], tagKey: "water_tags", tagGroup: "water", valueType: "multi_enum", sourceColumn: "shuilu_label" },
+    envir_tag: { label: "环境标签", values: ["墙面发霉", "渗水/返潮", "厨房老化", "卫生间老化", "阳台老化", "瓷砖开裂空鼓"], tagKey: "env_tags", tagGroup: "env", valueType: "multi_enum", sourceColumn: "envir_tag" },
+    family_structure: { label: "家庭结构", values: ["A_三代同堂", "B_多孩之家", "C_二孩之家", "D_三口之家", "E_二人世界"], tagKey: "family_structure", tagGroup: "family", valueType: "enum", sourceColumn: "family_structure" },
+    decorate_status: { label: "装修状态", values: ["未装修", "一年以内", "1-5年", "5-10年", "10年及以上"], tagKey: "decorate_status", tagGroup: "decoration", valueType: "enum", sourceColumn: "decorate_status" }
   };
   var DEFAULT_TAG_DICT = JSON.parse(JSON.stringify(TAG_DICT));
   var UPSTREAM_TAG_DICT = null;
