@@ -769,6 +769,29 @@
 @media(max-width:900px){.product-condition-grid{grid-template-columns:minmax(0,1fr)}.product-condition-panel+.product-condition-panel{border-left:0;border-top:1px solid #eaf0f5}.product-condition-panel{padding:17px}}
 @media(max-width:600px){.product-switcher{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.product-tab{padding:10px 9px;gap:7px}.product-tab-number{width:28px;height:28px;flex-basis:28px}.product-editor-head{padding:15px}.product-condition-panel{padding:14px}.product-editor-footer{padding:12px 15px}}
 
+
+.product-condition-panel{position:relative}
+.tag-picker{position:relative;margin-top:2px}
+.tag-search-results{position:absolute;top:calc(100% + 7px);left:0;right:0;z-index:90;margin:0;border:1px solid #d9e4ef;border-radius:10px;background:#fff;box-shadow:0 14px 34px rgba(25,49,76,.16);overflow:hidden}
+.tag-search-results[hidden]{display:none!important}
+.tag-browser-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid #eaf0f5;background:#f9fbfd}
+.tag-browser-head strong{font-size:11px;color:#334b64;font-weight:750}
+.tag-browser-head span{margin-left:auto;color:#8898aa;font-size:10px;white-space:nowrap}
+.tag-browser-head button{border:0;border-radius:5px;background:transparent;color:#5b7b9e;cursor:pointer;font-size:10px;padding:3px 5px}
+.tag-browser-head button:hover{background:#eaf2fa}
+.tag-options{max-height:300px;overflow:auto;padding:4px 0}
+.tag-options-group{border-bottom:1px solid #f0f3f7}
+.tag-category-toggle{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border:0;background:#fff;color:#344d66;text-align:left;cursor:pointer}
+.tag-category-toggle:hover{background:#f5f9fd}
+.tag-category-name{flex:1;min-width:0;font-size:11px;font-weight:650}
+.tag-category-count{color:#91a0b0;font-size:10px;white-space:nowrap}
+.tag-category-chevron{width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:#f1f5f9;color:#7f91a5;font-size:12px;flex:none}
+.tag-category-toggle[aria-expanded="true"] .tag-category-chevron{transform:rotate(90deg);background:#e7f0fa;color:#326b9d}
+.tag-category-values{padding:0 7px 6px}
+.tag-browser-hint{padding:10px 12px;border-top:1px solid #edf1f6;background:#fafbfd;color:#8494a6;font-size:10px;line-height:1.6}
+.tag-browser-no-result{padding:16px 13px;color:#8191a3;font-size:11px;line-height:1.7}
+.tag-browser-empty{padding:12px;color:#8b9aab;font-size:10.5px;line-height:1.7}
+
 </style>
 </head>
 <body>
@@ -1064,6 +1087,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 1：产品-标签映射配置（产品级搜索选择） ============ */
   var RULE_TAG_SEARCH = {};
+  var TAG_BROWSER_OPEN = {};
+  var TAG_CATEGORY_OPEN = {};
   var ACTIVE_RULE_ID = null;
   function getRuleTagKeys() {
     return Object.keys(TAG_DICT).filter(function (key) {
@@ -1101,33 +1126,47 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     }
     function optionGroups(rule,bucket,query) {
       var q=String(query||"").trim().toLocaleLowerCase();
-      return getRuleTagKeys().map(function(tagKey){
+      return getRuleTagKeys().map(function(tagKey) {
         var meta=TAG_DICT[tagKey];if(!meta)return "";
         var values=Array.isArray(meta.values)?meta.values:[];
-        var matching=values.some(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;});
-        var typeLabel=meta.valueType==="multi_enum"?"多值标签":"单值标签";
-        return '<div class="tag-options-group"'+(q&&matching?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+
-          values.map(function(value,index){
-            var visible=q&&(String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;
-            return '<label class="tag-option" data-search-text="'+escapeHtml((String(meta.label)+" "+String(value)).toLocaleLowerCase())+'"'+(visible?'':' style="display:none"')+'>'+
-              '<input type="checkbox" '+(selectedFor(rule,bucket,tagKey,value)?'checked':'')+' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/>'+
-              '<span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
-          }).join("")+'</div>';
+        var stateKey=rule.id+":"+bucket+":"+tagKey,expanded=!!TAG_CATEGORY_OPEN[stateKey];
+        var matches=values.filter(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;});
+        if(q&&!matches.length)return "";
+        var listValues=q?matches:values;
+        var rows=listValues.map(function(value){
+          var index=values.indexOf(value),searchText=(String(meta.label)+" "+String(value)).toLocaleLowerCase();
+          return '<label class="tag-option" data-search-text="'+escapeHtml(searchText)+'"'+(!q&&!expanded?' style="display:none"':'')+'>'+
+            '<input type="checkbox" '+(selectedFor(rule,bucket,tagKey,value)?'checked':'')+' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/>'+
+            '<span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+(meta.valueType==="multi_enum"?"多值标签":"单值标签")+'</span></label>';
+        }).join("");
+        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"><button type="button" class="tag-category-toggle" aria-expanded="'+(q||expanded)+'" '+
+          'onmousedown="event.preventDefault()" onclick="window._toggleTagCategory('+rule.id+',\''+bucket+'\',\''+tagKey+'\')">'+
+          '<span class="tag-category-name">'+escapeHtml(meta.label)+'</span><span class="tag-category-count">'+(q?matches.length+" / ":"")+values.length+' 个</span><span class="tag-category-chevron">›</span></button>'+
+          '<div class="tag-category-values"'+(!q&&!expanded?' style="display:none"':'')+'>'+rows+'</div></div>';
       }).join("");
     }
+
     function renderBucket(rule,bucket,title,description,mark) {
       var selected=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
-      var resultMessage=query.trim()?'':'输入关键词后显示匹配结果';
+      var browserKey=rule.id+":"+bucket,open=!!TAG_BROWSER_OPEN[browserKey],q=query.trim().toLocaleLowerCase();
+      var totalCategories=getRuleTagKeys().length;
+      var totalValues=getRuleTagKeys().reduce(function(sum,key){return sum+(TAG_DICT[key].values||[]).length;},0);
+      var matchedCount=getRuleTagKeys().reduce(function(sum,key){var m=TAG_DICT[key];return sum+(m?(m.values||[]).filter(function(v){return (String(m.label)+" "+String(v)).toLocaleLowerCase().indexOf(q)>=0;}).length:0);},0);
+      var emptyMessage=!totalCategories?'标签字典还没有开放可用的枚举类别。':(totalValues===0?'已读取标签类别，但还没有可选值，请检查 tag_value 数据。':'');
       return '<section class="product-condition-panel" data-condition-bucket="'+bucket+'"><div class="condition-panel-head"><div class="condition-panel-heading">'+
         '<span class="condition-panel-mark '+mark+'">'+(mark==="mand"?"必":"分")+'</span><h3>'+title+'</h3></div><span class="condition-panel-count">'+selected.length+' 项</span></div>'+
         '<p class="condition-panel-description">'+description+'</p>'+
-        (selected.length?'<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div>':'<div class="condition-empty">尚未设置'+title+'。在下方搜索并勾选标签即可。</div>')+
-        '<div class="tag-search-box"><span class="tag-search-icon">⌕</span><input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+
-        '" placeholder="搜索标签类别或标签值…" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
-        '<div class="tag-search-results'+(query.trim()?'':' is-idle')+'"><div class="tag-options" data-option-list="'+rule.id+":"+bucket+'">'+
-        optionGroups(rule,bucket,query)+(resultMessage?'<div class="tag-search-empty">'+resultMessage+'</div>':'')+
-        '</div></div></section>';
+        (selected.length?'<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div>':'<div class="condition-empty">尚未设置'+title+'。打开标签浏览器，按类别展开或直接搜索。</div>')+
+        '<div class="tag-picker"><div class="tag-search-box"><span class="tag-search-icon">⌕</span><input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+
+        '" placeholder="搜索，或点击浏览所有标签类别…" onfocus="window._openTagBrowser('+rule.id+',\''+bucket+'\')" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
+        '<div class="tag-search-results" data-tag-browser="'+browserKey+'"'+(open?'':' hidden')+'><div class="tag-browser-head"><strong>'+(q?'搜索结果':'浏览可选标签')+'</strong>'+
+        '<span>'+(q?matchedCount+' 个匹配值':totalCategories+' 个类别 · '+totalValues+' 个标签值')+'</span><button type="button" onmousedown="event.preventDefault()" onclick="window._closeTagBrowser('+rule.id+',\''+bucket+'\')">收起</button></div>'+
+        '<div class="tag-options" data-option-list="'+browserKey+'">'+optionGroups(rule,bucket,query)+
+        (q&&!matchedCount?'<div class="tag-browser-no-result">没有找到匹配标签。试试更短的关键词，或清空搜索后按类别浏览。</div>':'')+
+        (emptyMessage?'<div class="tag-browser-empty">'+emptyMessage+'</div>':(!q?'<div class="tag-browser-hint">点击类别展开具体标签，也可以输入关键词跨类别搜索。</div>':''))+
+        '</div></div></div></section>';
     }
+
     var html='<div class="page-head map-page-head"><div><h2>产品标签规则</h2><p>一次配置一个产品。切换产品查看各自规则，搜索后只展示匹配标签，避免所有规则同时铺开。</p></div>'+
       '<div class="cfg-legend"><span class="tag-source-status'+(TAG_SOURCE_STATUS.mode==="upstream"?" live":"")+'"><span class="dot"></span>'+(TAG_SOURCE_STATUS.mode==="upstream"?"标签表已连接":"离线预览")+'</span>'+
       '<span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span><span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span></div></div>'+
@@ -1158,22 +1197,51 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     render();
   };
 
+  window._openTagBrowser = function(ruleId,bucket) {
+    var key=ruleId+":"+bucket;
+    TAG_BROWSER_OPEN[key]=true;
+    document.querySelectorAll("[data-tag-browser]").forEach(function(panel){panel.hidden=panel.getAttribute("data-tag-browser")!==key;});
+    var panel=document.querySelector('[data-tag-browser="'+key+'"]');if(panel)panel.hidden=false;
+  };
+  window._closeTagBrowser = function(ruleId,bucket) {
+    TAG_BROWSER_OPEN[ruleId+":"+bucket]=false;
+    var panel=document.querySelector('[data-tag-browser="'+ruleId+":"+bucket+'"]');if(panel)panel.hidden=true;
+  };
+  window._toggleTagCategory = function(ruleId,bucket,tagKey) {
+    var key=ruleId+":"+bucket,categoryKey=key+":"+tagKey,q=String(RULE_TAG_SEARCH[key]||"").trim().toLocaleLowerCase();
+    var group=document.querySelector('[data-tag-browser="'+key+'"] [data-tag-group="'+tagKey+'"]');if(!group)return;
+    var expanded=!TAG_CATEGORY_OPEN[categoryKey];TAG_CATEGORY_OPEN[categoryKey]=expanded;
+    var values=group.querySelector(".tag-category-values"),button=group.querySelector(".tag-category-toggle");
+    if(button)button.setAttribute("aria-expanded",expanded||!!q?"true":"false");
+    if(values)values.style.display=(expanded||!!q)?"block":"none";
+    group.querySelectorAll(".tag-option").forEach(function(row){var hit=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0;row.style.display=q?(hit?"flex":"none"):(expanded?"flex":"none");});
+  };
   window._tagSearch = function(ruleId,bucket,query) {
-    RULE_TAG_SEARCH[ruleId+":"+bucket]=String(query||"");
+    var key=ruleId+":"+bucket;
+    RULE_TAG_SEARCH[key]=String(query||"");TAG_BROWSER_OPEN[key]=true;
     var root=document.querySelector('[data-rule-card="'+ruleId+'"]');
     if(!root||ACTIVE_RULE_ID!==ruleId)return;
-    var list=root.querySelector('[data-option-list="'+ruleId+":"+bucket+'"]');
-    if(!list)return;
+    var list=root.querySelector('[data-option-list="'+key+'"]'),panel=root.querySelector('[data-tag-browser="'+key+'"]');if(!list||!panel)return;
+    panel.hidden=false;
     var q=String(query||"").trim().toLocaleLowerCase(),groups=list.querySelectorAll(".tag-options-group"),visible=0;
     groups.forEach(function(group){
-      var rows=group.querySelectorAll(".tag-option"),inGroup=0;
-      rows.forEach(function(row){var show=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0;row.style.display=show?"flex":"none";if(show){inGroup++;visible++;}});
-      group.style.display=inGroup?"block":"none";
+      var rows=group.querySelectorAll(".tag-option"),inGroup=0,tagKey=group.getAttribute("data-tag-group"),expanded=!!TAG_CATEGORY_OPEN[key+":"+tagKey];
+      rows.forEach(function(row){var hit=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0,show=q?hit:expanded;row.style.display=show?"flex":"none";if(hit){inGroup++;visible++;}});
+      group.style.display=q?(inGroup?"block":"none"):"block";
+      var values=group.querySelector(".tag-category-values"),button=group.querySelector(".tag-category-toggle"),count=group.querySelector(".tag-category-count");
+      if(values)values.style.display=q?(inGroup?"block":"none"):(expanded?"block":"none");
+      if(button)button.setAttribute("aria-expanded",q||expanded?"true":"false");
+      if(count)count.textContent=q?(inGroup+" 个匹配"):rows.length+" 个";
     });
-    var empty=list.querySelector(".tag-search-empty");if(empty)empty.remove();
-    var container=list.parentElement;
-    if(!q){container.classList.add("is-idle");list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">输入关键词后显示匹配结果</div>');}
-    else{container.classList.remove("is-idle");if(!visible)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">没有找到匹配标签，可以尝试类别名称或其他关键词。</div>');}
+    var hint=list.querySelector(".tag-browser-hint");if(hint)hint.remove();
+    var noResult=list.querySelector(".tag-browser-no-result");if(noResult)noResult.remove();
+    var emptyDictionary=list.querySelector(".tag-browser-empty");if(emptyDictionary&&q)emptyDictionary.remove();
+    var header=panel.querySelector(".tag-browser-head");
+    if(header){var title=header.querySelector("strong"),summary=header.querySelector("span");
+      if(title)title.textContent=q?"搜索结果":"浏览可选标签";
+      if(summary)summary.textContent=q?visible+" 个匹配值":getRuleTagKeys().length+" 个类别 · "+getRuleTagKeys().reduce(function(sum,tagKey){return sum+(TAG_DICT[tagKey].values||[]).length;},0)+" 个标签值";}
+    if(q&&!visible)list.insertAdjacentHTML("beforeend",'<div class="tag-browser-no-result">没有找到匹配标签。试试更短的关键词，或清空搜索后按类别浏览。</div>');
+    else if(!q&&!emptyDictionary)list.insertAdjacentHTML("beforeend",'<div class="tag-browser-hint">点击类别展开具体标签，也可以输入关键词跨类别搜索。</div>');
   };
 
   window._toggleRuleTagByIndex = function(ruleId,bucket,tagKey,valueIndex,checked) {
