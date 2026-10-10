@@ -101,20 +101,37 @@
 
 ---
 
-### 3.1 产品规则页的标签值维护表
+### 3.1 产品规则页的标签类别与标签值维护表
 
-产品规则页仅提供原有四类核心标签：水路标签、环境标签、家庭结构、装修状态。类别与上游字段关系继续使用 `tag_dictionary`；**具体可勾选值逐行维护在 `tag_value` 表**，页面通过 `GET /api/tags` 动态读取。
+产品规则页的标签类别和可选值都由数据库提供，不在前端维护固定列表。当前初始化仅开放水路标签、环境标签、家庭结构、装修状态四类；既有其他字段仍保留在 `tag_dictionary`，但默认不显示在产品规则页。
 
-新增一个水路标签值示例：
+**新增一整个标签类别**时，在 `tag_dictionary` 建立一条类别记录并设置 `rule_enabled = true`，再把可选值逐行写入 `tag_value`。示例：
 
 ```sql
+-- ① 新增可用于规则的枚举类别
+INSERT INTO tag_dictionary
+  (tag_group, tag_key, tag_name, value_type, enum_values, source_column, rule_enabled)
+VALUES
+  ('repair', 'pipe_condition_tags', '管道状况标签', 'multi_enum',
+   '[]'::jsonb, 'pipe_condition_tag', true)
+ON CONFLICT (tag_key) DO UPDATE
+SET tag_name = EXCLUDED.tag_name,
+    value_type = EXCLUDED.value_type,
+    source_column = EXCLUDED.source_column,
+    rule_enabled = true;
+
+-- ② 给新类别登记可选值
 INSERT INTO tag_value (tag_key, tag_value, sort_order, status)
-VALUES ('water_tags', '新增水路标签', 100, 'enabled')
+VALUES
+  ('pipe_condition_tags', '管道老化', 10, 'enabled'),
+  ('pipe_condition_tags', '接口渗漏', 20, 'enabled')
 ON CONFLICT (tag_key, tag_value)
 DO UPDATE SET status = 'enabled';
 ```
 
-可用的 `tag_key` 为 `water_tags`、`env_tags`、`family_structure`、`decorate_status`。要暂时从产品规则选择器隐藏某个标签值，可将其 `status` 改为 `disabled`；无需改 HTML/前端常量。新增值是否实际命中，仍取决于房屋快照是否包含对应字段和值。初始化时由 `sql/01_tag_dictionary_seed.sql` 将当前 `enum_values` 中的历史枚举迁入 `tag_value`。
+只新增一个现有类别下的标签值时，无需新增 `tag_dictionary` 记录，只需往 `tag_value` 添加该类别的新值。将某个值的 `status` 改为 `disabled` 可从搜索器隐藏；将类别的 `rule_enabled` 改为 `false` 可将整个类别从产品规则选择器隐藏。前端通过 `GET /api/tags` 读取所有已启用的枚举类别和值，所以新增类别或新增标签值都无需改前端。
+
+**数据接入边界：** 以上配置会让新类别自动出现在规则搜索器中，但不会自动把上游新物理字段灌进房屋快照。要让新类别真正参与命中，仍需确认新字段已写入 `house_label_snapshot.labels`；若该上游字段以前未接入 staging / 同步映射，还需要补充对应的数据接入映射与验收，不能把“页面可选择”当成“数据已可命中”。初始化时由 `sql/01_tag_dictionary_seed.sql` 将四类核心标签的历史 `enum_values` 迁入 `tag_value`。
 
 ---
 
