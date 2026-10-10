@@ -1249,13 +1249,12 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
           var meta=TAG_DICT[tagKey],values=Array.isArray(meta.values)?meta.values:[];
           var categoryKey=key+":"+tagKey,expanded=!!TAG_CATEGORY_OPEN[categoryKey];
           var matches=values.filter(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;});
-          if(q&&!matches.length)return "";
-          var shownValues=q?values.filter(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;}):values;
-          return '<section class="tag-modal-category" data-tag-group="'+escapeHtml(tagKey)+'"><button type="button" class="tag-modal-category-head" aria-expanded="'+(q||expanded)+'" onclick="window._toggleTagCategory('+rule.id+',\''+bucket+'\',\''+tagKey+'\')">'+
+          return '<section class="tag-modal-category" data-tag-group="'+escapeHtml(tagKey)+'"'+(q&&!matches.length?' style="display:none"':'')+'><button type="button" class="tag-modal-category-head" aria-expanded="'+(q||expanded)+'" onclick="window._toggleTagCategory('+rule.id+',\''+bucket+'\',\''+tagKey+'\')">'+
             '<strong>'+escapeHtml(meta.label)+'</strong><span class="cat-count">'+(q?matches.length+" / ":"")+values.length+' 个</span><span class="cat-arrow">›</span></button>'+
-            '<div class="tag-modal-category-values'+(q||expanded?' is-open':'')+'">'+shownValues.map(function(value){
-              var idx=values.indexOf(value),checked=selectedFor(rule,bucket,tagKey,value);
-              return '<label class="tag-modal-option" data-search-text="'+escapeHtml((String(meta.label)+" "+String(value)).toLocaleLowerCase())+'">'+
+            '<div class="tag-modal-category-values'+(q||expanded?' is-open':'')+'">'+values.map(function(value){
+              var idx=values.indexOf(value),checked=selectedFor(rule,bucket,tagKey,value),searchText=(String(meta.label)+" "+String(value)).toLocaleLowerCase();
+              var matchesQuery=!q||searchText.indexOf(q)>=0;
+              return '<label class="tag-modal-option" data-search-text="'+escapeHtml(searchText)+'"'+(matchesQuery?'':' style="display:none"')+'>'+
                 '<input type="checkbox" '+(checked?'checked':'')+' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+idx+',this.checked)"/>'+
                 '<span class="option-name">'+escapeHtml(value)+'</span><span class="option-type">'+(meta.valueType==="multi_enum"?"多值":"单值")+'</span></label>';
             }).join("")+'</div></section>';
