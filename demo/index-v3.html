@@ -731,6 +731,44 @@
 @media(max-width:850px){.schedule-scope{grid-template-columns:minmax(0,1fr)}.schedule-project-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.schedule-project-list{grid-template-columns:minmax(0,1fr)}}
 
+
+.product-switcher{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:10px;margin:18px 0 16px}
+.product-tab{display:flex;align-items:center;gap:10px;min-width:0;text-align:left;padding:12px 13px;border:1px solid #e1e8f0;border-radius:10px;background:#fff;color:#344b63;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+.product-tab:hover{border-color:#aac4de;background:#fbfdff}.product-tab.active{border-color:#2e6fa9;background:#f2f7fc;box-shadow:inset 0 0 0 1px rgba(46,111,169,.08)}
+.product-tab-number{display:flex;align-items:center;justify-content:center;flex:0 0 32px;height:32px;border-radius:8px;background:#edf3fa;color:#285d91;font-size:10px;font-weight:800}.product-tab.active .product-tab-number{background:#1d5a96;color:#fff}
+.product-tab-info{min-width:0;flex:1}.product-tab-name{display:block;font-size:12.5px;font-weight:750;color:#263e56;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-tab-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:5px;font-size:10px;color:#8392a4}.product-tab-count{padding:2px 5px;border-radius:5px;background:#f0f3f7;color:#61758b}.product-tab.active .product-tab-count{background:#e0ecf8;color:#315f8b}
+.product-tab-status{width:7px;height:7px;border-radius:50%;background:#1caa77;flex:none}.product-tab-status.off{background:#c2cad3}
+.product-editor{border:1px solid #e0e7ef;border-radius:13px;background:#fff;overflow:hidden;box-shadow:0 3px 12px rgba(24,51,81,.035)}
+.product-editor-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 20px;border-bottom:1px solid #eaf0f5;background:linear-gradient(110deg,#fbfcfe,#fff)}
+.product-editor-mark{display:flex;align-items:center;justify-content:center;width:38px;height:38px;flex:none;border-radius:10px;background:#e9f1fa;color:#1d5a96;font-size:11px;font-weight:850}
+.product-editor-title{min-width:180px;flex:1}.product-editor-title label{display:block;margin-bottom:4px;color:#8b9aad;font-size:10px}
+.product-editor-title input{width:min(340px,100%);box-sizing:border-box;padding:4px 0;border:0;border-bottom:1px solid transparent;outline:none;background:transparent;color:#1e344b;font-size:18px;font-weight:760}.product-editor-title input:focus{border-bottom-color:#7fa7cf}
+.product-editor-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:5px;color:#7c8da0;font-size:10.5px}
+.product-editor-priority{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border:1px solid #e2e9f1;border-radius:6px;background:#fff;color:#59728a;font-size:10.5px}
+.product-editor-tip{max-width:235px;color:#8392a3;font-size:10.5px;line-height:1.6}
+.product-condition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}.product-condition-panel{min-width:0;padding:20px 21px}.product-condition-panel+.product-condition-panel{border-left:1px solid #eaf0f5;background:#fcfdff}
+.condition-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}.condition-panel-heading{display:flex;align-items:center;gap:8px;min-width:0}
+.condition-panel-mark{display:flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:7px;flex:none;font-size:11px;font-weight:800}.condition-panel-mark.mand{background:#fff0e0;color:#bd6816}.condition-panel-mark.opt{background:#e8f1fa;color:#1d5a96}
+.condition-panel-head h3{margin:0;color:#263d55;font-size:13px;font-weight:760}.condition-panel-count{font-size:10.5px;color:#7e8fa2;white-space:nowrap}
+.condition-panel-description{margin:0 0 14px;padding-left:33px;color:#8b99a9;font-size:10.5px;line-height:1.65}
+.selected-tag-list{display:flex;flex-wrap:wrap;gap:7px;min-height:0;margin:0 0 14px}.selected-tag-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:5px 7px 5px 9px;border:1px solid #dce7f2;border-radius:7px;background:#f5f9fd;color:#355878;font-size:11px;line-height:1.45}
+.selected-tag-chip .chip-group{color:#7c93a9;font-size:9.5px;white-space:nowrap}.selected-tag-chip .chip-value{overflow-wrap:anywhere}
+.selected-tag-chip button{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;padding:0;border:0;border-radius:4px;background:transparent;color:#8ca0b4;cursor:pointer;font-size:15px;line-height:1}.selected-tag-chip button:hover{background:#e9f0f7;color:#a34444}
+.condition-empty{margin-bottom:13px;padding:10px 11px;border:1px dashed #e0e7ef;border-radius:8px;background:#fbfcfe;color:#9aa7b5;font-size:10.5px;line-height:1.6}
+.tag-search-box{position:relative}.tag-search-input{display:block;width:100%;box-sizing:border-box;padding:10px 12px 10px 35px;border:1px solid #dfe7ef;border-radius:8px;background:#fff;color:#30475f;font-size:11.5px;outline:none;transition:border-color .15s,box-shadow .15s}
+.tag-search-input:focus{border-color:#83a9d1;box-shadow:0 0 0 3px rgba(40,103,163,.08)}.tag-search-icon{position:absolute;left:12px;top:10px;color:#91a2b4;pointer-events:none;font-size:14px}
+.tag-search-results{margin-top:8px;border:1px solid #e2e9f1;border-radius:8px;overflow:hidden;background:#fff}.tag-search-results.is-idle{border-color:transparent;background:transparent;margin-top:5px}
+.tag-search-results.is-idle .tag-options-group{display:none!important}.tag-options{max-height:220px;overflow:auto}
+.tag-options-group-title{position:sticky;top:0;z-index:1;padding:7px 11px;background:#f6f8fb;border-bottom:1px solid #edf1f5;color:#8493a4;font-size:10px;font-weight:750}
+.tag-option{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-bottom:1px solid #f0f3f7;color:#445a71;font-size:11px;line-height:1.5;cursor:pointer}.tag-option:last-child{border-bottom:0}.tag-option:hover{background:#f4f8fc}
+.tag-option input{flex:none;margin:2px 0 0;accent-color:#1d5a96}.tag-option-name{flex:1;min-width:0;overflow-wrap:anywhere}.tag-option-type{color:#a0adba;font-size:9.5px;white-space:nowrap}
+.tag-search-empty{padding:9px 11px;color:#96a3b1;font-size:10.5px;line-height:1.6}
+.product-editor-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 20px;border-top:1px solid #eaf0f5;background:#fbfcfe;color:#8493a4;font-size:10.5px;line-height:1.6}.product-editor-footer strong{color:#526d87;font-weight:650}
+.mapping-bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px}.mapping-bottom-bar .config-hint{flex:1;min-width:230px}
+@media(max-width:900px){.product-condition-grid{grid-template-columns:minmax(0,1fr)}.product-condition-panel+.product-condition-panel{border-left:0;border-top:1px solid #eaf0f5}.product-condition-panel{padding:17px}}
+@media(max-width:600px){.product-switcher{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.product-tab{padding:10px 9px;gap:7px}.product-tab-number{width:28px;height:28px;flex-basis:28px}.product-editor-head{padding:15px}.product-condition-panel{padding:14px}.product-editor-footer{padding:12px 15px}}
+
 </style>
 </head>
 <body>
@@ -1026,6 +1064,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 1：产品-标签映射配置（产品级搜索选择） ============ */
   var RULE_TAG_SEARCH = {};
+  var ACTIVE_RULE_ID = null;
   function getRuleTagKeys() {
     return Object.keys(TAG_DICT).filter(function (key) {
       var meta = TAG_DICT[key];
@@ -1047,81 +1086,119 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     function selectedFor(rule,bucket,tagKey,value) {
       return (rule[bucket]||[]).some(function(condition){return condition.tag===tagKey&&Array.isArray(condition.value)&&condition.value.indexOf(value)>=0;});
     }
+    if(!RULES.length)return '<div class="page-head"><h2>产品标签规则</h2><p>当前还没有产品规则。</p></div><div class="card"><button class="btn primary" onclick="window._addRule()">新增产品规则</button></div>';
+    var activeRule=RULES.find(function(rule){return rule.id===ACTIVE_RULE_ID;})||RULES[0];
+    ACTIVE_RULE_ID=activeRule.id;
+    function valueCount(rule,bucket){return getValues(rule,bucket).length;}
     function renderSelected(rule,bucket) {
-      var items=getValues(rule,bucket);
-      if(!items.length)return '<div class="tag-search-empty">尚未选择标签。输入关键词，从标签表中搜索并勾选。</div>';
-      return items.map(function(item) {
-        var meta=TAG_DICT[item.tag],title=meta?meta.label:item.tag;
-        return '<span class="selected-tag-chip"><span class="chip-group">'+escapeHtml(title)+'</span><span class="chip-value">'+escapeHtml(item.value)+'</span>'+
-          '<button type="button" title="移除此条件" data-tag-key="'+escapeHtml(item.tag)+'" data-tag-value="'+escapeHtml(item.value)+
+      var items=getValues(rule,bucket);if(!items.length)return '';
+      return items.map(function(item){
+        var meta=TAG_DICT[item.tag],label=meta?meta.label:item.tag;
+        return '<span class="selected-tag-chip"><span class="chip-group">'+escapeHtml(label)+'</span><span class="chip-value">'+escapeHtml(item.value)+'</span>'+
+          '<button type="button" aria-label="移除标签" title="移除此标签" data-tag-key="'+escapeHtml(item.tag)+'" data-tag-value="'+escapeHtml(item.value)+
           '" onclick="window._removeRuleTag('+rule.id+',\''+bucket+'\',this.dataset.tagKey,this.dataset.tagValue)">×</button></span>';
       }).join("");
     }
-    function optionGroups(rule,bucket) {
-      var query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"").trim().toLocaleLowerCase();
-      return getRuleTagKeys().map(function(tagKey) {
+    function optionGroups(rule,bucket,query) {
+      var q=String(query||"").trim().toLocaleLowerCase();
+      return getRuleTagKeys().map(function(tagKey){
         var meta=TAG_DICT[tagKey];if(!meta)return "";
         var values=Array.isArray(meta.values)?meta.values:[];
-        var matchCount=0;
-        var optionHtml=values.map(function(value,index) {
-          var searchText=(String(meta.label)+" "+String(value)).toLocaleLowerCase();
-          var visible=!!query&&searchText.indexOf(query)>=0;
-          if(visible)matchCount++;
-          var checked=selectedFor(rule,bucket,tagKey,value),typeLabel=meta.valueType==="multi_enum"?"多值":"单值";
-          return '<label class="tag-option" data-search-text="'+escapeHtml(searchText)+'"'+(visible?'':' style="display:none"')+'><input type="checkbox" '+(checked?'checked':'')+
-            ' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/><span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
-        }).join("");
-        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"'+(matchCount?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+optionHtml+'</div>';
+        var matching=values.some(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;});
+        var typeLabel=meta.valueType==="multi_enum"?"多值标签":"单值标签";
+        return '<div class="tag-options-group"'+(q&&matching?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+
+          values.map(function(value,index){
+            var visible=q&&(String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;
+            return '<label class="tag-option" data-search-text="'+escapeHtml((String(meta.label)+" "+String(value)).toLocaleLowerCase())+'"'+(visible?'':' style="display:none"')+'>'+
+              '<input type="checkbox" '+(selectedFor(rule,bucket,tagKey,value)?'checked':'')+' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/>'+
+              '<span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
+          }).join("")+'</div>';
       }).join("");
     }
-
-    function renderBucket(rule,bucket,title,help) {
-      var items=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
-      var noValues=getRuleTagKeys().every(function(key){return !TAG_DICT[key]||!Array.isArray(TAG_DICT[key].values)||!TAG_DICT[key].values.length;});
-      return '<section class="rule-condition-block"><div class="rule-condition-title"><strong>'+title+'</strong><span class="condition-count">'+items.length+' 项</span></div><div class="rule-condition-help">'+help+'</div>'+
-        '<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div><div class="tag-search-box"><span class="tag-search-icon">⌕</span>'+
-        '<input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+'" placeholder="搜索标签类别或标签值…" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
-        '<div class="tag-options" data-option-list="'+rule.id+":"+bucket+'">'+optionGroups(rule,bucket)+
-        (query.trim()?'':'<div class="tag-search-empty">'+(noValues?'标签字典暂无可选值，请检查数据库 tag_dictionary。':'输入关键词后显示匹配标签，选项来自数据库标签字典。')+'</div>')+'</div></section>';
+    function renderBucket(rule,bucket,title,description,mark) {
+      var selected=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
+      var resultMessage=query.trim()?'':'输入关键词后显示匹配结果';
+      return '<section class="product-condition-panel" data-condition-bucket="'+bucket+'"><div class="condition-panel-head"><div class="condition-panel-heading">'+
+        '<span class="condition-panel-mark '+mark+'">'+(mark==="mand"?"必":"分")+'</span><h3>'+title+'</h3></div><span class="condition-panel-count">'+selected.length+' 项</span></div>'+
+        '<p class="condition-panel-description">'+description+'</p>'+
+        (selected.length?'<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div>':'<div class="condition-empty">尚未设置'+title+'。在下方搜索并勾选标签即可。</div>')+
+        '<div class="tag-search-box"><span class="tag-search-icon">⌕</span><input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+
+        '" placeholder="搜索标签类别或标签值…" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
+        '<div class="tag-search-results'+(query.trim()?'':' is-idle')+'"><div class="tag-options" data-option-list="'+rule.id+":"+bucket+'">'+
+        optionGroups(rule,bucket,query)+(resultMessage?'<div class="tag-search-empty">'+resultMessage+'</div>':'')+
+        '</div></div></section>';
     }
-    var totalValues=getRuleTagKeys().reduce(function(sum,key){return sum+(TAG_DICT[key]&&Array.isArray(TAG_DICT[key].values)?TAG_DICT[key].values.length:0);},0);
-    var statusClass=TAG_SOURCE_STATUS.mode==="upstream"?" live":"";
-    var statusText=TAG_SOURCE_STATUS.mode==="upstream"?"标签表已连接":"离线预览";
-    var html='<div class="page-head map-page-head"><div><h2>产品标签规则</h2><p>每个产品独立维护必选条件与加分条件。输入关键词即可从标签表搜索和勾选，不再把所有标签铺成一张大矩阵。</p></div>'+
-      '<div class="cfg-legend"><span class="tag-source-status'+statusClass+'"><span class="dot"></span>'+statusText+'</span><span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span><span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span></div></div>'+
-      '<div class="rule-product-grid">'+RULES.map(function(rule,index) {
-        return '<article class="rule-product-card" data-rule-card="'+rule.id+'"><div class="rule-product-head"><span class="rule-product-number">P'+String(index+1).padStart(2,"0")+'</span>'+
-          '<div class="rule-product-title"><input aria-label="产品名称" type="text" maxlength="64" value="'+escapeHtml(rule.name)+'" onchange="window._updRule('+rule.id+',\'name\',this.value)"/><div class="rule-product-sub"><span class="rule-priority-pill">优先级 '+rule.manual_priority+'</span><span>'+(rule.enabled?"参与匹配":"已停用")+'</span></div></div>'+
-          '<span class="switch"><input aria-label="启用产品规则" type="checkbox" '+(rule.enabled?"checked":"")+' onchange="window._updRule('+rule.id+',\'enabled\',this.checked)"/><span class="track"></span></span></div>'+
-          '<div class="rule-product-body">'+renderBucket(rule,"mandatory","必选条件","所选标签必须满足；同一类别勾选多个值时，命中其中任意一个即可。")+
-          renderBucket(rule,"optional","加分条件","按标签类别分组计算命中，当前产品至少需要命中 "+rule.minOptionalHits+" 组。")+
-          '<div class="rule-condition-help">当前产品按优先级和加分组命中门槛参与试算。</div></div></article>';
-      }).join("")+'</div>'+
-      '<div class="mapping-bottom-bar"><span class="config-hint">只展示标签字典中标记为可用于规则的枚举类别。新增类别或标签值后，只要在数据库维护字典及取值并开放规则使用，刷新后就会自动出现在搜索结果中。</span>'+
-      '<span class="config-buttons"><button class="btn" onclick="window._addRule()">'+icon("plus",13)+' 加产品规则</button><button class="btn" onclick="window._reset()">恢复默认</button><button class="btn primary" onclick="window._save()">'+icon("check",13)+' 保存规则</button></span></div>'+
-      '<div class="mapping-source-note"><span>ⓘ</span><div><strong>标签表是标签类别与标签值的唯一来源。</strong>此页不提供新增标签入口，只读取 /api/tags 并保存产品选择的规则。新增类别时维护 tag_dictionary 并设置 rule_enabled=true，再向 tag_value 添加可选值即可，无需修改前端类别清单。</div></div>';
+    var html='<div class="page-head map-page-head"><div><h2>产品标签规则</h2><p>一次配置一个产品。切换产品查看各自规则，搜索后只展示匹配标签，避免所有规则同时铺开。</p></div>'+
+      '<div class="cfg-legend"><span class="tag-source-status'+(TAG_SOURCE_STATUS.mode==="upstream"?" live":"")+'"><span class="dot"></span>'+(TAG_SOURCE_STATUS.mode==="upstream"?"标签表已连接":"离线预览")+'</span>'+
+      '<span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span><span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span></div></div>'+
+      '<div class="product-switcher" role="tablist" aria-label="选择要配置的产品">'+RULES.map(function(rule,index){
+        var active=rule.id===activeRule.id;
+        return '<button type="button" role="tab" aria-selected="'+active+'" class="product-tab'+(active?" active":"")+'" onclick="window._selectRuleProduct('+rule.id+')">'+
+          '<span class="product-tab-number">P'+String(index+1).padStart(2,"0")+'</span><span class="product-tab-info"><span class="product-tab-name">'+escapeHtml(rule.name)+'</span>'+
+          '<span class="product-tab-meta"><span class="product-tab-count">必 '+valueCount(rule,"mandatory")+'</span><span class="product-tab-count">加 '+valueCount(rule,"optional")+'</span></span></span>'+
+          '<span class="product-tab-status'+(rule.enabled?"":" off")+'"></span></button>';
+      }).join("")+'</div>';
+    var selectedIndex=RULES.findIndex(function(rule){return rule.id===activeRule.id;});
+    html+='<section class="product-editor" data-rule-card="'+activeRule.id+'"><header class="product-editor-head"><div class="product-editor-mark">P'+String(selectedIndex+1).padStart(2,"0")+'</div>'+
+      '<div class="product-editor-title"><label>当前正在配置的产品</label><input type="text" maxlength="64" aria-label="产品名称" value="'+escapeHtml(activeRule.name)+'" onchange="window._updRule('+activeRule.id+',\'name\',this.value)"/>'+
+      '<div class="product-editor-meta"><span class="product-editor-priority">优先级 '+activeRule.manual_priority+'</span><span>'+(activeRule.enabled?"参与匹配":"已停用")+'</span></div></div>'+
+      '<div class="product-editor-tip">当前修改仅作用于「'+escapeHtml(activeRule.name)+'」。切换产品不会覆盖其他产品的规则。</div>'+
+      '<span class="switch"><input aria-label="启用当前产品规则" type="checkbox" '+(activeRule.enabled?"checked":"")+' onchange="window._updRule('+activeRule.id+',\'enabled\',this.checked)"/><span class="track"></span></span></header>'+
+      '<div class="product-condition-grid">'+renderBucket(activeRule,"mandatory","必选条件","房屋需满足这里的条件。同一类别内选择多个值时，命中其中任意一个即可。","mand")+
+      renderBucket(activeRule,"optional","加分条件","按标签类别分组计算命中；当前产品至少需要命中 "+activeRule.minOptionalHits+" 组。","opt")+
+      '</div><footer class="product-editor-footer"><span><strong>当前规则：</strong>必选 '+(activeRule.mandatory||[]).length+' 组 · 加分 '+(activeRule.optional||[]).length+' 组。实际命中取决于房屋快照中的标签数据。</span><span>标签类别和值均来自数据库</span></footer></section>'+
+      '<div class="mapping-bottom-bar"><span class="config-hint">类别和值均由数据库动态提供。新增类别时维护字典并开放规则使用，无需修改前端。</span><span class="config-buttons">'+
+      '<button class="btn" onclick="window._addRule()">'+icon("plus",13)+' 加产品规则</button><button class="btn" onclick="window._reset()">恢复默认</button><button class="btn primary" onclick="window._save()">'+icon("check",13)+' 保存规则</button></span></div>';
     return html;
   }
 
-  window._tagSearch = function(ruleId,bucket,query) {
-    RULE_TAG_SEARCH[ruleId+":"+bucket]=String(query||"");
-    var root=document.querySelector('[data-rule-card="'+ruleId+'"]');if(!root)return;
-    var list=root.querySelector('[data-option-list="'+ruleId+":"+bucket+'"]');if(!list)return;
-    var q=String(query||"").trim().toLocaleLowerCase(),groups=list.querySelectorAll(".tag-options-group"),visible=0;
-    groups.forEach(function(group){var rows=group.querySelectorAll(".tag-option"),inGroup=0;rows.forEach(function(row){var show=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0;row.style.display=show?"flex":"none";if(show){inGroup++;visible++;}});group.style.display=inGroup?"block":"none";});
-    var empty=list.querySelector(".tag-search-empty");if(empty)empty.remove();
-    if(!q)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">输入关键词后显示匹配标签，选项来自数据库标签字典。</div>');
-    else if(!visible)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">没有找到匹配标签，请检查标签表是否已维护该值。</div>');
-  };
-  window._toggleRuleTagByIndex = function(ruleId,bucket,tagKey,valueIndex,checked) {
-    var rule=RULES.find(function(item){return item.id===ruleId;}),meta=TAG_DICT[tagKey],value=meta&&Array.isArray(meta.values)?meta.values[Number(valueIndex)]:undefined;
-    if(!rule||value===undefined)return;
-    var target=bucket==="mandatory"?rule.mandatory:rule.optional,other=bucket==="mandatory"?rule.optional:rule.mandatory;
-    function removeValue(list,key,val){list.forEach(function(condition){if(condition.tag===key)condition.value=(condition.value||[]).filter(function(item){return item!==val;});});for(var i=list.length-1;i>=0;i--)if(!list[i].value||list[i].value.length===0)list.splice(i,1);}
-    if(!checked)removeValue(target,tagKey,value);
-    else{removeValue(other,tagKey,value);var condition=target.find(function(item){return item.tag===tagKey;});if(!condition){var op=meta.valueType==="enum"?"in":"contains_any";condition={tag:tagKey,op:op,value:[]};target.push(condition);}if(condition.value.indexOf(value)<0)condition.value.push(value);}
+  window._selectRuleProduct = function(ruleId) {
+    ACTIVE_RULE_ID = ruleId;
+    RULE_TAG_SEARCH = {};
     render();
   };
+
+  window._tagSearch = function(ruleId,bucket,query) {
+    RULE_TAG_SEARCH[ruleId+":"+bucket]=String(query||"");
+    var root=document.querySelector('[data-rule-card="'+ruleId+'"]');
+    if(!root||ACTIVE_RULE_ID!==ruleId)return;
+    var list=root.querySelector('[data-option-list="'+ruleId+":"+bucket+'"]');
+    if(!list)return;
+    var q=String(query||"").trim().toLocaleLowerCase(),groups=list.querySelectorAll(".tag-options-group"),visible=0;
+    groups.forEach(function(group){
+      var rows=group.querySelectorAll(".tag-option"),inGroup=0;
+      rows.forEach(function(row){var show=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0;row.style.display=show?"flex":"none";if(show){inGroup++;visible++;}});
+      group.style.display=inGroup?"block":"none";
+    });
+    var empty=list.querySelector(".tag-search-empty");if(empty)empty.remove();
+    var container=list.parentElement;
+    if(!q){container.classList.add("is-idle");list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">输入关键词后显示匹配结果</div>');}
+    else{container.classList.remove("is-idle");if(!visible)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">没有找到匹配标签，可以尝试类别名称或其他关键词。</div>');}
+  };
+
+  window._toggleRuleTagByIndex = function(ruleId,bucket,tagKey,valueIndex,checked) {
+    var rule=RULES.find(function(item){return item.id===ruleId;}),meta=TAG_DICT[tagKey];
+    var value=meta&&Array.isArray(meta.values)?meta.values[Number(valueIndex)]:undefined;
+    if(!rule||value===undefined)return;
+    var panel=document.querySelector('[data-condition-bucket="'+bucket+'"]'),search=panel&&panel.querySelector(".tag-search-input");
+    var searchState=search?{start:search.selectionStart,end:search.selectionEnd}:null;
+    var target=bucket==="mandatory"?rule.mandatory:rule.optional,other=bucket==="mandatory"?rule.optional:rule.mandatory;
+    function removeValue(list,key,val){
+      list.forEach(function(condition){if(condition.tag===key)condition.value=(condition.value||[]).filter(function(item){return item!==val;});});
+      for(var i=list.length-1;i>=0;i--)if(!list[i].value||list[i].value.length===0)list.splice(i,1);
+    }
+    if(!checked)removeValue(target,tagKey,value);
+    else{
+      removeValue(other,tagKey,value);
+      var condition=target.find(function(item){return item.tag===tagKey;});
+      if(!condition){condition={tag:tagKey,op:meta.valueType==="enum"?"in":"contains_any",value:[]};target.push(condition);}
+      if(condition.value.indexOf(value)<0)condition.value.push(value);
+    }
+    render();
+    var nextPanel=document.querySelector('[data-condition-bucket="'+bucket+'"]'),nextSearch=nextPanel&&nextPanel.querySelector(".tag-search-input");
+    if(nextSearch&&searchState){nextSearch.focus();try{nextSearch.setSelectionRange(searchState.start,searchState.end);}catch(e){}}
+  };
+
   window._removeRuleTag = function(ruleId,bucket,tagKey,value) {
     var rule=RULES.find(function(item){return item.id===ruleId;});if(!rule)return;
     var list=bucket==="mandatory"?rule.mandatory:rule.optional;
@@ -1895,8 +1972,10 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   window._addRule = function () {
     var maxId = Math.max.apply(null, RULES.map(function (r) { return r.id; }));
     RULES.push({ id: maxId + 1, name: "新产品", manual_priority: RULES.length + 1, enabled: true, mandatory: [], optional: [], minOptionalHits: 1 });
+    ACTIVE_RULE_ID = maxId + 1;
+    RULE_TAG_SEARCH = {};
     render();
-    flash("已新增「新产品」，在矩阵里打勾即可配置");
+    flash("已新增产品规则，请在当前编辑区搜索并选择标签");
   };
   window._updRule = function (id, key, val) {
     var r = RULES.find(function (x) { return x.id === id; });
