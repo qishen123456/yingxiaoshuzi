@@ -76,6 +76,30 @@ SET tag_group    = EXCLUDED.tag_group,
     max_value    = EXCLUDED.max_value,
     source_column= EXCLUDED.source_column;
 
+-- =================================================================================
+-- 行级标签值：tag_value 是产品标签选择器的唯一值来源。
+-- 新增常用标签值时，按已有 tag_key 新增一行即可；前端会通过 /api/tags 自动读取。
+-- 示例：
+-- INSERT INTO tag_value (tag_key, tag_value, sort_order)
+-- VALUES ('water_tags', '新增水路标签', 100)
+-- ON CONFLICT (tag_key, tag_value) DO UPDATE SET status = 'enabled';
+-- 历史 enum_values 只用于初始化；此后新增的标签应维护 tag_value，不必改前端代码。
+-- =================================================================================
+INSERT INTO tag_value (tag_key, tag_value, sort_order, status)
+SELECT
+  td.tag_key,
+  btrim(v.tag_value),
+  (v.ordinality * 10)::integer,
+  'enabled'
+FROM tag_dictionary td
+CROSS JOIN LATERAL jsonb_array_elements_text(COALESCE(td.enum_values, '[]'::jsonb))
+  WITH ORDINALITY AS v(tag_value, ordinality)
+WHERE td.tag_key IN ('water_tags', 'env_tags', 'family_structure', 'decorate_status')
+  AND btrim(v.tag_value) <> ''
+ON CONFLICT (tag_key, tag_value) DO UPDATE
+SET sort_order = EXCLUDED.sort_order,
+    status = 'enabled';
+
 -- 运维查询：标签字典概览（按标签组核对枚举与溯源列）
 -- SELECT tag_group, tag_key, tag_name, value_type, source_column,
 --        jsonb_array_length(COALESCE(enum_values, '[]'::jsonb)) AS enum_cnt
