@@ -650,6 +650,29 @@
   .plan-scope{color:#405870;line-height:1.7;min-width:190px}
   .plan-scope small{display:block;color:#8a98a9;font-size:10.5px}
 
+
+  .doc-flowchart{padding:20px;border:1px solid #e2e9f1;background:linear-gradient(180deg,#fbfcfe,#f7f9fc);border-radius:14px}
+  .flowchart-sources{display:grid;grid-template-columns:1fr 44px 1fr;gap:10px;align-items:stretch;max-width:900px;margin:0 auto}
+  .flowchart-node{min-width:0;background:#fff;border:1px solid #dfe7f0;border-radius:10px;padding:14px 15px;box-shadow:0 2px 5px rgba(22,49,78,.025)}
+  .flowchart-node .fc-step{display:block;color:#7f98b2;font-size:9.5px;font-weight:800;letter-spacing:.1em;margin-bottom:6px}
+  .flowchart-node strong{display:block;color:#203c58;font-size:12.5px;line-height:1.5}
+  .flowchart-node small{display:block;margin-top:5px;color:#72849a;font-size:10.5px;line-height:1.65}
+  .flowchart-node.source{border-top:3px solid #7da4ca}
+  .flowchart-node.core{border-top:3px solid #1d5a96}
+  .flowchart-node.guard{border-top:3px solid #d49a45}
+  .flowchart-node.output{border-top:3px solid #479577}
+  .flowchart-merge{display:flex;justify-content:center;align-items:center;color:#8fa1b4;font-size:18px}
+  .flowchart-bridge{display:flex;justify-content:center;margin:12px auto 0}
+  .flowchart-bridge span{padding:7px 13px;border:1px dashed #b7c9dc;border-radius:7px;color:#446887;background:#eef5fb;font-size:10.5px;font-weight:650;text-align:center}
+  .flowchart-down{text-align:center;color:#93a4b6;font-size:18px;line-height:1.3;margin:3px 0}
+  .flowchart-row{display:flex;align-items:stretch;gap:7px;margin-top:4px}
+  .flowchart-row .flowchart-node{flex:1 1 0;padding:13px 12px}
+  .flowchart-arrow{display:flex;align-items:center;justify-content:center;flex:0 0 17px;color:#a0afbf;font-size:17px}
+  .flowchart-row .flowchart-node small{font-size:10px}
+  .flowchart-return{text-align:center;margin-top:12px;padding-top:11px;border-top:1px dashed #d5dfe9;color:#8192a6;font-size:10.5px;line-height:1.7}
+  @media(max-width:1080px){.flowchart-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.flowchart-arrow{display:none}}
+  @media(max-width:640px){.doc-flowchart{padding:12px}.flowchart-sources{grid-template-columns:1fr}.flowchart-merge{min-height:18px}.flowchart-row{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1698,12 +1721,30 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       goal("sliders", "规则可管理", "通过映射矩阵维护必选门槛、加分项、产品启停与优先级，降低修改规则对技术人员的依赖。") +
       goal("history", "触达可追踪", "把筛选结果、海报素材、推送计划和发送记录纳入同一条业务链路，为后续频控与效果回看留出接口。");
 
-    var steps =
-      step("STEP 01", "数据输入", "读取房屋样本、项目归属、脱敏号码及水路、环境、家庭结构等标签。") +
-      step("STEP 02", "标签标准化", "拆分多值标签，按统一字段名和标签值组织成评估引擎可消费的结构。") +
-      step("STEP 03", "匹配产品规则", "校验必选条件，再计算加分组命中数；未通过门槛的产品不进入候选集。") +
-      step("STEP 04", "确定推送产品", "按手动优先级、命中数和规则 ID 排序，每户只保留一个胜出产品。") +
-      step("STEP 05", "配置并触达", "在推送页筛选人群，配置海报和计划；当前原型的发送行为为模拟操作。");
+    var flowchartHtml =
+      '<div class="doc-flowchart">' +
+        '<div class="flowchart-sources">' +
+          '<div class="flowchart-node source"><span class="fc-step">SOURCE 01</span><strong>房屋标签宽表</strong><small>MaxCompute · 责任盘房屋以及水路、电路、环境、装修、家庭结构等标签</small></div>' +
+          '<div class="flowchart-merge">＋</div>' +
+          '<div class="flowchart-node source"><span class="fc-step">SOURCE 02</span><strong>线索全量表与补号数据</strong><small>ADB PostgreSQL · 线索状态、手机号匹配和后续效果归因</small></div>' +
+        '</div>' +
+        '<div class="flowchart-bridge"><span>DataWorks T+1 同步 · 字段映射 · 多值拆分 · 手机号加密 / HMAC</span></div>' +
+        '<div class="flowchart-down">↓</div>' +
+        '<div class="flowchart-row">' +
+          '<div class="flowchart-node core"><span class="fc-step">01 · DATA</span><strong>房屋标签快照</strong><small>house_label_snapshot：房屋、项目、组织范围与标准化标签 JSON</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node core"><span class="fc-step">02 · DICTIONARY</span><strong>上游标签字典</strong><small>tag_dictionary：字段名称、源列、类型和动态枚举值</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node core"><span class="fc-step">03 · RULES</span><strong>产品规则配置</strong><small>维护必选门槛、加分组、优先级和规则启停</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node core"><span class="fc-step">04 · MATCH</span><strong>规则引擎圈人</strong><small>必选条件先校验；通过后检查加分门槛，每户确定唯一产品</small></div>' +
+        '</div>' +
+        '<div class="flowchart-down">↓ 人群范围收敛</div>' +
+        '<div class="flowchart-row">' +
+          '<div class="flowchart-node guard"><span class="fc-step">05 · SCOPE</span><strong>城市 / 项目范围</strong><small>城市默认全项目，也可选择一个或多个项目组合</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node guard"><span class="fc-step">06 · GUARD</span><strong>去重与频控</strong><small>同模式 30 天、跨模式 7 天；号码去重并检查执行门槛</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node output"><span class="fc-step">07 · CREATIVE</span><strong>海报与触达渠道</strong><small>依产品匹配素材与渠道；当前 HTML 发送行为仍是模拟</small></div><span class="flowchart-arrow">→</span>' +
+          '<div class="flowchart-node output"><span class="fc-step">08 · AUDIT</span><strong>推送留痕与效果回流</strong><small>push_detail 留痕，并关联发送后 15 天线索窗口</small></div>' +
+        '</div>' +
+        '<div class="flowchart-return">数据每日更新 → 规则与范围可配置 → 推送结果留痕 → 线索与效果复盘，形成可审计的运营闭环</div>' +
+      '</div>';
 
     var modules =
       module("sliders", "产品与标签映射", "01 / CONFIG", "管理标签类别、标签值与产品规则之间的关系；支持新增标签值、设定必选/加分、启停规则和恢复默认。", "页面内可交互 · 浏览器本地保存") +
@@ -1747,8 +1788,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       '<section class="doc-section">' + section("01", "项目要解决什么问题", "把分散在标签数据、人工筛选和素材执行中的动作统一成一套可以检查的流程。") +
         '<div class="doc-goal-grid">' + goals + '</div></section>' +
 
-      '<section class="doc-section">' + section("02", "业务链路与判断顺序", "规则先决定适不适合，再决定优先推哪个产品；发送动作必须建立在样本核验、频控和合规确认之后。") +
-        '<div class="doc-steps">' + steps + '</div>' +
+      '<section class="doc-section">' + section("02", "端到端业务流程图", "从上游数据进入系统，到标签规则、范围选择、频控触达与效果回流，完整展示各环节如何衔接。") +
+        flowchartHtml +
         '<div class="doc-callout"><strong>产品胜出顺序：</strong>先比较手动优先级（数字越小越优先），再比较命中标签组数（越多越优先），最后比较规则 ID；每户只保留一个胜出产品，避免同一批次重复推荐多个产品。</div></section>' +
 
       '<section class="doc-section">' + section("03", "产品规则口径", "下面按当前前端规则配置整理。这里的“加分组”按规则组计数，而不是简单统计单个标签文字的出现次数。") +
