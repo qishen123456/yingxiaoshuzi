@@ -1157,6 +1157,43 @@
 .doc-flow-track.doc-flow-track-three{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr)}
 @media(max-width:1150px){.doc-flow-source-pair{grid-template-columns:1fr}.doc-flow-track.doc-flow-track-three{grid-template-columns:1fr}}
 
+
+/* Show recognizable data values first; technical field maps are not the main story. */
+.doc-real-data{display:flex;flex-direction:column;gap:15px}
+.doc-real-block{border:1px solid #d8e2ec;border-radius:11px;background:#fff;overflow:hidden}
+.doc-real-block-head{padding:13px 15px;border-bottom:1px solid #e1e9f1;background:#f7f9fc}
+.doc-real-block-head h4{margin:0 0 5px;color:#203a54;font-size:12.5px}
+.doc-real-block-head p{margin:0;color:#667c91;font-size:10.5px;line-height:1.7}
+.doc-real-block-body{padding:14px 15px}
+.doc-tag-group-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.doc-real-tag-group{padding:12px;border:1px solid #e0e8f0;border-radius:9px;background:#fff}
+.doc-real-tag-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;color:#284660;font-size:11px;font-weight:750}
+.doc-real-tag-title small{color:#91a0af;font-size:9px;font-weight:500}
+.doc-real-chips{display:flex;gap:6px;flex-wrap:wrap}
+.doc-real-chip{display:inline-flex;align-items:center;padding:5px 8px;border:1px solid #d2dfeb;border-radius:6px;background:#f2f7fc;color:#2f5274;font-size:10.5px;line-height:1.4}
+.doc-real-chip.orange{border-color:#eed3ad;background:#fff7eb;color:#8e571b}
+.doc-real-chip.green{border-color:#c9e5d8;background:#f0f8f3;color:#2e6b50}
+.doc-data-table-wrap{width:100%;overflow:auto}
+.doc-data-table{width:100%;border-collapse:separate;border-spacing:0;min-width:740px;font-size:10.5px}
+.doc-data-table th{padding:10px 11px;background:#f4f7fa;border-bottom:1px solid #dbe4ed;color:#526b82;text-align:left;font-size:10px;font-weight:750;white-space:nowrap}
+.doc-data-table td{padding:11px;border-bottom:1px solid #e8eef4;color:#3e566d;line-height:1.6;white-space:nowrap}
+.doc-data-table tbody tr:nth-child(odd){background:#fff}
+.doc-data-table tbody tr:nth-child(even){background:#f8fafc}
+.doc-data-table tbody tr:last-child td{border-bottom:0}
+.doc-data-table .cell-strong{color:#1f466b;font-weight:750}
+.doc-sample-caption{padding:10px 13px;border-top:1px solid #e4ebf2;background:#fbfcfe;color:#7b8da0;font-size:10px;line-height:1.7}
+.doc-lead-example-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.doc-lead-example{padding:12px 13px;border:1px solid #dce5ee;border-radius:9px;background:#fbfcfe}
+.doc-lead-example label{display:block;margin-bottom:6px;color:#8294a7;font-size:9px}
+.doc-lead-example strong{display:block;margin-bottom:5px;color:#2b4865;font-size:12px;line-height:1.5}
+.doc-lead-example p{margin:0;color:#60768b;font-size:10px;line-height:1.65}
+.doc-true-vs-example{margin-top:11px;padding:10px 12px;border-left:3px solid #648cb3;border-radius:0 7px 7px 0;background:#f0f6fb;color:#526d86;font-size:10px;line-height:1.7}
+.doc-dev-field-details{margin-top:12px;border:1px solid #d9e3ed;border-radius:9px;background:#fff;overflow:hidden}
+.doc-dev-field-details summary{padding:11px 13px;background:#f7f9fc;color:#385670;font-size:10.5px;font-weight:750;cursor:pointer}
+.doc-dev-field-details[open] summary{border-bottom:1px solid #e2eaf2}
+.doc-dev-field-details .doc-db-grid{padding:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){.doc-tag-group-grid,.doc-lead-example-grid{grid-template-columns:1fr}.doc-dev-field-details .doc-db-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -2352,19 +2389,46 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       sourceCard('SOURCE 02 · ADB POSTGRESQL','线索上游全量宽表','yanxuan.ads_yx_clue_full_detail。每日 T+1 快照，约 180 个来源字段；系统按字段契约映射业务所需信息，不将整张宽表直接交给前端。','clue_id、customer_mobile、house_code、zhantu_housecode、intention_first_type、intention_second_type、customer_level、business_status、channel_category_l1、created_time、latest_deal_time、order_cnt、performance_final 等')+
       '</div>';
 
-    var warehouseTables =
-      '<div class="doc-layer-label">A. MaxCompute 数据仓库层 · 标准化标签与圈选事实</div><div class="doc-db-grid">'+
-      fieldTable('标签类别字典','weijia.dim_yx_house_tag_category','回答有哪些标签、值类型是什么、来源哪个字段，是类别和控件元信息的唯一来源。',categoryRows,'DIMENSION · 类别元信息')+
-      fieldTable('标签值字典','weijia.dim_yx_house_tag_value','回答每个枚举类别有哪些可选项。静态值保留稳定编码，动态值由明细回灌。',valueRows,'DIMENSION · 值域清单')+
-      fieldTable('房屋－标签明细长表','weijia.dwd_yx_house_tag_detail','一房一类别一值一行。多值拆成多行，数值写入独立数值列，按 pt 保留每日快照。',tagDetailRows,'FACT · 按 pt 分区')+
-      '</div>';
+    var actualContents =
+      '<div class="doc-real-data">'+
+      '<article class="doc-real-block"><header class="doc-real-block-head"><h4>① 标签库里实际有哪些内容？</h4><p>以下标签值取自项目现有数据契约和标签字典初始化 SQL。页面选项来自 tag_value；类别是否出现在产品规则中，还受 rule_enabled 控制。</p></header>'+
+      '<div class="doc-real-block-body"><div class="doc-tag-group-grid">'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">水路标签 <small>多选 · 当前开放规则</small></div><div class="doc-real-chips"><span class="doc-real-chip">卫生间漏水</span><span class="doc-real-chip">厨房漏水</span><span class="doc-real-chip">阳台漏水</span><span class="doc-real-chip">水管老化</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">环境标签 <small>多选 · 当前开放规则</small></div><div class="doc-real-chips"><span class="doc-real-chip">墙面发霉</span><span class="doc-real-chip">渗水/返潮</span><span class="doc-real-chip">厨房老化</span><span class="doc-real-chip">卫生间老化</span><span class="doc-real-chip">阳台老化</span><span class="doc-real-chip">瓷砖开裂空鼓</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">家庭结构 <small>单选 · 当前开放规则</small></div><div class="doc-real-chips"><span class="doc-real-chip">三代同堂</span><span class="doc-real-chip">多孩之家</span><span class="doc-real-chip">二孩之家</span><span class="doc-real-chip">三口之家</span><span class="doc-real-chip">二人世界</span></div><div class="doc-sample-caption" style="padding:7px 0 0;border:0;background:transparent">数据库原值带 A_ / B_ / C_ / D_ / E_ 前缀；前端展示时可以去掉前缀，规则匹配需保留原值。</div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">装修状态 <small>单选 · 当前开放规则</small></div><div class="doc-real-chips"><span class="doc-real-chip">未装修</span><span class="doc-real-chip">一年以内</span><span class="doc-real-chip">1-5年</span><span class="doc-real-chip">5-10年</span><span class="doc-real-chip">10年及以上</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">电路标签 <small>多选 · 字典已定义，规则默认关闭</small></div><div class="doc-real-chips"><span class="doc-real-chip">跳闸</span><span class="doc-real-chip">插座故障</span><span class="doc-real-chip">电路老化</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">家电标签 <small>多选 · 字典已定义，规则默认关闭</small></div><div class="doc-real-chips"><span class="doc-real-chip">空调故障</span><span class="doc-real-chip">热水器故障</span><span class="doc-real-chip">冰箱故障</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">居住状态 <small>单选 · 字典已定义，规则默认关闭</small></div><div class="doc-real-chips"><span class="doc-real-chip">未知</span><span class="doc-real-chip">自住-常住</span><span class="doc-real-chip">自住-非常住</span><span class="doc-real-chip">出租中</span><span class="doc-real-chip">空置</span></div></div>'+
+      '<div class="doc-real-tag-group"><div class="doc-real-tag-title">价格敏感标签 <small>单选 · 当前契约中的已知值</small></div><div class="doc-real-chips"><span class="doc-real-chip">性价比优先</span></div><div class="doc-sample-caption" style="padding:7px 0 0;border:0;background:transparent">上游实际值域还需持续核对；当前种子文件仅列出此已知示例。</div></div>'+
+      '</div><div class="doc-true-vs-example"><strong>提醒：</strong>房屋类型、户型、面积、房屋年限、维修次数也是实际数据列，但不是固定枚举。例如截图中的房屋类型为“住宅”、房屋年限为 8.28 年，维修次数为 0。数值型条件应使用阈值/区间，不应伪装成多选标签。</div></div></article>'+
 
-    var appTables =
-      '<div class="doc-layer-label">B. PostgreSQL 应用层 · 页面查询与运营使用</div><div class="doc-db-grid">'+
-      fieldTable('房屋明细 / 标签快照','house_label_snapshot','现有应用表，一房一行。后端按产品规则筛选并分页返回；浏览器不加载全量房屋后自行圈选。',houseRows,'SERVING · 当前已有模型')+
-      fieldTable('线索明细','lead_record','现有线索镜像表，一条线索一行。房屋详情通过 house_id 关联，展示意向、等级、状态、渠道和成交信号。',leadRows,'DETAIL · 当前已有模型')+
-      fieldTable('推送执行明细','push_detail','一条触达对象一条记录，关联任务、房屋、产品规则、素材、发送结果和失败原因。',pushRows,'AUDIT · 执行留痕')+
-      '</div><div class="doc-data-boundary"><strong>号码与隐私：</strong>线索主表保存 HMAC 客户键，房屋快照的手机号字段为加密值。详情接口只返回有权限展示的脱敏字段，不向普通页面暴露明文、密文或 HMAC 原值。</div>';
+      '<article class="doc-real-block"><header class="doc-real-block-head"><h4>② 房屋明细页面，开发最终会拿到什么？</h4><p>下面是你提供的明细截图中可见的一条房屋记录，展示的是业务内容，不是数据库字段清单。</p></header>'+
+      '<div class="doc-data-table-wrap"><table class="doc-data-table"><thead><tr><th>房屋名称</th><th>战图房屋编码</th><th>房屋年限</th><th>类型</th><th>项目编码</th><th>项目名称</th><th>水路标签</th><th>居住状态</th><th>装修状态</th><th>维修次数</th></tr></thead><tbody>'+
+      '<tr><td class="cell-strong">期6栋2单元1404</td><td>5101040352018060000140214043</td><td>8.28 年</td><td>住宅</td><td>CN510104010043</td><td class="cell-strong">成都锦城五期</td><td>—</td><td>自住-常住</td><td><span class="doc-real-chip orange">未装修</span></td><td>0</td></tr>'+
+      '</tbody></table></div><div class="doc-sample-caption">这一行来自你发的页面截图。完整页面还包含电路、家电、环境、价格标签、家庭结构、厨房 / 阳台 / 卫生间维修次数等列。实际房屋列表应由后端按产品规则筛选，再分页返回。</div></article>'+
+
+      '<article class="doc-real-block"><header class="doc-real-block-head"><h4>③ 点开房屋后，线索详情应该展示什么？</h4><p>现有 lead_record 保存线索镜像数据，字段值以线索来源表为准。以下展示源 SQL / 数据契约中有定义的业务内容，不拼造一条真实客户记录。</p></header>'+
+      '<div class="doc-real-block-body"><div class="doc-lead-example-grid">'+
+      '<div class="doc-lead-example"><label>产品意向</label><strong>局部改造 · 浴缸改淋浴</strong><p>来源于一级意向 + 二级意向。具体二级枚举需以线索源表盘点结果为准。</p></div>'+
+      '<div class="doc-lead-example"><label>客户等级</label><strong>A类客户 / B类客户 / C类客户 / D类客户 / E类客户</strong><p>按上游 customer_level 原值保存，供详情查看和质量分层。</p></div>'+
+      '<div class="doc-lead-example"><label>线索状态</label><strong>已成交、有需求未成交、跟进中、无需求、待清洗、其他</strong><p>按上游 business_status 原值展示；其中无需求、待清洗等状态不属于有效线索。</p></div>'+
+      '<div class="doc-lead-example"><label>线索渠道</label><strong>物业联动、朴邻联动、PA自拓、NPS 等</strong><p>来源字段 channel_category_l1；真实值随上游数据更新。</p></div>'+
+      '<div class="doc-lead-example"><label>业务指标</label><strong>创建时间、最近成交时间、订单数、业绩金额</strong><p>分别用于线索详情、成交信号和触达效果归因。</p></div>'+
+      '<div class="doc-lead-example"><label>房屋与客户关联</label><strong>Pride 房屋码优先，必要时回退战图码</strong><p>手机号只用于同步时生成 HMAC 客户键；详情页面不直接展示明文手机号。</p></div>'+
+      '</div><div class="doc-true-vs-example"><strong>页面开发建议：</strong>房屋详情用房屋标签快照展示房屋属性；下方按 house_id 分页查询 lead_record，按时间倒序展示线索。未匹配到房屋的线索仍应保留在独立线索列表，不应丢弃。</div></div></article>'+
+
+      '<details class="doc-dev-field-details"><summary>开发参考：展开查看表结构字段映射（业务样例在上方）</summary><div class="doc-db-grid">'+
+      '<div class="doc-db-card"><header class="doc-db-card-head"><span class="db-role">WAREHOUSE / FACT</span><h4>房屋标签长表</h4><code>weijia.dwd_yx_house_tag_detail</code><p>一个类别一个值一行，供标签匹配与人数统计。</p></header><div class="doc-db-card-body"><table class="doc-db-table"><thead><tr><th>字段</th><th>用途</th></tr></thead><tbody>'+
+      tagDetailRows.map(function(row){return '<tr><td>'+escapeHtml(row[0])+'</td><td>'+escapeHtml(row[1])+'</td></tr>';}).join("")+
+      '</tbody></table></div></div>'+
+      '<div class="doc-db-card"><header class="doc-db-card-head"><span class="db-role">APPLICATION / HOUSE</span><h4>房屋快照</h4><code>house_label_snapshot</code><p>一房一行，规则筛选和房屋详情的入口。</p></header><div class="doc-db-card-body"><table class="doc-db-table"><thead><tr><th>字段</th><th>用途</th></tr></thead><tbody>'+
+      houseRows.map(function(row){return '<tr><td>'+escapeHtml(row[0])+'</td><td>'+escapeHtml(row[1])+'</td></tr>';}).join("")+
+      '</tbody></table></div></div>'+
+      '<div class="doc-db-card"><header class="doc-db-card-head"><span class="db-role">APPLICATION / LEAD</span><h4>线索明细</h4><code>lead_record</code><p>一条线索一行，支持详情展示和效果回流。</p></header><div class="doc-db-card-body"><table class="doc-db-table"><thead><tr><th>字段</th><th>用途</th></tr></thead><tbody>'+
+      leadRows.map(function(row){return '<tr><td>'+escapeHtml(row[0])+'</td><td>'+escapeHtml(row[1])+'</td></tr>';}).join("")+
+      '</tbody></table></div></div></div></details>'+
+      '</div>';
 
     var apis =
       '<div class="doc-api-grid">'+
@@ -2431,7 +2495,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       '<h2>营销智能推送 · 数据基础与业务流程</h2><p>先讲清楚数据来自哪里、开发可以读取哪些字段，再讲产品规则、筛选范围和推送限制。目标是让业务配置可理解、房屋筛选可复现、触达结果可追踪。</p>'+
       '<div class="doc-hero-tags"><span>标签数据字典</span><span>房屋 / 线索明细</span><span>产品规则驱动</span><span>推送全程留痕</span></div></div>'+
       '<div class="doc-hero-side"><div class="dhs-label">当前交付范围</div><div class="dhs-value">数据模型 + 系统方案</div><div class="dhs-caption">上游 SQL 定义仓库标签模型；应用层已有房屋快照、线索镜像和推送明细。按产品规则筛选房屋的接口及生产调度仍需开发联调。</div></div></section>'+
-      '<section class="doc-section">'+section('01','数据基础：上游表与数据去向','上游生产宽表保持只读，通过 DataWorks 同步到仓库与应用层，前端不直接连接来源库。')+dataSources+warehouseTables+appTables+'<div class="doc-layer-label">C. 开发与前端可取的数据</div>'+apis+'</section>'+
+      '<section class="doc-section">'+section('01','数据基础：上游表与数据去向','上游生产宽表保持只读，通过 DataWorks 同步到仓库与应用层，前端不直接连接来源库。')+dataSources+actualContents+'<div class="doc-layer-label">C. 开发与前端可取的数据</div>'+apis+'</section>'+
       '<section class="doc-section">'+section('02','系统规则与功能','前端负责配置和呈现；真正的产品匹配、分页筛选、调度和频控由服务端执行。')+rulesHtml+'</section>'+
       '<section class="doc-section">'+section('03','推送限制与执行保护','先圈选目标，再做客户去重、模式频控和任务校验；下列为当前方案定义的规则口径。')+limits+'</section>'+
       '<section class="doc-section">'+section('04','一套完整的端到端流程','从两路上游数据到标签加工、产品匹配、范围过滤、频控、发送记录和线索回流。')+processFlow+'</section>'+
