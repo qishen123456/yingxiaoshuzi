@@ -2370,22 +2370,27 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
     var processFlow=
       '<div class="doc-full-flow">'+
-      '<div class="doc-flow-lane-title"><span>01</span>数据基础：从来源表到可查询的数据模型</div>'+
+      '<div class="doc-flow-lane-title"><span>01</span>数据基础：两路来源、分层加工</div>'+
+      '<div class="doc-flow-source-pair">'+
+        flowNode('SOURCE A','房屋标签宽表','责任盘房屋、组织项目与装修 / 维修标签。','source')+
+        flowNode('SOURCE B','线索全量宽表','线索意向、客户等级、状态、渠道及成交信号。','source')+
+      '</div>'+
+      '<div class="doc-flow-bridge"><strong>两路独立同步：</strong>DataWorks T+1 集成、字段映射、数据质量校验与号码保护 <span class="down-arrow">↓</span></div>'+
+      '<div class="doc-flow-track doc-flow-track-three">'+flowRow([
+        ['01','标签仓库模型','类别字典、值字典、按 pt 分区的标签长表。','data'],
+        ['02','应用房屋明细','一房一行，保存标签 JSONB 与城市 / 项目维度。','data'],
+        ['03','应用线索明细','一条线索一行，保存意向、状态与成交 / 归因字段。','data']
+      ])+'</div>'+
+      '<div class="doc-flow-bridge"><strong>数据准备完成：</strong>前端读取动态标签目录；后端按房屋和线索主键查询。</div>'+
+      '<div class="doc-flow-lane-title"><span>02</span>业务执行：从产品规则到触达回流</div>'+
       '<div class="doc-flow-track">'+flowRow([
-        ['01','房屋标签宽表','组织、责任盘项目与房屋标签。','source'],
-        ['02','线索全量宽表','意向、业务状态、渠道与成交信号。','source'],
-        ['03','DataWorks 同步','每日 T+1、字段映射、校验与号码保护。','data'],
-        ['04','标签仓库模型','类别字典、值字典、房屋标签长表。','data'],
-        ['05','应用明细表','房屋快照、线索镜像、推送执行明细。','data']
-      ])+'</div><div class="doc-flow-bridge"><span class="down-arrow">↓</span><strong>数据准备完成：</strong>前端读取动态标签目录，后端可以按房屋及线索主键查询数据。</div>'+
-      '<div class="doc-flow-lane-title"><span>02</span>业务执行：从产品配置到效果回流</div>'+
-      '<div class="doc-flow-track">'+flowRow([
-        ['06','配置产品规则','必选、加分、最低命中组数和优先级。','rule'],
-        ['07','后端匹配房屋','按产品规则查询房屋快照并分页返回。','rule'],
-        ['08','选择城市 / 项目','单城全推、多城组合，或选择部分项目。','guard'],
-        ['09','去重与频控','同模式 30 天、跨模式 7 天。','guard'],
-        ['10','定时任务与触达','匹配素材、执行任务并记录结果。','out']
-      ])+'</div><div class="doc-flow-bridge"><span class="down-arrow">↓</span><strong>结果回流：</strong>push_detail 留存触达记录，lead_record 关联后续线索和成交信号，供运营复盘。</div>'+
+        ['04','配置产品规则','必选、加分、最低命中组数、优先级与启停。','rule'],
+        ['05','后端匹配房屋','依据产品规则筛选房屋快照并分页返回。','rule'],
+        ['06','选择城市 / 项目','单城全推、多城组合，或筛选部分项目。','guard'],
+        ['07','去重与频控','同模式 30 天、跨模式 7 天。','guard'],
+        ['08','定时任务与触达','匹配素材、执行任务并记录成功 / 失败。','out']
+      ])+'</div>'+
+      '<div class="doc-flow-bridge"><span class="down-arrow">↓</span><strong>结果回流：</strong>push_detail 留存触达记录，lead_record 关联后续线索与成交信号，供运营复盘。</div>'+
       '<div class="doc-flow-caption">分工原则：前端负责配置与展示，数据库负责存储，服务端负责匹配、分页和频控；浏览器不直接拉取全量房屋后自行圈选。</div></div>';
 
     var tagDetailDdl = "-- A. MaxCompute / ODPS：一房一标签值一行的圈选事实表\n-- 来源：weijia.dwd_yanxuan_responsible_project_hosue_label（每日全量宽表）\n-- 调度变量：${bizdate}；步骤 02 静态值字典先于本节点，动态值字典在本节点后回灌。\nCREATE TABLE IF NOT EXISTS weijia.dwd_yx_house_tag_detail (\n  house_code STRING COMMENT '战图房屋编码',\n  house_pride_code STRING COMMENT 'Pride 房屋编码，来源宽表 code',\n  region_name STRING COMMENT '大区',\n  city_group_name STRING COMMENT '城市分公司',\n  asset_code STRING COMMENT '责任盘项目编码',\n  asset_name STRING COMMENT '责任盘项目名称',\n  category_code STRING COMMENT '标签类别编码',\n  tag_value_code STRING COMMENT '枚举标签稳定值编码；动态值首轮可为空',\n  tag_value_name STRING COMMENT '枚举标签中文值；数值类为空',\n  tag_value_num DECIMAL(38,4) COMMENT '数值标签值，如房龄、面积、维修次数'\n)\nCOMMENT '研选房屋标签明细长表；每日一分区，一房一类别一值一行'\nPARTITIONED BY (pt STRING COMMENT '业务日期 yyyyMMdd');";
