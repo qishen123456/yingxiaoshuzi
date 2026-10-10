@@ -1119,7 +1119,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     var target=bucket==="mandatory"?rule.mandatory:rule.optional,other=bucket==="mandatory"?rule.optional:rule.mandatory;
     function removeValue(list,key,val){list.forEach(function(condition){if(condition.tag===key)condition.value=(condition.value||[]).filter(function(item){return item!==val;});});for(var i=list.length-1;i>=0;i--)if(!list[i].value||list[i].value.length===0)list.splice(i,1);}
     if(!checked)removeValue(target,tagKey,value);
-    else{removeValue(other,tagKey,value);var condition=target.find(function(item){return item.tag===tagKey;});if(!condition){var op=(tagKey==="decorate_status"||tagKey==="family_structure")?"in":"contains_any";condition={tag:tagKey,op:op,value:[]};target.push(condition);}if(condition.value.indexOf(value)<0)condition.value.push(value);}
+    else{removeValue(other,tagKey,value);var condition=target.find(function(item){return item.tag===tagKey;});if(!condition){var op=meta.valueType==="enum"?"in":"contains_any";condition={tag:tagKey,op:op,value:[]};target.push(condition);}if(condition.value.indexOf(value)<0)condition.value.push(value);}
     render();
   };
   window._removeRuleTag = function(ruleId,bucket,tagKey,value) {
