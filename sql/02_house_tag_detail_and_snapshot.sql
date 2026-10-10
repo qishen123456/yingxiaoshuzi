@@ -28,52 +28,52 @@ SELECT DISTINCT
   asset_code, asset_name, category_code, tag_value_code, tag_value_name, tag_value_num
 FROM (
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'repair_water' AS category_code,
+         d.asset_code, d.asset_name, 'water_tags' AS category_code,
          v.value_code AS tag_value_code, TRIM(w1.raw_val) AS tag_value_name,
          CAST(NULL AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
   LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.shuilu_label, ''), ',')) w1 AS raw_val
   LEFT JOIN weijia.dim_yx_house_tag_value v
-    ON v.category_code = 'repair_water' AND v.value_name = TRIM(w1.raw_val)
+    ON v.category_code = 'water_tags' AND v.value_name = TRIM(w1.raw_val)
   WHERE d.house_code IS NOT NULL AND d.house_code <> ''
     AND TRIM(w1.raw_val) <> ''
 
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'repair_circuit' AS category_code,
+         d.asset_code, d.asset_name, 'electric_tags' AS category_code,
          v.value_code AS tag_value_code, TRIM(w2.raw_val) AS tag_value_name,
          CAST(NULL AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
-  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.dianlu_label, ''), ',')) w2 AS raw_val
+  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.dianlu_tag, ''), ',')) w2 AS raw_val
   LEFT JOIN weijia.dim_yx_house_tag_value v
-    ON v.category_code = 'repair_circuit' AND v.value_name = TRIM(w2.raw_val)
+    ON v.category_code = 'electric_tags' AND v.value_name = TRIM(w2.raw_val)
   WHERE d.house_code IS NOT NULL AND d.house_code <> ''
     AND TRIM(w2.raw_val) <> ''
 
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'repair_appliance' AS category_code,
+         d.asset_code, d.asset_name, 'appliance_tags' AS category_code,
          v.value_code AS tag_value_code, TRIM(w3.raw_val) AS tag_value_name,
          CAST(NULL AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
-  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.jiadian_label, ''), ',')) w3 AS raw_val
+  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.jiadian_tag, ''), ',')) w3 AS raw_val
   LEFT JOIN weijia.dim_yx_house_tag_value v
-    ON v.category_code = 'repair_appliance' AND v.value_name = TRIM(w3.raw_val)
+    ON v.category_code = 'appliance_tags' AND v.value_name = TRIM(w3.raw_val)
   WHERE d.house_code IS NOT NULL AND d.house_code <> ''
     AND TRIM(w3.raw_val) <> ''
 
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'repair_env' AS category_code,
+         d.asset_code, d.asset_name, 'env_tags' AS category_code,
          v.value_code AS tag_value_code, TRIM(w4.raw_val) AS tag_value_name,
          CAST(NULL AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
-  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.envir_label, ''), ',')) w4 AS raw_val
+  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.envir_tag, ''), ',')) w4 AS raw_val
   LEFT JOIN weijia.dim_yx_house_tag_value v
-    ON v.category_code = 'repair_env' AND v.value_name = TRIM(w4.raw_val)
+    ON v.category_code = 'env_tags' AND v.value_name = TRIM(w4.raw_val)
   WHERE d.house_code IS NOT NULL AND d.house_code <> ''
     AND TRIM(w4.raw_val) <> ''
 
@@ -126,7 +126,7 @@ FROM (
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'house_type' AS category_code,
+         d.asset_code, d.asset_name, 'house_type_name' AS category_code,
          CAST(NULL AS STRING) AS tag_value_code, TRIM(d.house_type_name) AS tag_value_name,
          CAST(NULL AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
@@ -146,7 +146,7 @@ FROM (
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'house_age' AS category_code,
+         d.asset_code, d.asset_name, 'deliver_year' AS category_code,
          CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,
          CAST(d.deliver_year AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
@@ -164,7 +164,7 @@ FROM (
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'kitchen_repair' AS category_code,
+         d.asset_code, d.asset_name, 'repair_kitchen' AS category_code,
          CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,
          CAST(COALESCE(d.kitchen_repair, 0) AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
@@ -173,7 +173,7 @@ FROM (
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'balcony_repair' AS category_code,
+         d.asset_code, d.asset_name, 'repair_balcony' AS category_code,
          CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,
          CAST(COALESCE(d.balcony_repair, 0) AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
@@ -182,7 +182,7 @@ FROM (
   UNION ALL
 
   SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,
-         d.asset_code, d.asset_name, 'bathroom_repair' AS category_code,
+         d.asset_code, d.asset_name, 'repair_bathroom' AS category_code,
          CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,
          CAST(COALESCE(d.bathroom_repair, 0) AS DECIMAL(38,4)) AS tag_value_num
   FROM weijia.dwd_yanxuan_responsible_project_hosue_label d
