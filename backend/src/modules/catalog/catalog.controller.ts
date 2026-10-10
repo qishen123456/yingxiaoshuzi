@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
-/** 产品包与标签字典（只读）。标签由运营 / 数据团队维护数据库字典，前端按字典动态读取。 */
+/** 产品包与规则标签选项。标签类别固定为业务当前使用的四组，选项值由 tag_value 数据表维护。 */
 @Controller()
 export class CatalogController {
   constructor(private readonly prisma: PrismaService) {}
@@ -15,11 +15,28 @@ export class CatalogController {
     });
   }
 
-  /** 标签字典：由 tag_dictionary 维护，前端按固定业务标签类别动态消费枚举值。 */
+  /**
+   * 搜索选择器的标签来源。
+   * 只向规则页返回原有四类核心标签；每个可选标签值一行存于 tag_value。
+   * 将 enumValues 组装成旧前端契约，避免 UI 与数据库模型耦合。
+   */
   @Get('tags')
-  tags() {
-    return this.prisma.tagDictionary.findMany({
+  async tags() {
+    const rows = await this.prisma.tagDictionary.findMany({
+      where: { tagKey: { in: ['water_tags', 'env_tags', 'family_structure', 'decorate_status'] } },
       orderBy: [{ tagGroup: 'asc' }, { tagKey: 'asc' }],
+      include: {
+        tagValues: {
+          where: { status: 'enabled' },
+          orderBy: [{ sortOrder: 'asc' }, { tagValue: 'asc' }],
+          select: { tagValue: true },
+        },
+      },
     });
+
+    return rows.map(({ tagValues, ...tag }) => ({
+      ...tag,
+      enumValues: tagValues.map((item) => item.tagValue),
+    }));
   }
 }
