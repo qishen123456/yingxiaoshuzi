@@ -78,7 +78,12 @@ SET tag_group    = EXCLUDED.tag_group,
     max_value    = EXCLUDED.max_value,
     source_column= EXCLUDED.source_column;
 
--- 默认只开放目前确认使用的四类标签；其他历史字段继续保留在字典，但不污染产品规则页。
+-- 历史字典中虽为枚举、但当前产品规则暂不使用的字段保持关闭，避免页面一下显示太多选项。
+UPDATE tag_dictionary
+SET rule_enabled = false
+WHERE tag_key IN ('electric_tags', 'appliance_tags', 'price_sensitivity', 'residence_status', 'house_feature_tags');
+
+-- 当前确认开放的四类核心标签启用规则选择。
 UPDATE tag_dictionary
 SET rule_enabled = true
 WHERE tag_key IN ('water_tags', 'env_tags', 'family_structure', 'decorate_status');
