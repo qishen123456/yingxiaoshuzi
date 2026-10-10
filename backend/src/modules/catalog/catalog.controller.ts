@@ -35,14 +35,17 @@ export class CatalogController {
   }
 
   /**
-   * 搜索选择器的标签来源。
-   * 只向规则页返回原有四类核心标签；每个可选标签值一行存于 tag_value。
-   * 将 enumValues 组装成旧前端契约，避免 UI 与数据库模型耦合。
+   * 产品规则搜索器标签目录。
+   * 返回所有 rule_enabled=true 的枚举字段，不按 tag_key 写死类别。
+   * 新增类别并插入 tag_value 后，无需修改前端即可出现在规则选择器。
    */
   @Get('tags')
   async tags() {
     const rows = await this.prisma.tagDictionary.findMany({
-      where: { tagKey: { in: ['water_tags', 'env_tags', 'family_structure', 'decorate_status'] } },
+      where: {
+        ruleEnabled: true,
+        valueType: { in: ['enum', 'multi_enum'] },
+      },
       orderBy: [{ tagGroup: 'asc' }, { tagKey: 'asc' }],
       include: {
         tagValues: {
