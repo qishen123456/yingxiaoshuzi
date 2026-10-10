@@ -752,13 +752,13 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   }
   function applyUpstreamTagDictionary(rows) {
     if (!Array.isArray(rows) || !rows.length) throw new Error("上游标签字典为空或格式不正确");
-    var alias = {water_tags:"shuilu_label",env_tags:"envir_tag"}, next = {};
+    var alias = {water_tags:"shuilu_label",electric_tags:"dianlu_tag",appliance_tags:"jiadian_tag",env_tags:"envir_tag"}, next = {};
     rows.forEach(function(item) {
       if (!item || !item.tagKey || !item.tagName) return;
       var internalKey = alias[item.tagKey] || item.tagKey;
       var upstreamValues = Array.isArray(item.enumValues) ? item.enumValues.filter(function(v){return typeof v==="string" && v.trim();}) : [];
       var previousValues = TAG_DICT[internalKey] && Array.isArray(TAG_DICT[internalKey].values) ? TAG_DICT[internalKey].values : [];
-      next[internalKey] = {label:item.tagName,values:Array.from(new Set(upstreamValues.concat(previousValues))),tagKey:item.tagKey,tagGroup:item.tagGroup||"other",valueType:item.valueType||"string",sourceColumn:item.sourceColumn||null};
+      next[internalKey] = {label:item.tagName,values:upstreamValues,tagKey:item.tagKey,tagGroup:item.tagGroup||"other",valueType:item.valueType||"string",sourceColumn:item.sourceColumn||null};
     });
     TAG_DICT = next;
     UPSTREAM_TAG_DICT = JSON.parse(JSON.stringify(next));
