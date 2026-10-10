@@ -2309,10 +2309,27 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       ['tag_value_name','枚举中文值；数值类为空'],['tag_value_num','DECIMAL(38,4)，用于房龄、面积、维修次数比较'],['pt','业务日期分区 yyyyMMdd']
     ];
     var houseRows=[
-      ['house_id','Pride 房屋编码，主键；用于房屋与线索关联'],['zhantu_house_id / house_name','战图备用编码、房屋名称'],
-      ['community_id / community_name','责任盘项目编码、名称'],['region / city / branch / station','组织与城市范围筛选维度'],
-      ['labels (JSONB)','动态标签集合：多值为数组、枚举为字符串、数值为数字'],['stat_date / synced_at','业务日期、同步时间'],['label_version','标签模型版本'],
-      ['owner_name_masked','脱敏姓名，仅按权限展示'],['contact_mobile_enc','加密号码，不向前端返回密文'],['customer_key_hash','号码 HMAC 标识，用于去重，不作为展示字段']
+      ['house_id','Pride 房屋编码，应用系统主键；用于房屋与线索关联'],
+      ['zhantu_house_id','战图房屋编码，对应房屋列表的“战图房屋编码”列'],
+      ['house_name','房屋名称，对应列表首列房屋名称'],
+      ['community_id / community_name','责任盘项目编码 / 项目名称，对应列表“项目编码、项目名称”'],
+      ['region / city / branch / station','大区、城市、营业部、服务站；用于权限与城市范围筛选'],
+      ['labels->deliver_year','房屋年限（年，小数），对应列表“房屋年限”'],
+      ['labels->house_type_name','房屋类型，对应列表“房屋类型”'],
+      ['labels->water_tags','水路标签；多值数组，对应列表“水路标签”'],
+      ['labels->electric_tags','电路标签；多值数组，对应列表“电路标签”'],
+      ['labels->appliance_tags','家电标签；多值数组，对应列表“家电标签”'],
+      ['labels->env_tags','环境标签；多值数组，对应列表“环境标签”'],
+      ['labels->price_sensitivity','价格敏感标签，对应列表“价格标签”'],
+      ['labels->residence_status','居住状态，对应列表“居住状态”'],
+      ['labels->family_structure','家庭结构，对应列表“家庭结构”'],
+      ['labels->decorate_status','装修状态，对应列表“装修状态”'],
+      ['labels->repair_kitchen / repair_balcony / repair_bathroom','厨房、阳台、卫生间维修次数，对应列表维修次数列'],
+      ['labels->property_area / labels->layout','建筑面积（㎡）与户型；可供房屋详情和后续规则使用'],
+      ['stat_date / synced_at / label_version','数据业务日期、同步时间、标签模型版本'],
+      ['owner_name_masked','脱敏姓名，按权限展示'],
+      ['contact_mobile_enc','加密号码，不向前端返回密文'],
+      ['customer_key_hash','号码 HMAC 标识，仅用于同客户去重，不作为展示字段']
     ];
     var leadRows=[
       ['lead_id','线索唯一 ID / 详情主键'],['lead_created_at','线索创建时间'],['external_package_code','一级意向 + 二级意向组成的外部产品识别码'],
