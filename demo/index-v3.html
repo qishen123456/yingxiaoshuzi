@@ -1299,6 +1299,56 @@
   .prd-flow-step>span{display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;background:#1d5a96;color:#fff;border-radius:7px;font-size:10px;font-weight:800;margin-bottom:10px}
   .prd-flow-step b{display:block;font-size:12px;color:#20384f;margin-bottom:5px}
   .prd-flow-step p{font-size:10.5px;color:#6d7d90;line-height:1.75;margin:0}
+
+  /* Product Path State Flow: four business states from raw data to attributable touch */
+  .product-path-flow{padding:18px;border:1px solid #dce6f0;border-radius:14px;background:linear-gradient(140deg,var(--bg-soft,#f7f9fc) 0%,#fff 72%);box-shadow:0 5px 18px rgba(29,65,101,.045);overflow:hidden}
+  .ppf-intro{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin:0 0 16px}
+  .ppf-intro-copy{min-width:0}
+  .ppf-eyebrow{display:block;color:var(--brand-600,#1d5a96);font-size:9px;font-weight:850;letter-spacing:.13em;margin-bottom:5px}
+  .ppf-intro-title{display:block;color:#203b56;font-size:13px;font-weight:800;line-height:1.5}
+  .ppf-intro-desc{margin:4px 0 0;color:#718297;font-size:10px;line-height:1.7}
+  .ppf-flow-badge{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid #dce6f0;border-radius:999px;background:#fff;color:#64788e;font-size:9px;font-weight:700;white-space:nowrap}
+  .ppf-flow-badge i{display:block;width:6px;height:6px;border-radius:50%;background:var(--brand-600,#1d5a96);box-shadow:0 0 0 3px rgba(29,90,150,.1)}
+  .ppf-track{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr) 46px minmax(0,1fr) 46px minmax(0,1fr);align-items:stretch;gap:7px}
+  .ppf-card{--ppf-accent:#7189a1;position:relative;display:flex;flex-direction:column;min-width:0;padding:14px 13px 13px;border:1px solid #dfe7ef;border-top:3px solid var(--ppf-accent);border-radius:12px;background:linear-gradient(180deg,var(--ppf-tint,#f5f8fb) 0%,#fff 34%);box-shadow:0 3px 10px rgba(24,52,81,.045);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+  .ppf-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--ppf-accent) 44%,#dfe7ef);box-shadow:0 10px 24px rgba(29,65,101,.12),0 0 0 3px color-mix(in srgb,var(--ppf-accent) 9%,transparent)}
+  .ppf-input{--ppf-accent:#7b91a8;--ppf-tint:#f2f6fa}
+  .ppf-match{--ppf-accent:#4f87b8;--ppf-tint:#edf5fc}
+  .ppf-filter{--ppf-accent:var(--brand-600,#1d5a96);--ppf-tint:#eaf2fb}
+  .ppf-execute{--ppf-accent:#279675;--ppf-tint:#eaf7f2}
+  .ppf-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:9px}
+  .ppf-stage-id{display:block;padding-top:3px;color:var(--ppf-accent);font-size:9px;font-weight:900;letter-spacing:.09em}
+  .ppf-icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border:1px solid color-mix(in srgb,var(--ppf-accent) 20%,#fff);border-radius:10px;background:color-mix(in srgb,var(--ppf-accent) 9%,#fff);color:var(--ppf-accent)}
+  .ppf-icon svg{display:block;width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+  .ppf-card h4{margin:0;color:#203b56;font-size:13px;font-weight:820;line-height:1.5}
+  .ppf-state{display:flex;align-items:center;gap:7px;margin:9px 0 8px;padding:8px 9px;border:1px solid color-mix(in srgb,var(--ppf-accent) 17%,#fff);border-radius:8px;background:color-mix(in srgb,var(--ppf-accent) 6%,#fff)}
+  .ppf-state span{flex:0 0 auto;color:#7b8da0;font-size:9px}
+  .ppf-state b{min-width:0;color:var(--ppf-accent);font-size:11px;font-weight:850}
+  .ppf-card-desc{margin:0 0 11px;color:#60758a;font-size:10px;line-height:1.75;min-height:52px}
+  .ppf-logic{margin-top:auto;padding-top:10px;border-top:1px dashed #dbe4ed}
+  .ppf-logic-label{display:block;margin-bottom:6px;color:#8594a5;font-size:9px;font-weight:750;letter-spacing:.04em}
+  .ppf-logic-chain{display:flex;flex-wrap:wrap;align-items:center;gap:4px;color:#39536d;font-size:9.5px;font-weight:720;line-height:1.6}
+  .ppf-logic-chain span{display:inline}
+  .ppf-logic-chain i{font-style:normal;color:var(--ppf-accent);font-size:10px;font-weight:900}
+  .ppf-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
+  .ppf-pill{display:inline-flex;align-items:center;padding:4px 6px;border:1px solid #e0e8f0;border-radius:5px;background:#f7f9fc;color:#60758a;font-size:8.8px;line-height:1.3;white-space:nowrap}
+  .ppf-input .ppf-pill{border-color:#e0e7ee;background:#f5f8fb}
+  .ppf-match .ppf-pill{border-color:#dce9f5;background:#f2f7fc}
+  .ppf-filter .ppf-pill{border-color:#d7e5f3;background:#f0f5fb}
+  .ppf-execute .ppf-pill{border-color:#d5ebe3;background:#eff8f4}
+  .ppf-connector{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;color:#7b91a7}
+  .ppf-link-label{display:block;padding:4px 5px;border:1px solid #e0e8f0;border-radius:5px;background:#fff;color:#60758a;font-size:8px;font-weight:750;line-height:1.35;text-align:center;white-space:nowrap}
+  .ppf-arrow-svg{display:block;overflow:visible;color:#92a7bb}
+  .ppf-arrow-horizontal{width:40px;height:16px}
+  .ppf-arrow-vertical{display:none;width:16px;height:28px}
+  .ppf-arrow-line{fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+  .ppf-caption{display:flex;align-items:center;gap:8px;margin-top:14px;padding:10px 11px;border:1px solid #e2eaf2;border-radius:8px;background:rgba(255,255,255,.72);color:#6b7f93;font-size:9.5px;line-height:1.7}
+  .ppf-caption svg{width:15px;height:15px;flex:0 0 15px;fill:none;stroke:var(--brand-600,#1d5a96);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  @media(max-width:1080px) and (min-width:861px){.product-path-flow{padding:13px}.ppf-track{grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr) 34px minmax(0,1fr) 34px minmax(0,1fr);gap:4px}.ppf-card{padding:12px 10px}.ppf-icon{width:30px;height:30px;flex-basis:30px}.ppf-card h4{font-size:12px}.ppf-card-desc{font-size:9.5px}.ppf-pill{font-size:8px;padding:4px 5px}.ppf-arrow-horizontal{width:30px}}
+  @media(max-width:860px){.product-path-flow{padding:14px}.ppf-intro{align-items:flex-start}.ppf-track{grid-template-columns:minmax(0,1fr);gap:0}.ppf-card{padding:15px 14px}.ppf-card-desc{min-height:0}.ppf-connector{min-height:58px;gap:3px}.ppf-link-label{font-size:9px;padding:4px 8px}.ppf-arrow-horizontal{display:none}.ppf-arrow-vertical{display:block;width:16px;height:28px}.ppf-caption{align-items:flex-start}}
+  @media(max-width:480px){.product-path-flow{padding:11px}.ppf-intro{flex-direction:column;gap:8px}.ppf-flow-badge{align-self:flex-start}.ppf-card h4{font-size:13px}.ppf-pills{gap:5px}}
+  @media(prefers-reduced-motion:reduce){.ppf-card{transition:none}.ppf-card:hover{transform:none}}
+
   .prd-note{font-size:10.5px;line-height:1.75;color:#6d7d90;background:#f6f8fb;border-radius:8px;padding:10px 12px;margin-top:11px}
   .prd-list{padding-left:18px;margin:12px 0 0;color:#64758a;font-size:10.5px;line-height:1.95}
   .prd-list li{margin:4px 0}
@@ -2639,6 +2689,109 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       ['权限与隐私', '列表按权限控制数据范围；手机号不在普通页面明文展示；关键配置变更保留审计记录。']
     ];
 
+    var productPathDiagram = `
+      <div class="product-path-flow" role="group" aria-label="从海量房屋底账到营销触达结果的四阶段状态流转图">
+        <div class="ppf-intro">
+          <div class="ppf-intro-copy">
+            <span class="ppf-eyebrow">PRODUCT PATH · STATE FLOW</span>
+            <strong class="ppf-intro-title">一套房屋，如何从海量底账变成一条可追踪的营销触达</strong>
+            <p class="ppf-intro-desc">每一阶段都形成明确业务状态；只有完成规则收敛与发送前校验，才进入触达执行。</p>
+          </div>
+          <span class="ppf-flow-badge"><i></i> 四阶段状态流转</span>
+        </div>
+        <div class="ppf-track">
+          <article class="ppf-card ppf-input">
+            <div class="ppf-card-top">
+              <span class="ppf-stage-id">01 / INPUT</span>
+              <span class="ppf-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+              </span>
+            </div>
+            <h4>数据输入层</h4>
+            <div class="ppf-state"><span>输出状态</span><b>原始底账</b></div>
+            <p class="ppf-card-desc">汇集房屋基础事实与客户线索，为后续规则判断提供统一、可核对的数据起点。</p>
+            <div class="ppf-logic">
+              <span class="ppf-logic-label">输入数据</span>
+              <div class="ppf-logic-chain"><span>房屋标签快照</span><i>＋</i><span>线索明细</span><i>＋</i><span>联系方式库</span></div>
+            </div>
+            <div class="ppf-pills"><span class="ppf-pill">T+1 标签快照</span><span class="ppf-pill">房屋编码关联</span><span class="ppf-pill">线索 / 联系方式</span></div>
+          </article>
+
+          <div class="ppf-connector" aria-label="流转动作：匹配规则">
+            <span class="ppf-link-label">匹配规则</span>
+            <svg class="ppf-arrow-svg ppf-arrow-horizontal" viewBox="0 0 48 16" aria-hidden="true"><path class="ppf-arrow-line" d="M2 8H45M38 2l7 6-7 6"/></svg>
+            <svg class="ppf-arrow-svg ppf-arrow-vertical" viewBox="0 0 16 28" aria-hidden="true"><path class="ppf-arrow-line" d="M8 1V25M2 19l6 6 6-6"/></svg>
+          </div>
+
+          <article class="ppf-card ppf-match">
+            <div class="ppf-card-top">
+              <span class="ppf-stage-id">02 / MATCHING</span>
+              <span class="ppf-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.09-.03a1.7 1.7 0 0 0-1.8.58l-.05.08h-3.4l-.03-.1a1.7 1.7 0 0 0-1.36-1.2 1.7 1.7 0 0 0-1.57.64l-.06.08-2.94-1.7.03-.1a1.7 1.7 0 0 0-.58-1.8l-.08-.05v-3.4l.1-.03a1.7 1.7 0 0 0 1.2-1.36 1.7 1.7 0 0 0-.64-1.57l-.08-.06 1.7-2.94.1.03a1.7 1.7 0 0 0 1.8-.58l.05-.08h3.4l.03.1a1.7 1.7 0 0 0 1.36 1.2 1.7 1.7 0 0 0 1.57-.64l.06-.08 2.94 1.7-.03.1a1.7 1.7 0 0 0 .58 1.8l.08.05v3.4z"/></svg>
+              </span>
+            </div>
+            <h4>规则匹配层</h4>
+            <div class="ppf-state"><span>输出状态</span><b>命中产品</b></div>
+            <p class="ppf-card-desc">根据产品映射条件计算所有命中项，再按互斥关系与优先级收敛，确定每套房屋的最终产品。</p>
+            <div class="ppf-logic">
+              <span class="ppf-logic-label">判定链路</span>
+              <div class="ppf-logic-chain"><span>产品映射</span><i>→</i><span>规则引擎</span><i>→</i><span>优先级择优</span></div>
+            </div>
+            <div class="ppf-pills"><span class="ppf-pill">必选 / 组合条件</span><span class="ppf-pill">规则启停</span><span class="ppf-pill">优先级决策</span></div>
+          </article>
+
+          <div class="ppf-connector" aria-label="流转动作：候选过滤">
+            <span class="ppf-link-label">候选过滤</span>
+            <svg class="ppf-arrow-svg ppf-arrow-horizontal" viewBox="0 0 48 16" aria-hidden="true"><path class="ppf-arrow-line" d="M2 8H45M38 2l7 6-7 6"/></svg>
+            <svg class="ppf-arrow-svg ppf-arrow-vertical" viewBox="0 0 16 28" aria-hidden="true"><path class="ppf-arrow-line" d="M8 1V25M2 19l6 6 6-6"/></svg>
+          </div>
+
+          <article class="ppf-card ppf-filter">
+            <div class="ppf-card-top">
+              <span class="ppf-stage-id">03 / FILTERING</span>
+              <span class="ppf-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 5h18l-7.1 8.1v5.4l-3.8 2v-7.4L3 5z"/><path d="M7 8h10"/></svg>
+              </span>
+            </div>
+            <h4>候选过滤层</h4>
+            <div class="ppf-state"><span>输出状态</span><b>可推候选</b></div>
+            <p class="ppf-card-desc">命中产品不等于可发送。执行前完成频控、线索静默、黑名单及触达资格校验。</p>
+            <div class="ppf-logic">
+              <span class="ppf-logic-label">发送前闸门</span>
+              <div class="ppf-logic-chain"><span>频控拦截</span><i>→</i><span>线索静默</span><i>→</i><span>黑名单排除</span></div>
+            </div>
+            <div class="ppf-pills"><span class="ppf-pill">30 / 7 天频控</span><span class="ppf-pill">线索静默校验</span><span class="ppf-pill">黑名单 / 退订</span></div>
+          </article>
+
+          <div class="ppf-connector" aria-label="流转动作：放行发送名单">
+            <span class="ppf-link-label">放行名单</span>
+            <svg class="ppf-arrow-svg ppf-arrow-horizontal" viewBox="0 0 48 16" aria-hidden="true"><path class="ppf-arrow-line" d="M2 8H45M38 2l7 6-7 6"/></svg>
+            <svg class="ppf-arrow-svg ppf-arrow-vertical" viewBox="0 0 16 28" aria-hidden="true"><path class="ppf-arrow-line" d="M8 1V25M2 19l6 6 6-6"/></svg>
+          </div>
+
+          <article class="ppf-card ppf-execute">
+            <div class="ppf-card-top">
+              <span class="ppf-stage-id">04 / EXECUTION</span>
+              <span class="ppf-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M21.5 2.8 14 21l-4.2-7.1L2.7 9.7 21.5 2.8z"/><path d="m9.8 13.9 5.1-5.1"/></svg>
+              </span>
+            </div>
+            <h4>执行触达层</h4>
+            <div class="ppf-state"><span>输出状态</span><b>最终触达</b></div>
+            <p class="ppf-card-desc">按已确认的模板和渠道生成营销内容并下发，保存状态与回执，形成后续效果归因闭环。</p>
+            <div class="ppf-logic">
+              <span class="ppf-logic-label">执行链路</span>
+              <div class="ppf-logic-chain"><span>AI 海报合成</span><i>→</i><span>通道下发</span><i>→</i><span>回写 / 归因</span></div>
+            </div>
+            <div class="ppf-pills"><span class="ppf-pill">海报变量渲染</span><span class="ppf-pill">企微 / 短信</span><span class="ppf-pill">结果回写追踪</span></div>
+          </article>
+        </div>
+        <div class="ppf-caption">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.4h.01"/></svg>
+          <span><b>口径提醒：</b>“命中产品”只代表规则匹配成功，“可推候选”还必须通过全部发送前保护；真实触达需由后端统一闸门放行。短信 / 企微发送、异步回执和归因能力以接口完成联调为准。</span>
+        </div>
+      </div>`;
+
     var functionLinks =
       '<div class="prd-links">' +
       '<a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/sql/06_business_tables_ddl.sql" target="_blank" rel="noreferrer"><b>SQL 06</b><span>基础表建表语句 ↗</span></a>' +
@@ -2677,15 +2830,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
         table(['数据对象', '建议表 / 来源', '维护责任', '刷新方式', '关键口径'], dataRows) +
         '<div class="prd-callout"><b>关键时效说明</b><p>页面打开时可以实时发起线索查询，但如果查询的数据源本身只在 T+1 重刷，返回的仍是最新快照，不是分钟级实时数据。若业务要求当天新增线索立即生效，必须由数据与开发确认 API 直连或提高同步频率，并写入验收标准。</p></div>' +
         '<div class="prd-callout prd-callout-muted"><b>新增标签的两种情况</b><p>新增既有字段下的枚举值：维护标签字典和值表即可；新增上游从未接入的物理字段：还需数据侧补取数、开发补字段映射和数据校验，不能仅靠手工加配置实现命中。</p></div>') +
-      section('05', '主业务流程', '建议按数据就绪、规则圈选、执行前保护、触达和结果回写的顺序实施。', 
-        '<div class="prd-flow">' +
-          step('01', '同步房屋标签', 'T+1 读取上游房屋标签，完成字段映射、编码标准化和数据质量检查。') +
-          step('02', '维护标签配置', '标签类别与可选值由数据库提供，新增和停用均有状态。') +
-          step('03', '配置产品映射', '营销维护必选标签、组合逻辑、优先级及启停状态。') +
-          step('04', '生成命中清单', '规则引擎输出命中房屋、命中产品和规则原因，支持数量与样本核对。') +
-          step('05', '形成推送候选', '收敛为最终产品，再校验联系方式、既有线索、范围、黑名单和频控。') +
-          step('06', '触达与回写', '通道接入后执行定时发送，记录回执、失败原因，并关联后续线索。') +
-        '</div><div class="prd-note">第 06 步依赖营销提供海报与渠道要求、开发提供真实接口与回执能力；接口未确认前只能验收清单和模拟流程。</div>') +
+      section('05', '主业务流程', '从原始底账、规则命中、候选过滤到最终触达，以四个业务状态呈现完整的数据流转。', 
+        productPathDiagram + '<div class="prd-note">上线前需逐一确认 30 天 / 7 天频控的具体含义和口径、线索静默时间窗、黑名单来源及优先级；这些策略必须在后端统一执行，页面展示不代表真实发送已启用。</div>') +
       section('06', '功能需求与验收结果', '以业务可操作和结果可核验为验收目标，不以页面按钮存在作为完成标准。', table(['功能模块', '需求说明', '验收标准'], featureRows)) +
       section('07', '规则口径与清单定义', '“命中”和“可发送”是两个不同状态，应分别统计与解释。', 
         '<div class="prd-grid-2">' +
