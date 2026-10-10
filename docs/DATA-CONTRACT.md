@@ -101,6 +101,23 @@
 
 ---
 
+### 3.1 产品规则页的标签值维护表
+
+产品规则页仅提供原有四类核心标签：水路标签、环境标签、家庭结构、装修状态。类别与上游字段关系继续使用 `tag_dictionary`；**具体可勾选值逐行维护在 `tag_value` 表**，页面通过 `GET /api/tags` 动态读取。
+
+新增一个水路标签值示例：
+
+```sql
+INSERT INTO tag_value (tag_key, tag_value, sort_order, status)
+VALUES ('water_tags', '新增水路标签', 100, 'enabled')
+ON CONFLICT (tag_key, tag_value)
+DO UPDATE SET status = 'enabled';
+```
+
+可用的 `tag_key` 为 `water_tags`、`env_tags`、`family_structure`、`decorate_status`。要暂时从产品规则选择器隐藏某个标签值，可将其 `status` 改为 `disabled`；无需改 HTML/前端常量。新增值是否实际命中，仍取决于房屋快照是否包含对应字段和值。初始化时由 `sql/01_tag_dictionary_seed.sql` 将当前 `enum_values` 中的历史枚举迁入 `tag_value`。
+
+---
+
 ## 4. 线索字段映射契约（ads_yx_clue_full_detail → lead_record）
 
 ### 4.1 字段映射
