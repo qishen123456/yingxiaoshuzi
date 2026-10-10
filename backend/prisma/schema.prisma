@@ -214,6 +214,7 @@ model HouseLabelSnapshot {
 
   @@index([statDate])
   @@index([region, city, branch, station])
+  @@index([city, communityId])
   @@index([communityId])
   @@map("house_label_snapshot")
 }
