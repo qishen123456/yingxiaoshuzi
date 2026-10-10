@@ -1194,6 +1194,13 @@
 .doc-dev-field-details .doc-db-grid{padding:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:1000px){.doc-tag-group-grid,.doc-lead-example-grid{grid-template-columns:1fr}.doc-dev-field-details .doc-db-grid{grid-template-columns:1fr}}
 
+
+/* Editable product priority */
+.rule-priority-control{display:inline-flex;align-items:center;gap:5px;padding:2px 5px 2px 7px;border:1px solid #cbd8e6;border-radius:6px;background:#fff;color:#516a83;font-size:10px;white-space:nowrap}
+.rule-priority-control select{min-width:30px;padding:2px 14px 2px 4px;border:0;border-radius:4px;background:#edf4fb;color:#1d568b;font-size:10.5px;font-weight:800;cursor:pointer;outline:none}
+.rule-priority-control select:focus{box-shadow:0 0 0 2px rgba(37,105,169,.22)}
+.rule-priority-control:hover{border-color:#8caecc}
+
 </style>
 </head>
 <body>
@@ -1580,7 +1587,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       '<div class="rule-compare-grid">'+RULES.map(function(rule,index){
         return '<article class="rule-compare-card'+(rule.enabled?"":" is-disabled")+'"><header class="rule-compare-head"><span class="rule-compare-index">P'+String(index+1).padStart(2,"0")+'</span>'+
           '<div class="rule-compare-head-main"><input class="rule-compare-name" aria-label="产品名称" type="text" maxlength="64" value="'+escapeHtml(rule.name)+'" onchange="window._updRule('+rule.id+',\'name\',this.value)"/>'+
-          '<div class="rule-compare-meta"><span class="rule-compare-priority">优先级 '+rule.manual_priority+'</span><span>'+(rule.enabled?"参与匹配":"已停用")+'</span></div></div>'+
+          (function(){var options="";for(var rank=1;rank<=RULES.length;rank++){options+='<option value="'+rank+'"'+(Number(rule.manual_priority)===rank?' selected':'')+'>'+rank+'</option>';}return '<div class="rule-compare-meta"><label class="rule-priority-control"><span>优先级</span><select aria-label="'+escapeHtml(rule.name)+'优先级" onchange="window._updRule('+rule.id+',\'manual_priority\',this.value)">'+options+'</select></label><span>'+(rule.enabled?"参与匹配":"已停用")+'</span></div>';})()+'</div>'+
           '<label class="switch rule-compare-switch" title="启用或停用产品规则"><input type="checkbox" '+(rule.enabled?"checked":"")+' onchange="window._updRule('+rule.id+',\'enabled\',this.checked)"/><span class="track"></span></label></header>'+
           '<div class="rule-compare-body">'+renderBucket(rule,"mandatory","必选条件","mand")+renderBucket(rule,"optional","加分条件","opt")+'</div>'+
           '<footer class="rule-compare-foot">必选 '+(rule.mandatory||[]).length+' 组 · 加分 '+(rule.optional||[]).length+' 组</footer></article>';
@@ -2533,9 +2540,19 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   window._updRule = function (id, key, val) {
     var r = RULES.find(function (x) { return x.id === id; });
     if (!r) return;
-    r[key] = val;
+    if (key === "manual_priority") {
+      var requested = parseInt(val, 10);
+      if (!Number.isFinite(requested)) return;
+      requested = Math.max(1, Math.min(RULES.length, requested));
+      var oldPriority = Number(r.manual_priority) || RULES.indexOf(r) + 1;
+      var occupant = RULES.find(function (x) { return x.id !== id && Number(x.manual_priority) === requested; });
+      if (occupant) occupant.manual_priority = oldPriority;
+      r.manual_priority = requested;
+    } else {
+      r[key] = val;
+    }
     render();
-    if (key !== "enabled") flash("配置已更新（实时试算）");
+    if (key !== "enabled") flash(key === "manual_priority" ? "优先级已调整；保存规则后生效" : "配置已更新（实时试算）");
   };
   window._filter = function (key, val) {
     pushFilter[key] = val;
