@@ -699,6 +699,38 @@
 .mapping-bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:16px}.mapping-bottom-bar .config-hint{flex:1;min-width:240px}
 @media(max-width:640px){.rule-product-grid{grid-template-columns:minmax(0,1fr)}.rule-product-body{padding:12px}.mapping-bottom-bar{align-items:stretch}}
 
+
+.schedule-scope{display:grid;grid-template-columns:minmax(240px,.78fr) minmax(320px,1.22fr);gap:14px;margin-bottom:14px}
+.schedule-scope-card{min-width:0;border:1px solid #e3eaf2;border-radius:11px;background:#fff;overflow:hidden}
+.schedule-scope-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:13px 14px;border-bottom:1px solid #edf1f6;background:#fbfcfe}
+.schedule-scope-step{display:block;color:#7291b1;font-size:9px;font-weight:800;letter-spacing:.1em;margin-bottom:5px}
+.schedule-scope-head strong{display:block;color:#28445f;font-size:12px}
+.schedule-scope-head small{display:block;margin-top:4px;color:#8796a8;font-size:10px;line-height:1.5}
+.schedule-scope-count{flex:none;padding:4px 7px;border:1px solid #dbe6f1;border-radius:6px;background:#f4f8fc;color:#5b7794;font-size:10px;white-space:nowrap}
+.schedule-city-list{display:flex;flex-wrap:wrap;gap:8px;padding:12px}
+.schedule-city-choice{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid #e0e8f1;border-radius:8px;background:#fff;cursor:pointer;color:#455d76;font-size:11.5px}
+.schedule-city-choice:has(input:checked){border-color:#90b3d8;background:#f1f7fd;color:#214f7d}
+.schedule-city-choice input,.schedule-project-choice input{margin:0;accent-color:#1d5a96;flex:none}
+.schedule-city-choice small{color:#97a5b5;font-size:9.5px;white-space:nowrap}
+.schedule-city-empty{padding:12px;color:#96a3b2;font-size:11px}
+.schedule-project-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid #eef2f6}
+.schedule-project-toolbar label{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:650;color:#415b75;cursor:pointer}
+.schedule-project-toolbar .project-count{margin-left:auto;color:#8493a5;font-size:10px}
+.schedule-project-search{position:relative;padding:10px 12px 0}
+.schedule-project-search input{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #e0e7f0;border-radius:7px;background:#fbfcfe;color:#314b65;font-size:11px;outline:none}
+.schedule-project-search input:focus{border-color:#8eb2d9;background:#fff}
+.schedule-project-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:10px 12px;max-height:215px;overflow:auto}
+.schedule-project-choice{display:flex;align-items:flex-start;gap:7px;min-width:0;padding:7px 8px;border:1px solid #e6edf4;border-radius:7px;background:#fff;cursor:pointer;color:#536980;font-size:10.5px;line-height:1.45}
+.schedule-project-choice:has(input:checked){border-color:#bfd4e9;background:#f5f9fd;color:#244d75}
+.schedule-project-choice .project-name{min-width:0;overflow-wrap:anywhere}
+.schedule-project-choice .project-city{display:block;color:#9aa8b7;font-size:9px;margin-top:2px}
+.schedule-project-empty{grid-column:1/-1;padding:12px 5px;text-align:center;color:#8a99aa;font-size:10.5px;line-height:1.7}
+.schedule-project-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:0 12px 11px;color:#8a98a8;font-size:10px}
+.schedule-project-actions button{border:0;background:transparent;color:#4777a6;cursor:pointer;font-size:10.5px;padding:2px 0}
+.schedule-project-actions button:hover{color:#1d5a96}
+@media(max-width:850px){.schedule-scope{grid-template-columns:minmax(0,1fr)}.schedule-project-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.schedule-project-list{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 </head>
 <body>
@@ -1489,7 +1521,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 4：定时推送（项目级计划 + 频控） ============ */
   var CHAN_FREQ = ["每周", "每天", "仅一次"];
-  var AUTO = { city: "all", projects: [], mode: 0, freq: "weekly", day: 2, time: "10:00", product: "all" };
+  var AUTO = { cities: [], projectIndexes: [], mode: 0, freq: "weekly", day: 2, time: "10:00", product: "all" };
+  var SCHEDULE_PROJECT_QUERY = "";
   var PLANS = [
     { id: 1, city: "东莞", project: "东莞金域松湖", mode: 0, freqText: "每周二 10:00", scope: "全部命中产品", target: 453, phones: 439, on: true },
     { id: 2, city: "深圳", project: "深圳第五园", mode: 2, freqText: "每周四 15:00", scope: "命中：浴改淋", target: 96, phones: 92, on: false }
@@ -1497,12 +1530,11 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   // 频控试算：同模式 30 天内已推 → 跳过；7 天内被其他模式推过 → 跳过
   function autoEstimate() {
-    if (!Array.isArray(AUTO.projects) || AUTO.projects.length === 0) return null;
+    if (!Array.isArray(AUTO.projectIndexes) || AUTO.projectIndexes.length === 0) return null;
     var mode = +AUTO.mode;
-    var selected = AUTO.projects;
+    var selectedIndexes = AUTO.projectIndexes;
     var rows = allRows().filter(function (r) {
-      if (selected.indexOf(PROJECTS[r.h[0]]) < 0) return false;
-      if (AUTO.city !== "all" && CITY_OF_PROJECT[r.h[0]] !== AUTO.city) return false;
+      if (selectedIndexes.indexOf(r.h[0]) < 0) return false;
       if (AUTO.product !== "all") {
         if (AUTO.product === "none") return false;
         if (!r.winner || r.winner.rule.name !== AUTO.product) return false;
@@ -1511,21 +1543,15 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     });
     var skipSame = 0, skipCross = 0, ph = {};
     rows.forEach(function (r) {
-      var m = r.mock;
-      var blocked = false;
+      var m = r.mock, blocked = false;
       if (m.pushDays !== null) {
         if (m.pushDays <= 30 && m.lastMode === mode) { skipSame++; blocked = true; }
         else if (m.pushDays <= 7 && m.lastMode !== mode) { skipCross++; blocked = true; }
       }
       if (!blocked) ph[r.h[5]] = 1;
     });
-    return {
-      total: rows.length,
-      skipSame: skipSame,
-      skipCross: skipCross,
-      will: rows.length - skipSame - skipCross,
-      phones: Object.keys(ph).length
-    };
+    return { total: rows.length, skipSame: skipSame, skipCross: skipCross,
+      will: rows.length - skipSame - skipCross, phones: Object.keys(ph).length };
   }
 
   function freqText() {
@@ -1538,153 +1564,149 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   function renderAuto() {
     var est = autoEstimate();
     var enabledPlans = PLANS.filter(function (p) { return p.on; });
-    var pending = enabledPlans.reduce(function (s, p) { return s + p.phones; }, 0);
-
+    var pending = enabledPlans.reduce(function (sum, plan) { return sum + plan.phones; }, 0);
+    var cityList = Array.from(new Set(CITY_OF_PROJECT));
+    var scopedProjectIndexes = PROJECTS.map(function (_, i) { return i; }).filter(function (i) {
+      return AUTO.cities.indexOf(CITY_OF_PROJECT[i]) >= 0;
+    });
+    var selectedInScope = scopedProjectIndexes.filter(function (i) { return AUTO.projectIndexes.indexOf(i) >= 0; });
+    var allProjectsSelected = scopedProjectIndexes.length > 0 && selectedInScope.length === scopedProjectIndexes.length;
+    var query = String(SCHEDULE_PROJECT_QUERY || "").trim().toLocaleLowerCase();
+    var visibleProjectIndexes = scopedProjectIndexes.filter(function (i) {
+      return (PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase().indexOf(query) >= 0;
+    });
     function asel(key, options) {
       return '<select onchange="window._autoSet(\'' + key + '\',this.value)">' +
-        options.map(function (o) {
-          return '<option value="' + o[0] + '"' + (String(AUTO[key]) === String(o[0]) ? " selected" : "") + '>' + o[1] + '</option>';
+        options.map(function (option) {
+          return '<option value="' + option[0] + '"' + (String(AUTO[key]) === String(option[0]) ? " selected" : "") + '>' + option[1] + '</option>';
         }).join("") + '</select>';
     }
-    var cityOpts = [["all", "跨城市项目组合"]].concat(Array.from(new Set(CITY_OF_PROJECT)).map(function (city) { return [city, city + " · 全项目"]; }));
-    var projList = AUTO.city === "all"
-      ? PROJECTS.slice()
-      : PROJECTS.filter(function (p, i) { return CITY_OF_PROJECT[i] === AUTO.city; });
-    var allProjectsSelected = projList.length > 0 && AUTO.projects.length === projList.length &&
-      projList.every(function (p) { return AUTO.projects.indexOf(p) >= 0; });
-    var projectPicker = '<div class="project-picker">' +
-      (projList.length
-        ? '<div class="project-picker-head"><label><input type="checkbox" ' + (allProjectsSelected ? "checked" : "") +
-          ' onchange="window._autoSelectAllProjects(this.checked)"/> 全选当前范围项目 · ' + projList.length + ' 个</label><span class="count">已选 ' + AUTO.projects.length + ' / ' + projList.length + '</span></div>' +
-          '<div class="project-checks">' + projList.map(function (p) {
-            return '<label><input type="checkbox" ' + (AUTO.projects.indexOf(p) >= 0 ? "checked" : "") +
-              ' onchange="window._autoToggleProjectByIndex(' + PROJECTS.indexOf(p) + ',this.checked)"/> ' + p + '</label>';
-          }).join("") + '</div>'
-        : '<div class="project-picker-empty">选择城市会默认勾选该城市全部项目；选择“跨城市项目组合”后可从多个城市自由多选。</div>') +
-      '</div>';
-    var prodOpts = [["all", "全部命中产品"]].concat(
-      RULES.filter(function (r) { return r.enabled; }).map(function (r) { return [r.name, "仅命中：" + r.name]; }));
-    var modeOpts = CHAN.map(function (c, i) { return [i, c]; });
+    var cityPanel = '<section class="schedule-scope-card"><div class="schedule-scope-head"><div><span class="schedule-scope-step">01 / CITY SCOPE</span><strong>先选择城市</strong><small>可选一个或多个城市；选中后默认纳入该城市全部项目。</small></div><span class="schedule-scope-count">已选 ' + AUTO.cities.length + ' 个城市</span></div><div class="schedule-city-list">' +
+      (cityList.length ? cityList.map(function (city, index) {
+        var projectCount = CITY_OF_PROJECT.filter(function (value) { return value === city; }).length;
+        return '<label class="schedule-city-choice"><input type="checkbox" ' + (AUTO.cities.indexOf(city) >= 0 ? "checked" : "") +
+          ' onchange="window._toggleScheduleCityByIndex(' + index + ',this.checked)"/><span>' + escapeHtml(city) + '</span><small>' + projectCount + ' 项目</small></label>';
+      }).join("") : '<div class="schedule-city-empty">当前没有可选城市。</div>') +
+      '</div></section>';
+    var projectPanel = '<section class="schedule-scope-card"><div class="schedule-scope-head"><div><span class="schedule-scope-step">02 / PROJECT SCOPE</span><strong>再确认项目范围</strong><small>这里只显示上面选中城市的项目，支持按项目名称搜索。</small></div><span class="schedule-scope-count">已选 ' + selectedInScope.length + ' / ' + scopedProjectIndexes.length + '</span></div>' +
+      '<div class="schedule-project-toolbar"><label><input type="checkbox" ' + (allProjectsSelected ? "checked" : "") +
+      ' ' + (scopedProjectIndexes.length ? "" : "disabled") + ' onchange="window._autoSelectAllProjects(this.checked)"/> 全选所选城市的项目</label><span class="project-count">' + (allProjectsSelected ? "默认全城推送" : "可进一步缩小项目范围") + '</span></div>' +
+      '<div class="schedule-project-search"><input type="search" autocomplete="off" value="' + escapeHtml(SCHEDULE_PROJECT_QUERY) +
+      '" placeholder="搜索项目名称…" oninput="window._scheduleProjectSearch(this.value)"/></div>' +
+      '<div class="schedule-project-list" data-schedule-project-list>' +
+      (!AUTO.cities.length ? '<div class="schedule-project-empty">先在左侧选择城市。选中后自动勾选该城市所有项目。</div>' :
+       (!visibleProjectIndexes.length ? '<div class="schedule-project-empty">没有找到匹配项目，请换一个关键词。</div>' :
+        visibleProjectIndexes.map(function (i) {
+          return '<label class="schedule-project-choice" data-project-search="' + escapeHtml((PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase()) + '">' +
+            '<input type="checkbox" ' + (AUTO.projectIndexes.indexOf(i) >= 0 ? "checked" : "") +
+            ' onchange="window._toggleScheduleProjectByIndex(' + i + ',this.checked)"/><span class="project-name">' + escapeHtml(PROJECTS[i]) +
+            '<span class="project-city">' + escapeHtml(CITY_OF_PROJECT[i]) + '</span></span></label>';
+        }).join(""))) +
+      '</div><div class="schedule-project-actions"><span>所选城市范围内共 ' + scopedProjectIndexes.length + ' 个项目</span>' +
+      '<button type="button" onclick="window._clearScheduleProjects()">清空项目选择</button></div></section>';
+    var prodOpts = [["all", "全部命中产品"]].concat(RULES.filter(function (r) { return r.enabled; }).map(function (r) { return [r.name, "仅命中：" + r.name]; }));
+    var modeOpts = CHAN.map(function (channel, i) { return [i, channel]; });
     var freqOpts = [["weekly", "每周推送"], ["daily", "每天推送"], ["once", "仅一次"]];
-
     var estHtml;
     if (!est) {
-      estHtml = '<div class="est-box"><div class="est-item" style="flex:1"><div class="t" style="font-size:13px;color:var(--ink-2)">选择城市后默认全选该城市项目；也可选择跨城市的多个项目</div></div></div>';
+      estHtml = '<div class="est-box"><div class="est-item" style="flex:1"><div class="t" style="font-size:13px;color:var(--ink-2)">先选择城市，系统会默认选中对应项目；如需部分项目，再搜索并取消不需要的项。</div></div></div>';
     } else {
-      estHtml =
-        '<div class="est-box">' +
-          '<div class="est-item"><div class="n">' + est.total + '</div><div class="t">命中房屋（目标范围）</div></div>' +
-          '<div class="est-item skip"><div class="n">' + est.skipSame + '</div><div class="t">跳过：30 天内同模式（' + CHAN[+AUTO.mode] + '）已推</div></div>' +
-          '<div class="est-item skip"><div class="n">' + est.skipCross + '</div><div class="t">跳过：7 天内被其他模式推过</div></div>' +
-          '<div class="est-item ok"><div class="n">' + est.will + '</div><div class="t">实际将推（去重 ' + est.phones + ' 号码）</div></div>' +
-        '</div>';
+      estHtml = '<div class="est-box">' +
+        '<div class="est-item"><div class="n">' + est.total + '</div><div class="t">命中房屋（目标范围）</div></div>' +
+        '<div class="est-item skip"><div class="n">' + est.skipSame + '</div><div class="t">跳过：30 天内同模式（' + CHAN[+AUTO.mode] + '）已推</div></div>' +
+        '<div class="est-item skip"><div class="n">' + est.skipCross + '</div><div class="t">跳过：7 天内被其他模式推过</div></div>' +
+        '<div class="est-item ok"><div class="n">' + est.will + '</div><div class="t">实际将推（去重 ' + est.phones + ' 号码）</div></div></div>';
     }
-
-    var html =
-      '<div class="page-head"><h2>定时推送</h2>' +
-      '<p>选择城市会默认勾选该城市全部项目，也可通过“跨城市项目组合”多选目标范围。推送前自动执行频控：<b>同一模式 30 天内推送过的房屋不重复推；7 天内被其他模式推过的房屋也不推</b>。频控只作用于营销类消息，通知类（如维修提醒）不受限。</p></div>' +
-
+    var html = '<div class="page-head"><h2>定时推送</h2><p>先勾选城市，再从这些城市的项目中搜索和调整范围。选中单个城市即可全城推送；跨城市计划也先选城市，不会直接展示所有城市的项目。</p></div>' +
       '<div class="grid-kpi">' +
-        '<div class="kpi accent"><div class="k-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>' +
-          '<div class="k-body"><div class="k-label">推送计划</div><div class="k-value">' + PLANS.length + '</div><div class="k-sub">进行中 ' + enabledPlans.length + ' · 已暂停 ' + (PLANS.length - enabledPlans.length) + '</div></div></div>' +
-        '<div class="kpi"><div class="k-icon blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div>' +
-          '<div class="k-body"><div class="k-label">本期待推号码</div><div class="k-value">' + pending + '</div><div class="t k-sub">进行中计划去重合计（估算）</div></div></div>' +
-        '<div class="kpi"><div class="k-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>' +
-          '<div class="k-body"><div class="k-label">频控保护</div><div class="k-value" style="color:var(--warn)">30天 / 7天</div><div class="k-sub">同模式 / 跨模式禁止期</div></div></div>' +
-        '<div class="kpi"><div class="k-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>' +
-          '<div class="k-body"><div class="k-label">当前试算实际将推</div><div class="k-value" style="color:var(--ok)">' + (est ? est.will : "—") + '</div><div class="k-sub">' + (est ? CHAN[+AUTO.mode] + ' · ' + freqText() : "未选范围") + '</div></div></div>' +
-      '</div>' +
-
-      '<div class="card">' +
-        '<div class="toolbar">' +
-          asel("city", cityOpts) + projectPicker + asel("product", prodOpts) +
-        '</div>' +
-        '<div class="toolbar">' +
-          '<span style="font-size:12.5px;color:var(--ink-3)">推送模式</span>' + asel("mode", modeOpts) +
-          '<span style="font-size:12.5px;color:var(--ink-3)">频率</span>' + asel("freq", freqOpts) +
-          (AUTO.freq === "weekly" ? '<select onchange="window._autoSet(\'day\',this.value)">' +
-            ["周日", "周一", "周二", "周三", "周四", "周五", "周六"].map(function (d, i) {
-              return '<option value="' + i + '"' + (+AUTO.day === i ? " selected" : "") + '>' + d + '</option>';
-            }).join("") + '</select>' : '') +
-          '<input type="time" value="' + AUTO.time + '" onchange="window._autoSet(\'time\',this.value)" style="font-size:12.5px;padding:6.5px 10px;border:1px solid var(--line-2);border-radius:8px;background:#fff"/>' +
-          '<div class="filter-result">' + (est ? ('已选 ' + AUTO.projects.length + ' 个项目') : '请先选择项目范围') + '</div>' +
-          '<button class="btn primary" ' + (est ? '' : 'disabled title="请先选择城市和项目"') + ' onclick="window._autoSave()">保存并启用计划</button>' +
-        '</div>' +
-        estHtml +
-        '<div class="freq-note">频控口径：<b>同模式 30 天</b>（' + CHAN.join(" / ") + ' 各自独立计数）；<b>跨模式 7 天</b>（任一模式推过，其余模式 7 天内静默）。同一号码名下多套房合并为一个推送对象。计划执行时如遇海报未通过抽查，该批顺延至下一周期。</div>' +
-      '</div>' +
-
-      '<div class="card" style="margin-top:16px">' +
-        '<div class="sec-title" style="margin-bottom:12px">计划列表</div>' +
-        '<div class="table-wrap"><table>' +
-          '<thead><tr><th>城市 / 项目范围</th><th>推送模式</th><th>频率</th><th>目标范围</th><th>试算目标</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
-          (PLANS.length ? PLANS.map(function (p, i) {
-            return '<tr>' +
-              '<td class="plan-scope">' + (p.city === "all" ? "跨城市组合" : p.city) + '<small>' + escapeHtml(Array.isArray(p.projects) ? (p.projects.length === PROJECTS.filter(function (project, idx) { return p.city === "all" || CITY_OF_PROJECT[idx] === p.city; }).length ? (p.city === "all" ? "全部项目" : "全城项目") + "（" + p.projects.length + "）" : p.projects.join("、")) : p.project) + '</small></td>' +
-              '<td><span class="badge primary">' + CHAN[p.mode] + '</span></td>' +
-              '<td>' + p.freqText + '</td>' +
-              '<td>' + p.scope + '</td>' +
-              '<td>' + p.target + ' 户 / ' + p.phones + ' 号码</td>' +
-              '<td><span class="badge ' + (p.on ? "success" : "neutral") + ' plan-status" onclick="window._planToggle(' + i + ')"><span class="dot"></span>' + (p.on ? "进行中" : "已暂停") + '</span></td>' +
-              '<td><button class="btn sm" onclick="window._planDel(' + i + ')">删除</button></td>' +
-            '</tr>';
-          }).join("") : '<tr><td colspan="7"><div class="empty-tip">暂无计划，用上方表单创建</div></td></tr>') +
-          '</tbody></table></div>' +
-        '<div class="stat-line">执行记录与发送回执对应推送明细表；每次执行自动带频控过滤，被拦截的房屋记入频控日志（跳过原因：同模式 30 天 / 跨模式 7 天）。</div>' +
-      '</div>';
+        '<div class="kpi accent"><div class="k-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="k-body"><div class="k-label">推送计划</div><div class="k-value">' + PLANS.length + '</div><div class="k-sub">进行中 ' + enabledPlans.length + ' · 已暂停 ' + (PLANS.length - enabledPlans.length) + '</div></div></div>' +
+        '<div class="kpi"><div class="k-icon blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div><div class="k-body"><div class="k-label">本期待推号码</div><div class="k-value">' + pending + '</div><div class="k-sub">进行中计划去重合计（估算）</div></div></div>' +
+        '<div class="kpi"><div class="k-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="k-body"><div class="k-label">频控保护</div><div class="k-value" style="color:var(--warn)">30天 / 7天</div><div class="k-sub">同模式 / 跨模式禁止期</div></div></div>' +
+        '<div class="kpi"><div class="k-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="k-body"><div class="k-label">当前试算实际将推</div><div class="k-value" style="color:var(--ok)">' + (est ? est.will : "—") + '</div><div class="k-sub">' + (est ? CHAN[+AUTO.mode] + ' · ' + freqText() : "尚未选择项目范围") + '</div></div></div>' +
+      '</div><div class="card"><div class="schedule-scope">' + cityPanel + projectPanel + '</div>' +
+      '<div class="toolbar"><span style="font-size:12.5px;color:var(--ink-3)">产品范围</span>' + asel("product", prodOpts) +
+        '<span style="font-size:12.5px;color:var(--ink-3)">推送模式</span>' + asel("mode", modeOpts) +
+        '<span style="font-size:12.5px;color:var(--ink-3)">频率</span>' + asel("freq", freqOpts) +
+        (AUTO.freq === "weekly" ? '<select onchange="window._autoSet(\'day\',this.value)">' + ["周日","周一","周二","周三","周四","周五","周六"].map(function(d,i){return '<option value="'+i+'"'+(+AUTO.day===i?" selected":"")+'>'+d+'</option>';}).join("") + '</select>' : '') +
+        '<input type="time" value="' + AUTO.time + '" onchange="window._autoSet(\'time\',this.value)" style="font-size:12.5px;padding:6.5px 10px;border:1px solid var(--line-2);border-radius:8px;background:#fff"/>' +
+        '<div class="filter-result">' + (est ? ('已选 ' + AUTO.cities.length + ' 个城市 / ' + AUTO.projectIndexes.length + ' 个项目') : '请先选择城市') + '</div>' +
+        '<button class="btn primary" ' + (est ? '' : 'disabled title="请先选择城市并确认项目范围"') + ' onclick="window._autoSave()">保存并启用计划</button></div>' +
+      estHtml + '<div class="freq-note">频控口径：<b>同模式 30 天</b>（' + CHAN.join(" / ") + ' 各自独立计数）；<b>跨模式 7 天</b>（任一模式推过，其余模式 7 天内静默）。同一号码名下多套房合并为一个推送对象。当前原型只做范围试算，不会真实发送。</div></div>' +
+      '<div class="card" style="margin-top:16px"><div class="sec-title" style="margin-bottom:12px">计划列表</div><div class="table-wrap"><table>' +
+      '<thead><tr><th>城市 / 项目范围</th><th>推送模式</th><th>频率</th><th>目标范围</th><th>试算目标</th><th>状态</th><th>操作</th></tr></thead><tbody>' +
+      (PLANS.length ? PLANS.map(function(p,i){
+        var cityText=Array.isArray(p.cities)?p.cities.join("、"):(p.city==="all"?"跨城市组合":p.city);
+        var projectText=Array.isArray(p.projectNames)?(p.project||p.projectNames.join("、")):p.project;
+        return '<tr><td class="plan-scope">'+escapeHtml(cityText||"未指定")+'<small>'+escapeHtml(projectText||"")+'</small></td>' +
+          '<td><span class="badge primary">'+CHAN[p.mode]+'</span></td><td>'+p.freqText+'</td><td>'+p.scope+'</td><td>'+p.target+' 户 / '+p.phones+' 号码</td>' +
+          '<td><span class="badge '+(p.on?"success":"neutral")+' plan-status" onclick="window._planToggle('+i+')"><span class="dot"></span>'+(p.on?"进行中":"已暂停")+'</span></td>' +
+          '<td><button class="btn sm" onclick="window._planDel('+i+')">删除</button></td></tr>';
+      }).join(""):'<tr><td colspan="7"><div class="empty-tip">暂无计划，用上方表单创建</div></td></tr>')+
+      '</tbody></table></div><div class="stat-line">计划按所选城市和项目范围记录；当前静态原型中创建的计划保存在页面内存中。</div></div>';
     return html;
   }
 
-  window._autoSet = function (key, val) {
-    AUTO[key] = val;
-    if (key === "city") {
-      AUTO.projects = val === "all" ? [] : PROJECTS.filter(function (p, i) { return CITY_OF_PROJECT[i] === val; });
+  window._autoSet = function (key,val) {
+    AUTO[key]=val;
+    render();
+  };
+  window._toggleScheduleCityByIndex = function(cityIndex,on) {
+    var cities=Array.from(new Set(CITY_OF_PROJECT)),city=cities[Number(cityIndex)];
+    if(!city)return;
+    var selectedCities=AUTO.cities.slice(),selectedProjects=AUTO.projectIndexes.slice(),idx=selectedCities.indexOf(city);
+    if(on&&idx<0){
+      selectedCities.push(city);
+      PROJECTS.forEach(function(_,projectIndex){if(CITY_OF_PROJECT[projectIndex]===city&&selectedProjects.indexOf(projectIndex)<0)selectedProjects.push(projectIndex);});
+    } else if(!on&&idx>=0){
+      selectedCities.splice(idx,1);
+      selectedProjects=selectedProjects.filter(function(projectIndex){return CITY_OF_PROJECT[projectIndex]!==city;});
     }
+    AUTO.cities=selectedCities;
+    AUTO.projectIndexes=selectedProjects;
     render();
   };
-  window._autoToggleProjectByIndex = function (projectIndex, on) {
-    var project = PROJECTS[projectIndex];
-    if (!project) return;
-    var selected = Array.isArray(AUTO.projects) ? AUTO.projects.slice() : [];
-    var idx = selected.indexOf(project);
-    if (on && idx < 0) selected.push(project);
-    if (!on && idx >= 0) selected.splice(idx, 1);
-    AUTO.projects = selected;
+  window._toggleScheduleProjectByIndex = function(projectIndex,on) {
+    projectIndex=Number(projectIndex);
+    if(projectIndex<0||projectIndex>=PROJECTS.length)return;
+    if(AUTO.cities.indexOf(CITY_OF_PROJECT[projectIndex])<0)return;
+    var selected=AUTO.projectIndexes.slice(),idx=selected.indexOf(projectIndex);
+    if(on&&idx<0)selected.push(projectIndex);
+    if(!on&&idx>=0)selected.splice(idx,1);
+    AUTO.projectIndexes=selected;
     render();
   };
-  window._autoSelectAllProjects = function (on) {
-    AUTO.projects = on ? PROJECTS.filter(function (p, i) {
-      return AUTO.city === "all" || CITY_OF_PROJECT[i] === AUTO.city;
-    }) : [];
+  window._autoSelectAllProjects = function(on) {
+    var inScope=PROJECTS.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(CITY_OF_PROJECT[i])>=0;});
+    AUTO.projectIndexes=on?inScope:[];
     render();
   };
-  window._autoSave = function () {
-    if (!Array.isArray(AUTO.projects) || AUTO.projects.length === 0) {
-      flash("请至少勾选一个项目");
-      return;
-    }
-    var est = autoEstimate();
-    if (!est) { flash("当前范围没有可试算的目标人群"); return; }
-    var scopeProjects = PROJECTS.filter(function (p, i) {
-      return AUTO.city === "all" || CITY_OF_PROJECT[i] === AUTO.city;
-    });
-    var projectLabel = AUTO.projects.length === scopeProjects.length
-      ? (AUTO.city === "all" ? "全部项目" : "该城市全部项目")
-      : AUTO.projects.join("、");
-    PLANS.unshift({
-      id: Date.now(),
-      city: AUTO.city,
-      projects: AUTO.projects.slice(),
-      project: projectLabel,
-      mode: +AUTO.mode,
-      freqText: freqText(),
-      scope: AUTO.product === "all" ? "全部命中产品" : "仅命中：" + AUTO.product,
-      target: est.will,
-      phones: est.phones,
-      on: true
-    });
+  window._clearScheduleProjects = function() {
+    AUTO.projectIndexes=[];
     render();
-    flash("已保存：" + (AUTO.city === "all" ? "跨城市组合" : AUTO.city) + " · " + projectLabel + " · " + CHAN[+AUTO.mode] + " · " + freqText());
+  };
+  window._scheduleProjectSearch = function(query) {
+    SCHEDULE_PROJECT_QUERY=String(query||"");
+    var q=SCHEDULE_PROJECT_QUERY.trim().toLocaleLowerCase(),list=document.querySelector("[data-schedule-project-list]");
+    if(!list)return;
+    var rows=list.querySelectorAll(".schedule-project-choice"),visible=0;
+    rows.forEach(function(row){var hit=!!q&&(row.getAttribute("data-project-search")||"").indexOf(q)>=0;row.style.display=hit?"flex":"none";if(hit)visible++;});
+    var empty=list.querySelector(".schedule-project-empty");if(empty)empty.remove();
+    if(q&&!visible)list.insertAdjacentHTML("beforeend",'<div class="schedule-project-empty">没有找到匹配项目，请换一个关键词。</div>');
+    if(!q&&rows.length===0)list.insertAdjacentHTML("beforeend",'<div class="schedule-project-empty">先选择城市后显示项目。</div>');
+  };
+  window._autoSave = function() {
+    if(!AUTO.cities.length){flash("请先选择至少一个城市");return;}
+    if(!AUTO.projectIndexes.length){flash("所选城市当前没有选中的项目，请检查项目范围");return;}
+    var est=autoEstimate();if(!est){flash("当前范围没有可试算的目标人群");return;}
+    var scopeIndexes=PROJECTS.map(function(_,i){return i;}).filter(function(i){return AUTO.cities.indexOf(CITY_OF_PROJECT[i])>=0;});
+    var everySelected=AUTO.projectIndexes.length===scopeIndexes.length&&scopeIndexes.every(function(i){return AUTO.projectIndexes.indexOf(i)>=0;});
+    var projectNames=AUTO.projectIndexes.map(function(i){return PROJECTS[i];});
+    var projectLabel=everySelected?"所选城市全部项目（"+AUTO.projectIndexes.length+"）":projectNames.join("、");
+    PLANS.unshift({id:Date.now(),cities:AUTO.cities.slice(),city:AUTO.cities.length===1?AUTO.cities[0]:"多城市组合",
+      projects:AUTO.projectIndexes.slice(),projectNames:projectNames.slice(),project:projectLabel,mode:+AUTO.mode,freqText:freqText(),
+      scope:AUTO.product==="all"?"全部命中产品":"仅命中："+AUTO.product,target:est.will,phones:est.phones,on:true});
+    render();
+    flash("已保存："+AUTO.cities.join("、")+" · "+projectLabel+" · "+CHAN[+AUTO.mode]+" · "+freqText());
   };
 
 
