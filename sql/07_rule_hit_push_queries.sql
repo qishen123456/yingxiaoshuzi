@@ -58,7 +58,7 @@ BEGIN
       RETURN v_actual IS NOT NULL AND v_actual <> v_expected;
 
     WHEN 'in' THEN
-      IF v_actual IS NULL OR jsonb_typeof(v_expected) <> 'array' THEN
+      IF v_actual IS NULL OR jsonb_typeof(v_expected) IS DISTINCT FROM 'array' THEN
         RETURN FALSE;
       END IF;
       RETURN EXISTS (
