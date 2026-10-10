@@ -68,27 +68,10 @@ export class HouseSyncService {
   }
 
   /** 节点①：标签 staging upsert 进 house_label_snapshot（号码列不在此步更新，避免覆盖）。 */
-  async mergeHouseLabels(): Promise<{ upserted: number; dictionaryValuesAdded: number }> {
+  async mergeHouseLabels(): Promise<{ upserted: number }> {
     const BATCH = 5000;
     let upserted = 0;
     let cursor: bigint | undefined;
-    // 枚举目录初值来自 SQL seed；每日同步时继续发现上游新枚举值并并入 tag_dictionary。
-    const enumTags = await this.prisma.tagDictionary.findMany({
-      where: { valueType: { in: ['enum', 'multi_enum'] }, sourceColumn: { not: null } },
-      select: { tagKey: true, enumValues: true },
-    });
-    const enumTagKeys = new Set(enumTags.map((t) => t.tagKey));
-    const observedValues = new Map<string, Set<string>>();
-    const collectValue = (tagKey: string, value: unknown) => {
-      if (!enumTagKeys.has(tagKey)) return;
-      const bucket = observedValues.get(tagKey) ?? new Set<string>();
-      if (Array.isArray(value)) {
-        for (const item of value) if (typeof item === 'string' && item.trim()) bucket.add(item.trim());
-      } else if (typeof value === 'string' && value.trim()) {
-        bucket.add(value.trim());
-      }
-      observedValues.set(tagKey, bucket);
-    };
     // 全量覆写语义：以当日 staging 为准。骨架直接 upsert；消失房屋的下线策略属后续运营需求。
     for (;;) {
       const rows = await this.prisma.houseLabelStaging.findMany({
@@ -97,10 +80,6 @@ export class HouseSyncService {
         orderBy: { id: 'asc' },
       });
       if (rows.length === 0) break;
-      for (const row of rows) {
-        const labels = this.buildLabels(row);
-        for (const [tagKey, value] of Object.entries(labels)) collectValue(tagKey, value);
-      }
       await this.prisma.$transaction(
         rows.map((r) =>
           this.prisma.houseLabelSnapshot.upsert({
@@ -141,27 +120,8 @@ export class HouseSyncService {
       cursor = rows[rows.length - 1].id;
       if (rows.length < BATCH) break;
     }
-    let dictionaryValuesAdded = 0;
-    for (const [tagKey, values] of observedValues) {
-      if (values.size === 0) continue;
-      const current = enumTags.find((t) => t.tagKey === tagKey);
-      if (!current) continue;
-      const existing = Array.isArray(current.enumValues)
-        ? current.enumValues.filter((v): v is string => typeof v === 'string')
-        : [];
-      const merged = [...new Set([...existing, ...values])].sort((a, b) => a.localeCompare(b, 'zh-CN'));
-      if (merged.length === existing.length && merged.every((v, i) => v === [...existing].sort((a, b) => a.localeCompare(b, 'zh-CN'))[i])) {
-        continue;
-      }
-      await this.prisma.tagDictionary.update({
-        where: { tagKey },
-        data: { enumValues: merged as Prisma.InputJsonValue },
-      });
-      dictionaryValuesAdded += Math.max(0, merged.length - existing.length);
-    }
-
-    this.logger.log(`房屋标签 merge 完成：${upserted} 行；标签字典新增枚举值 ${dictionaryValuesAdded} 个`);
-    return { upserted, dictionaryValuesAdded };
+    this.logger.log(`房屋标签 merge 完成：${upserted} 行`);
+    return { upserted };
   }
 
   /**
