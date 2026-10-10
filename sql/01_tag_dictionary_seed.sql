@@ -16,6 +16,8 @@
 -- 溯源列：架构 §6（3）原表无此列，字段级映射需要，随种子一并补齐
 ALTER TABLE tag_dictionary ADD COLUMN IF NOT EXISTS source_column varchar(64);
 COMMENT ON COLUMN tag_dictionary.source_column IS '上游数据源真实列名（MaxCompute 标签宽表拼音列），同步映射与溯源用';
+ALTER TABLE tag_dictionary ADD COLUMN IF NOT EXISTS rule_enabled boolean NOT NULL DEFAULT false;
+COMMENT ON COLUMN tag_dictionary.rule_enabled IS '是否开放给产品规则搜索器；新类别默认开放，已有非核心类别默认关闭';
 
 INSERT INTO tag_dictionary (tag_group, tag_key, tag_name, value_type, enum_values, min_value, max_value, source_column) VALUES
 -- ==================== 维修标签（多值，逗号字符串） ====================
@@ -75,6 +77,14 @@ SET tag_group    = EXCLUDED.tag_group,
     min_value    = EXCLUDED.min_value,
     max_value    = EXCLUDED.max_value,
     source_column= EXCLUDED.source_column;
+
+-- 默认只开放目前确认使用的四类标签；其他历史字段继续保留在字典，但不污染产品规则页。
+UPDATE tag_dictionary
+SET rule_enabled = true
+WHERE tag_key IN ('water_tags', 'env_tags', 'family_structure', 'decorate_status');
+
+-- 之后新建的标签类别默认即可用于产品规则；不需要修改前端类别清单。
+ALTER TABLE tag_dictionary ALTER COLUMN rule_enabled SET DEFAULT true;
 
 -- =================================================================================
 -- 行级标签值：tag_value 是产品标签选择器的唯一值来源。
