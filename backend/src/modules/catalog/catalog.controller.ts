@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
-/** 产品包与规则标签选项。标签类别固定为业务当前使用的四组，选项值由 tag_value 数据表维护。 */
+/** 产品包与规则标签选项。规则可用类别由 tag_dictionary.rule_enabled 控制，选项值逐行维护在 tag_value。 */
 @Controller()
 export class CatalogController {
   constructor(private readonly prisma: PrismaService) {}
