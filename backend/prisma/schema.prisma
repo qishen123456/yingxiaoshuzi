@@ -78,7 +78,7 @@ model TagValue {
   tagKey    String        @map("tag_key") @db.VarChar(64)
   tagValue  String        @map("tag_value") @db.VarChar(128)
   status    String        @default("enabled") @db.VarChar(16)
-  sortOrder Int           @default(0) @map("sort_order")
+  sortOrder Int           @default(1000) @map("sort_order")
   createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
   tag       TagDictionary @relation(fields: [tagKey], references: [tagKey], onDelete: Cascade)
