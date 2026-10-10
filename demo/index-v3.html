@@ -1089,6 +1089,69 @@
 .doc-sql-note strong{color:#214d75}
 @media(max-width:1050px){.doc-sql-overview{grid-template-columns:1fr}.doc-sql-dag-row{grid-template-columns:1fr;gap:18px}.doc-sql-step:not(:last-child):after{content:"↓";right:50%;top:auto;bottom:-20px;transform:translateX(50%)}.doc-rule-semantics{grid-template-columns:1fr}.doc-review-grid{grid-template-columns:1fr}}
 
+
+.doc-data-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.doc-data-source{padding:15px 16px;border:1px solid #d7e2ec;border-radius:10px;background:#fff}
+.doc-data-source .source-kind{display:block;margin-bottom:7px;color:#7890a8;font-size:9px;font-weight:800;letter-spacing:.08em}
+.doc-data-source h4{margin:0 0 6px;color:#203b55;font-size:12px;overflow-wrap:anywhere}
+.doc-data-source p{margin:0;color:#60758a;font-size:10.5px;line-height:1.75}
+.doc-db-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.doc-db-card{min-width:0;border:1px solid #d8e2ec;border-radius:11px;background:#fff;overflow:hidden}
+.doc-db-card-head{padding:12px 14px;border-bottom:1px solid #e2eaf2;background:#f7f9fc}
+.doc-db-card-head .db-role{display:block;margin-bottom:5px;color:#7f96ab;font-size:9px;font-weight:800;letter-spacing:.07em}
+.doc-db-card-head h4{margin:0 0 4px;color:#203a54;font-size:12px}
+.doc-db-card-head code{color:#4e6a84;font-size:9.5px;overflow-wrap:anywhere;white-space:normal}
+.doc-db-card-head p{margin:7px 0 0;color:#61778c;font-size:10.5px;line-height:1.65}
+.doc-db-table{width:100%;border-collapse:collapse;font-size:10px;table-layout:fixed}
+.doc-db-table th{padding:8px 10px;background:#fbfcfe;color:#667c91;text-align:left;font-weight:700;border-bottom:1px solid #e2eaf2}
+.doc-db-table td{padding:7px 10px;border-bottom:1px solid #edf1f5;color:#536a80;line-height:1.6;vertical-align:top;overflow-wrap:anywhere}
+.doc-db-table tr:last-child td{border-bottom:0}
+.doc-db-table td:first-child{width:38%;color:#234c73;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9.5px}
+.doc-layer-label{display:flex;align-items:center;gap:9px;margin:19px 0 11px;color:#294660;font-size:12px;font-weight:780}
+.doc-layer-label:before{content:"";width:4px;height:16px;border-radius:4px;background:#3875a9}
+.doc-api-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.doc-api-card{padding:12px 14px;border:1px solid #dce5ee;border-radius:9px;background:#f9fbfd}
+.doc-api-card .api-status{display:inline-block;margin-bottom:7px;padding:3px 6px;border-radius:5px;background:#e6f3eb;color:#26704f;font-size:9px;font-weight:750}
+.doc-api-card .api-status.planned{background:#fff0dc;color:#96601e}
+.doc-api-card h4{margin:0 0 5px;color:#294760;font-size:11px}
+.doc-api-card code{display:block;margin-bottom:6px;color:#2c6397;font-size:9.5px;overflow-wrap:anywhere}
+.doc-api-card p{margin:0;color:#657a8e;font-size:10px;line-height:1.65}
+.doc-rule-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.doc-rule-card{padding:15px 16px;border:1px solid #d8e2ec;border-radius:10px;background:#fff}
+.doc-rule-card .rule-no{display:block;margin-bottom:8px;color:#8298ad;font-size:9px;font-weight:850;letter-spacing:.08em}
+.doc-rule-card h4{margin:0 0 6px;color:#25425e;font-size:12px}
+.doc-rule-card p{margin:0;color:#5d7388;font-size:10.5px;line-height:1.75}
+.doc-limit-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.doc-limit{padding:13px 14px;border:1px solid #dce5ee;border-radius:9px;background:#fff}
+.doc-limit strong{display:block;margin-bottom:6px;color:#264864;font-size:11.5px}
+.doc-limit .limit-value{display:block;margin-bottom:6px;color:#1c5d91;font-size:17px;font-weight:800}
+.doc-limit p{margin:0;color:#63798e;font-size:10px;line-height:1.65}
+.doc-full-flow{padding:16px;border:1px solid #d8e2ec;border-radius:12px;background:#fff}
+.doc-flow-lane-title{display:flex;align-items:center;gap:8px;margin:0 0 11px;color:#526a82;font-size:10px;font-weight:800;letter-spacing:.06em}
+.doc-flow-lane-title span{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#e8f0f8;color:#285f91;font-size:10px}
+.doc-flow-track{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);align-items:stretch;gap:5px}
+.doc-flow-node{min-width:0;padding:12px 11px;border:1px solid #d8e2ec;border-radius:9px;background:#fbfcfe}
+.doc-flow-node .flow-no{display:block;margin-bottom:8px;color:#8096ab;font-size:9px;font-weight:850;letter-spacing:.06em}
+.doc-flow-node strong{display:block;margin-bottom:5px;color:#24415b;font-size:11.5px;line-height:1.55}
+.doc-flow-node p{margin:0;color:#60768b;font-size:9.8px;line-height:1.7}
+.doc-flow-node.source{border-top:3px solid #819ab3}.doc-flow-node.data{border-top:3px solid #4e83b4}.doc-flow-node.rule{border-top:3px solid #b98240}.doc-flow-node.guard{border-top:3px solid #b98240}.doc-flow-node.out{border-top:3px solid #428b70}
+.doc-flow-arrow{display:flex;align-items:center;justify-content:center;color:#8ba0b4;font-size:17px}
+.doc-flow-bridge{display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0;padding:10px;border-radius:8px;background:#f1f6fb;color:#4e6b86;font-size:10.5px;text-align:center}
+.doc-flow-bridge .down-arrow{font-size:16px;color:#2d6d9f}
+.doc-flow-caption{margin-top:12px;padding-top:11px;border-top:1px dashed #d7e1eb;color:#60758a;font-size:10px;line-height:1.7}
+.doc-sql-appendix{margin-top:12px;border:1px solid #d8e2ec;border-radius:10px;background:#fff;overflow:hidden}
+.doc-sql-appendix summary{padding:13px 15px;background:#f7f9fc;color:#26455f;font-size:11.5px;font-weight:750;cursor:pointer;list-style-position:inside}
+.doc-sql-appendix summary:hover{background:#eef4fa}
+.doc-sql-appendix[open] summary{border-bottom:1px solid #dce5ee}
+.doc-sql-explain{padding:11px 15px 0;color:#61778c;font-size:10.5px;line-height:1.7}
+.doc-sql-appendix pre{max-height:490px;overflow:auto;margin:10px 15px 15px;padding:13px 15px;border:1px solid #dce5ee;border-radius:8px;background:#152b41;color:#edf4fb;font:10px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;tab-size:2}
+.doc-sql-appendix pre code{color:inherit}
+.doc-sql-link{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding:11px 14px;border:1px solid #d7e2ed;border-radius:8px;background:#f8fafc;color:#526b83;font-size:10.5px}
+.doc-sql-link a{color:#21639a;font-weight:700;text-decoration:none}.doc-sql-link a:hover{text-decoration:underline}
+.doc-data-boundary{margin-top:12px;padding:12px 14px;border-left:3px solid #4b82b1;border-radius:0 8px 8px 0;background:#eef5fb;color:#4c6781;font-size:10.5px;line-height:1.75}
+@media(max-width:1150px){.doc-db-grid{grid-template-columns:1fr}.doc-limit-list{grid-template-columns:repeat(2,minmax(0,1fr))}.doc-api-grid{grid-template-columns:1fr}.doc-flow-track{grid-template-columns:1fr;gap:5px}.doc-flow-arrow{height:13px;transform:rotate(90deg)}}
+@media(max-width:760px){.doc-data-source-grid,.doc-rule-grid{grid-template-columns:1fr}.doc-limit-list{grid-template-columns:1fr}.doc-full-flow{padding:11px}}
+
 </style>
 </head>
 <body>
@@ -2203,73 +2266,149 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     function section(no,title,desc) {
       return '<div class="doc-section-heading"><span class="doc-section-no">'+no+'</span><div><h3>'+title+'</h3><p>'+desc+'</p></div></div>';
     }
-    function progress(title,status,statusClass,desc) {
-      return '<article class="doc-progress-item"><div class="dpi-top"><strong class="dpi-title">'+title+'</strong><span class="dpi-status '+statusClass+'">'+status+'</span></div><p>'+desc+'</p></article>';
+    function fieldTable(title,physical,summary,rows,role) {
+      return '<article class="doc-db-card"><header class="doc-db-card-head"><span class="db-role">'+role+'</span><h4>'+title+'</h4><code>'+physical+'</code><p>'+summary+'</p></header>'+
+        '<table class="doc-db-table"><thead><tr><th>字段</th><th>含义 / 开发用途</th></tr></thead><tbody>'+
+        rows.map(function(row){return '<tr><td>'+escapeHtml(row[0])+'</td><td>'+escapeHtml(row[1])+'</td></tr>';}).join("")+
+        '</tbody></table></article>';
     }
-    function principle(no,title,desc) {
-      return '<article class="doc-principle"><span class="dp-number">'+no+'</span><h4>'+title+'</h4><p>'+desc+'</p></article>';
+    function sourceCard(kind,title,desc,fields) {
+      return '<article class="doc-data-source"><span class="source-kind">'+kind+'</span><h4>'+title+'</h4><p>'+desc+'</p><p style="margin-top:7px"><b>主要字段：</b>'+fields+'</p></article>';
     }
-    function boundary(title,desc,kind) {
-      return '<article class="doc-boundary '+(kind||'')+'"><h4>'+title+'</h4><p>'+desc+'</p></article>';
+    function ruleCard(no,title,desc) {
+      return '<article class="doc-rule-card"><span class="rule-no">'+no+'</span><h4>'+title+'</h4><p>'+desc+'</p></article>';
+    }
+    function flowNode(no,title,desc,kind) {
+      return '<article class="doc-flow-node '+kind+'"><span class="flow-no">'+no+'</span><strong>'+title+'</strong><p>'+desc+'</p></article>';
+    }
+    function flowRow(items) {
+      var out='';
+      items.forEach(function(item,i){if(i)out+='<span class="doc-flow-arrow">→</span>';out+=flowNode(item[0],item[1],item[2],item[3]);});
+      return out;
     }
     function reviewItem(no,title,desc) {
       return '<article class="doc-review-item"><span class="doc-review-num">'+no+'</span><div><strong>'+title+'</strong><p>'+desc+'</p></div></article>';
     }
 
-    var modelHtml =
-      '<div class="doc-sql-overview">'+
-      '<article class="doc-sql-table"><header class="doc-sql-table-head"><span class="doc-sql-table-no">DIMENSION 01</span><h4>标签类别字典</h4><code>weijia.dim_yx_house_tag_category</code></header><div class="doc-sql-table-body"><p>回答“有哪些类别、值怎么解释、前端用什么控件”。这是标签类别和配置元信息的来源。</p><span class="doc-sql-badge">category_code</span><span class="doc-sql-badge">tag_group</span><span class="doc-sql-badge">value_type</span><span class="doc-sql-badge">value_load_mode</span><ul><li>值类型：ENUM_SINGLE 单选、ENUM_MULTI 多选、NUMERIC 数值。</li><li>值域方式：STATIC 固定枚举、DYNAMIC 动态枚举、NONE 无枚举值。</li><li>同时维护来源字段、排序、启停状态和口径说明。</li></ul></div></article>'+
-      '<article class="doc-sql-table"><header class="doc-sql-table-head"><span class="doc-sql-table-no">DIMENSION 02</span><h4>标签值字典</h4><code>weijia.dim_yx_house_tag_value</code></header><div class="doc-sql-table-body"><p>回答“某个类别有哪些选项”。前端按类别读取选项，并使用稳定的 value_code 保存枚举规则。</p><span class="doc-sql-badge">category_code</span><span class="doc-sql-badge">value_code</span><span class="doc-sql-badge">value_name</span><ul><li>静态枚举使用固定英文编码和中文名称。</li><li>开放值域从当日明细 DISTINCT 回灌。</li><li>排序和启停字段控制选项展示。</li></ul></div></article>'+
-      '<article class="doc-sql-table"><header class="doc-sql-table-head"><span class="doc-sql-table-no">FACT 03</span><h4>房屋－标签明细长表</h4><code>weijia.dwd_yx_house_tag_detail</code></header><div class="doc-sql-table-body"><p>规则圈选的核心事实表。一房一个标签值一行，按业务日期分区，避免规则直接扫描宽表中的所有字段。</p><span class="doc-sql-badge">house_code</span><span class="doc-sql-badge">asset_code</span><span class="doc-sql-badge">category_code</span><span class="doc-sql-badge">tag_value_num</span><ul><li>保留战图码、Pride 码、大区、城市和项目。</li><li>枚举存 code/name；数值条件存 DECIMAL(38,4)。</li><li>多选值通过 explode 拆行，每天写入 pt 分区。</li></ul></div></article>'+
+    var categoryRows=[
+      ['category_code','稳定类别编码，规则与标签值关联主键'],['category_name','前端展示名称'],['tag_group','业务分组：维修、房屋属性、家庭属性等'],
+      ['value_type','ENUM_SINGLE 单选、ENUM_MULTI 多选、NUMERIC 数值'],['value_load_mode','STATIC 固定枚举、DYNAMIC 动态枚举、NONE 无枚举值'],
+      ['source_column','上游真实字段名，用于血缘与映射'],['sort_order','前端展示顺序'],['is_enabled','1 启用、0 停用'],['description','标签业务口径说明']
+    ];
+    var valueRows=[
+      ['category_code','所属标签类别'],['value_code','稳定值编码，建议作为规则持久化值'],['value_name','前端展示文案'],['sort_order','类别内展示顺序'],['is_enabled','1 显示、0 停用']
+    ];
+    var tagDetailRows=[
+      ['house_code','战图房屋编码，辅助关联键'],['house_pride_code','Pride 房屋编码，对应宽表 code'],['region_name / city_group_name','大区、城市分公司'],
+      ['asset_code / asset_name','责任盘项目编码、名称'],['category_code','标签类别，关联类别字典'],['tag_value_code','枚举稳定编码；动态值首轮可能为空'],
+      ['tag_value_name','枚举中文值；数值类为空'],['tag_value_num','DECIMAL(38,4)，用于房龄、面积、维修次数比较'],['pt','业务日期分区 yyyyMMdd']
+    ];
+    var houseRows=[
+      ['house_id','Pride 房屋编码，主键；用于房屋与线索关联'],['zhantu_house_id / house_name','战图备用编码、房屋名称'],
+      ['community_id / community_name','责任盘项目编码、名称'],['region / city / branch / station','组织与城市范围筛选维度'],
+      ['labels (JSONB)','动态标签集合：多值为数组、枚举为字符串、数值为数字'],['stat_date / synced_at','业务日期、同步时间'],['label_version','标签模型版本'],
+      ['owner_name_masked','脱敏姓名，仅按权限展示'],['contact_mobile_enc','加密号码，不向前端返回密文'],['customer_key_hash','号码 HMAC 标识，用于去重，不作为展示字段']
+    ];
+    var leadRows=[
+      ['lead_id','线索唯一 ID / 详情主键'],['lead_created_at','线索创建时间'],['external_package_code','一级意向 + 二级意向组成的外部产品识别码'],
+      ['product_package_id / package_source','系统产品包与 external / inferred / none 来源状态'],['lead_grade / lead_status','客户等级、业务状态'],['lead_quality','按统一口径派生的 A/B/C/无效等级'],
+      ['source_channel','线索来源渠道'],['is_valid_for_reno / is_valid_for_repair','装修向、维修向有效线索标识'],
+      ['house_id / house_match_type','关联房屋及匹配方式，含战图码回退标记'],['latest_deal_at / order_cnt / performance_amount','成交时间、订单数、业绩金额'],
+      ['first_touch_push_id / last_touch_push_id','首次 / 最近触达记录'],['attribution_window_days / attributed_at','归因窗口和归因时间'],
+      ['customer_key / customer_key_type','HMAC 客户键及匹配类型；不展示原始手机号'],['stat_date / synced_at / stale_in_source','同步日期、时间及源表消失标记']
+    ];
+    var pushRows=[
+      ['push_task_id / house_id','所属任务和目标房屋'],['msg_type','消息类型'],['package_id / rule_id','产品包、命中规则'],
+      ['poster_template_id / poster_url','素材模板与海报地址'],['status','排队、成功、失败等执行状态'],['fail_reason / reason_code','失败详情与标准原因码'],
+      ['deferred_until / defer_count','频控延期时间及次数'],['customer_key_hash','用于去重的客户 HMAC 键'],['lead_count','关联线索数量'],
+      ['channel_msg_id / sent_at','渠道消息 ID、发送时间'],['is_resent / resent_from_id','重发标识和原记录'],['created_at','推送明细创建时间']
+    ];
+
+    var dataSources =
+      '<div class="doc-data-source-grid">'+
+      sourceCard('SOURCE 01 · MAXCOMPUTE','房屋标签上游宽表','weijia.dwd_yanxuan_responsible_project_hosue_label。每日全量输入，截图显示约 1,256,680 条房屋记录，是标签加工的来源。','code、house_code、region_name、city_group_name、asset_code、asset_name、shuilu_label、dianlu_label、jiadian_label、envir_label、residence_status、family_structure、decorate_status、deliver_year、property_area 等')+
+      sourceCard('SOURCE 02 · ADB POSTGRESQL','线索上游全量宽表','yanxuan.ads_yx_clue_full_detail。每日 T+1 快照，约 180 个来源字段；系统按字段契约映射业务所需信息，不将整张宽表直接交给前端。','clue_id、customer_mobile、house_code、zhantu_housecode、intention_first_type、intention_second_type、customer_level、business_status、channel_category_l1、created_time、latest_deal_time、order_cnt、performance_final 等')+
       '</div>';
 
-    var dagHtml =
-      '<div class="doc-sql-dag"><div class="doc-sql-dag-row">'+
-      '<article class="doc-sql-step s1"><span class="step-id">STEP 01 · CATEGORY</span><strong>类别字典</strong><p>生成类别、分组、值类型、来源字段、排序和启停信息。</p><span class="step-code">dim_yx_house_tag_category</span></article>'+
-      '<article class="doc-sql-step s2"><span class="step-id">STEP 02 · STATIC VALUES</span><strong>静态值字典</strong><p>先写固定枚举，为明细加工关联稳定 value_code。</p><span class="step-code">dim_yx_house_tag_value</span></article>'+
-      '<article class="doc-sql-step s3"><span class="step-id">STEP 03 · UNPIVOT</span><strong>宽表转长表</strong><p>多选拆多行、单选一行、数值写入 tag_value_num。</p><span class="step-code">dwd_yx_house_tag_detail / pt</span></article>'+
-      '<article class="doc-sql-step s4"><span class="step-id">STEP 04 · DYNAMIC VALUES</span><strong>回灌动态值</strong><p>从当天明细 DISTINCT 获取开放值域，与静态枚举合并。</p><span class="step-code">STATIC UNION ALL DYNAMIC</span></article>'+
-      '</div><div class="doc-sql-dag-footer"><strong>DataWorks DAG 依赖：</strong>01 → 02 → 03 → 04。步骤 02 必须先于 03，确保固定枚举可关联编码；步骤 04 必须等当天明细完成后再回灌动态值。</div></div>';
-
-    var semanticsHtml =
-      '<div class="doc-rule-semantics">'+
-      '<article><span class="sem-no">MATCH 01</span><h4>同类多选 = OR</h4><p>同一个类别勾选多个值，使用 IN 判断，命中任意一个已选值即可。</p></article>'+
-      '<article><span class="sem-no">MATCH 02</span><h4>多类别组合 = AND</h4><p>先汇总各类别命中的候选行，再按房屋分组，以命中的 DISTINCT category_code 数等于所选类别数，实现跨类别全部满足。</p></article>'+
-      '<article><span class="sem-no">MATCH 03</span><h4>数值类独立处理</h4><p>面积、房龄、维修次数通过 tag_value_num 做阈值/区间比较，不应伪装成枚举值。当前网页/API 尚未完整提供 NUMERIC 规则配置。</p></article>'+
+    var warehouseTables =
+      '<div class="doc-layer-label">A. MaxCompute 数据仓库层 · 标准化标签与圈选事实</div><div class="doc-db-grid">'+
+      fieldTable('标签类别字典','weijia.dim_yx_house_tag_category','回答有哪些标签、值类型是什么、来源哪个字段，是类别和控件元信息的唯一来源。',categoryRows,'DIMENSION · 类别元信息')+
+      fieldTable('标签值字典','weijia.dim_yx_house_tag_value','回答每个枚举类别有哪些可选项。静态值保留稳定编码，动态值由明细回灌。',valueRows,'DIMENSION · 值域清单')+
+      fieldTable('房屋－标签明细长表','weijia.dwd_yx_house_tag_detail','一房一类别一值一行。多值拆成多行，数值写入独立数值列，按 pt 保留每日快照。',tagDetailRows,'FACT · 按 pt 分区')+
       '</div>';
 
-    var risksHtml =
-      '<div class="doc-review-grid">'+
-      reviewItem("01","MaxCompute 与应用库还需同步契约","SQL 产出 ODPS 三张表；当前应用 API 读取 PostgreSQL 的 tag_dictionary、tag_value 与 house_label_snapshot.labels，尚非直接查询 ODPS。还要明确 category_code/value_code 与 tag_key/tag_value 的映射，以及字段类型 ENUM_SINGLE/ENUM_MULTI/NUMERIC 到 enum/multi_enum/number 的转换。房屋标识也需统一：本 SQL 的 house_code 是战图码、house_pride_code 是 Pride 码，而应用快照 houseId 的注释以 Pride 码为主；asset_code/asset_name、city_group_name 也需分别映射到 communityId/communityName、city。")+
-      reviewItem("02","数值类标签尚未贯通规则页面","SQL 定义了房屋年限、面积及维修次数等 NUMERIC 标签，但当前 /api/tags 只返回 enum / multi_enum，产品规则页也没有数值阈值控件。若要参与圈选，需要同步补充规则存储、控件与命中引擎。")+
-      reviewItem("03","全量覆盖会重置启停状态","步骤 01、02、04 使用 INSERT OVERWRITE 且在 SQL 中写固定 is_enabled；人工停用类别/值可能在下一次调度后被重置。建议让启停由权威 SQL 管理，或将运营开关单独存放在不会被覆盖的配置表。")+
-      reviewItem("04","动态值字典只保留当天出现的值","步骤 04 从当天 pt 分区 DISTINCT 后全量覆盖值表；某个动态值若当日没有房屋出现，可能从可选字典消失。需要确认是否只展示当天有效值，并防止已有规则引用失效值。")+
-      reviewItem("05","字段口径需验收","多值拆分建议对 split 后的值统一 TRIM，避免逗号后空格导致静态值 JOIN 不上；同时确认 deliver_year 是房龄还是交付年份，当前 CAST 直接转数值只有在原字段本身代表年限时才正确。")+
+    var appTables =
+      '<div class="doc-layer-label">B. PostgreSQL 应用层 · 页面查询与运营使用</div><div class="doc-db-grid">'+
+      fieldTable('房屋明细 / 标签快照','house_label_snapshot','现有应用表，一房一行。后端按产品规则筛选并分页返回；浏览器不加载全量房屋后自行圈选。',houseRows,'SERVING · 当前已有模型')+
+      fieldTable('线索明细','lead_record','现有线索镜像表，一条线索一行。房屋详情通过 house_id 关联，展示意向、等级、状态、渠道和成交信号。',leadRows,'DETAIL · 当前已有模型')+
+      fieldTable('推送执行明细','push_detail','一条触达对象一条记录，关联任务、房屋、产品规则、素材、发送结果和失败原因。',pushRows,'AUDIT · 执行留痕')+
+      '</div><div class="doc-data-boundary"><strong>号码与隐私：</strong>线索主表保存 HMAC 客户键，房屋快照的手机号字段为加密值。详情接口只返回有权限展示的脱敏字段，不向普通页面暴露明文、密文或 HMAC 原值。</div>';
+
+    var apis =
+      '<div class="doc-api-grid">'+
+      '<article class="doc-api-card"><span class="api-status">已有接口代码</span><h4>标签类别与可选值</h4><code>GET /api/tags</code><p>读取规则可用的枚举 / 多值枚举类别和值，由页面按类别动态展示。</p></article>'+
+      '<article class="doc-api-card"><span class="api-status">已有接口代码</span><h4>城市与责任盘项目</h4><code>GET /api/project-catalog</code><p>返回 city、projectId、projectName，供先选城市、再选项目的计划配置使用。</p></article>'+
+      '<article class="doc-api-card"><span class="api-status planned">后续接口建议</span><h4>按产品规则筛选房屋</h4><code>GET /api/houses?productId=&amp;city=&amp;projectIds=&amp;page=&amp;pageSize=</code><p>后端读取产品规则，查询 house_label_snapshot 并分页返回命中房屋、命中产品和规则原因；该接口尚需开发。</p></article>'+
+      '<article class="doc-api-card"><span class="api-status planned">后续接口建议</span><h4>房屋详情中的线索</h4><code>GET /api/houses/:houseId/leads?page=&amp;pageSize=</code><p>按 house_id 查询 lead_record，返回线索时间、意向、等级、状态、来源和成交字段，不返回原始手机号。</p></article>'+
       '</div>';
+
+    var rulesHtml='<div class="doc-rule-grid">'+
+      ruleCard('RULE 01 · PRODUCT','产品规则配置','每个产品独立配置必选条件、加分条件、最低加分组门槛、优先级和启停状态；页面并排对比规则差异。')+
+      ruleCard('RULE 02 · MATCH','标签组合命中','同一类别内多个已选值按 OR，命中任一即可；不同类别之间按 AND，所有所选类别都要满足。数值型条件需用数值比较。')+
+      ruleCard('RULE 03 · SCOPE','城市优先选择','先选一个或多个城市，默认纳入所选城市全部项目；需要精细运营时，再搜索并取消部分项目。')+
+      ruleCard('RULE 04 · PLAN','定时计划','按产品范围设置推送模式、日 / 周 / 单次频率和执行时间；正式计划需由服务端持久化和调度。')+
+      ruleCard('RULE 05 · AUDIT','执行结果可追溯','push_detail 保存目标房屋、命中规则、素材、状态和失败原因；lead_record 关联后续线索和成交信号。')+
+      ruleCard('RULE 06 · DATA','字典驱动','新增枚举类别维护类别元信息和值即可被前端读取；新增物理字段仍需接入同步流程。')+
+      '</div>';
+
+    var limits='<div class="doc-limit-list">'+
+      '<article class="doc-limit"><strong>同推送模式</strong><span class="limit-value">30 天</span><p>同一客户在同模式保护期内再次触达时跳过，并记录频控原因。</p></article>'+
+      '<article class="doc-limit"><strong>跨推送模式</strong><span class="limit-value">7 天</span><p>一种模式触达后，其他模式在保护期内暂缓，减少短时间重复营销。</p></article>'+
+      '<article class="doc-limit"><strong>同客户多房屋</strong><span class="limit-value">先去重</span><p>使用统一客户 HMAC 键识别同一客户，避免多套房屋重复触达。</p></article>'+
+      '<article class="doc-limit"><strong>执行前校验</strong><span class="limit-value">范围 / 数据</span><p>检查数据就绪、目标范围、频控和素材，记录成功、失败或跳过原因。当前网页是原型，真实发送仍需接入验收。</p></article>'+
+      '</div>';
+
+    var processFlow=
+      '<div class="doc-full-flow">'+
+      '<div class="doc-flow-lane-title"><span>01</span>数据基础：从来源表到可查询的数据模型</div>'+
+      '<div class="doc-flow-track">'+flowRow([
+        ['01','房屋标签宽表','组织、责任盘项目与房屋标签。','source'],
+        ['02','线索全量宽表','意向、业务状态、渠道与成交信号。','source'],
+        ['03','DataWorks 同步','每日 T+1、字段映射、校验与号码保护。','data'],
+        ['04','标签仓库模型','类别字典、值字典、房屋标签长表。','data'],
+        ['05','应用明细表','房屋快照、线索镜像、推送执行明细。','data']
+      ])+'</div><div class="doc-flow-bridge"><span class="down-arrow">↓</span><strong>数据准备完成：</strong>前端读取动态标签目录，后端可以按房屋及线索主键查询数据。</div>'+
+      '<div class="doc-flow-lane-title"><span>02</span>业务执行：从产品配置到效果回流</div>'+
+      '<div class="doc-flow-track">'+flowRow([
+        ['06','配置产品规则','必选、加分、最低命中组数和优先级。','rule'],
+        ['07','后端匹配房屋','按产品规则查询房屋快照并分页返回。','rule'],
+        ['08','选择城市 / 项目','单城全推、多城组合，或选择部分项目。','guard'],
+        ['09','去重与频控','同模式 30 天、跨模式 7 天。','guard'],
+        ['10','定时任务与触达','匹配素材、执行任务并记录结果。','out']
+      ])+'</div><div class="doc-flow-bridge"><span class="down-arrow">↓</span><strong>结果回流：</strong>push_detail 留存触达记录，lead_record 关联后续线索和成交信号，供运营复盘。</div>'+
+      '<div class="doc-flow-caption">分工原则：前端负责配置与展示，数据库负责存储，服务端负责匹配、分页和频控；浏览器不直接拉取全量房屋后自行圈选。</div></div>';
+
+    var tagDetailDdl = "-- A. MaxCompute / ODPS：一房一标签值一行的圈选事实表\n-- 来源：weijia.dwd_yanxuan_responsible_project_hosue_label（每日全量宽表）\n-- 调度变量：${bizdate}；步骤 02 静态值字典先于本节点，动态值字典在本节点后回灌。\nCREATE TABLE IF NOT EXISTS weijia.dwd_yx_house_tag_detail (\n  house_code STRING COMMENT '战图房屋编码',\n  house_pride_code STRING COMMENT 'Pride 房屋编码，来源宽表 code',\n  region_name STRING COMMENT '大区',\n  city_group_name STRING COMMENT '城市分公司',\n  asset_code STRING COMMENT '责任盘项目编码',\n  asset_name STRING COMMENT '责任盘项目名称',\n  category_code STRING COMMENT '标签类别编码',\n  tag_value_code STRING COMMENT '枚举标签稳定值编码；动态值首轮可为空',\n  tag_value_name STRING COMMENT '枚举标签中文值；数值类为空',\n  tag_value_num DECIMAL(38,4) COMMENT '数值标签值，如房龄、面积、维修次数'\n)\nCOMMENT '研选房屋标签明细长表；每日一分区，一房一类别一值一行'\nPARTITIONED BY (pt STRING COMMENT '业务日期 yyyyMMdd');";
+    var tagDetailInsert = "-- B. 每日写入标签明细长表：多值拆行、单值一行、数值单独落列\nINSERT OVERWRITE TABLE weijia.dwd_yx_house_tag_detail\nPARTITION (pt = '${bizdate}')\nSELECT DISTINCT\n  house_code, house_pride_code, region_name, city_group_name,\n  asset_code, asset_name, category_code, tag_value_code, tag_value_name, tag_value_num\nFROM (\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_water' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w1.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.shuilu_label, ''), ',')) w1 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'repair_water' AND v.value_name = TRIM(w1.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w1.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_circuit' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w2.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.dianlu_label, ''), ',')) w2 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'repair_circuit' AND v.value_name = TRIM(w2.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w2.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_appliance' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w3.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.jiadian_label, ''), ',')) w3 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'repair_appliance' AND v.value_name = TRIM(w3.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w3.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'repair_env' AS category_code,\n         v.value_code AS tag_value_code, TRIM(w4.raw_val) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LATERAL VIEW EXPLODE(SPLIT(COALESCE(d.envir_label, ''), ',')) w4 AS raw_val\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'repair_env' AND v.value_name = TRIM(w4.raw_val)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND TRIM(w4.raw_val) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'residence_status' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.residence_status) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'residence_status' AND v.value_name = TRIM(d.residence_status)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.residence_status IS NOT NULL AND TRIM(d.residence_status) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'decorate_status' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.decorate_status) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'decorate_status' AND v.value_name = TRIM(d.decorate_status)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.decorate_status IS NOT NULL AND TRIM(d.decorate_status) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'family_structure' AS category_code,\n         v.value_code AS tag_value_code, TRIM(d.family_structure) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  LEFT JOIN weijia.dim_yx_house_tag_value v\n    ON v.category_code = 'family_structure' AND v.value_name = TRIM(d.family_structure)\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.family_structure IS NOT NULL AND TRIM(d.family_structure) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'price_sensitivity' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.price_sensitivity_label) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.price_sensitivity_label IS NOT NULL AND TRIM(d.price_sensitivity_label) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'house_type' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.house_type_name) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.house_type_name IS NOT NULL AND TRIM(d.house_type_name) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'layout' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, TRIM(d.layout) AS tag_value_name,\n         CAST(NULL AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n    AND d.layout IS NOT NULL AND TRIM(d.layout) <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'house_age' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(d.deliver_year AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> '' AND d.deliver_year IS NOT NULL\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'property_area' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(d.property_area AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> '' AND d.property_area IS NOT NULL\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'kitchen_repair' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.kitchen_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'balcony_repair' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.balcony_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n\n  UNION ALL\n\n  SELECT d.house_code, d.code AS house_pride_code, d.region_name, d.city_group_name,\n         d.asset_code, d.asset_name, 'bathroom_repair' AS category_code,\n         CAST(NULL AS STRING) AS tag_value_code, CAST(NULL AS STRING) AS tag_value_name,\n         CAST(COALESCE(d.bathroom_repair, 0) AS DECIMAL(38,4)) AS tag_value_num\n  FROM weijia.dwd_yanxuan_responsible_project_hosue_label d\n  WHERE d.house_code IS NOT NULL AND d.house_code <> ''\n) all_tag;";
+    var houseDetailDdl = "-- C. PostgreSQL / RDS：房屋明细查询表（项目已有 house_label_snapshot，DDL 与现有 Prisma 模型对齐）\n-- 一房一行，标签以 JSONB 保存；前端不直接扫描全量数据，后端按产品规则筛选、分页返回。\nCREATE TABLE IF NOT EXISTS house_label_snapshot (\n  id BIGSERIAL PRIMARY KEY,\n  house_id VARCHAR(64) NOT NULL UNIQUE,\n  zhantu_house_id VARCHAR(64),\n  house_name TEXT,\n  community_id VARCHAR(64),\n  community_name TEXT,\n  region TEXT,\n  city TEXT,\n  branch TEXT,\n  station TEXT,\n  station_code TEXT,\n  owner_name_masked TEXT,\n  contact_mobile_enc TEXT,\n  customer_key_hash VARCHAR(128),\n  labels JSONB NOT NULL DEFAULT '{}'::jsonb,\n  stat_date DATE NOT NULL,\n  synced_at TIMESTAMPTZ NOT NULL DEFAULT now(),\n  label_version VARCHAR(32) NOT NULL DEFAULT 'v1'\n);\nCOMMENT ON COLUMN house_label_snapshot.house_id IS 'Pride 房屋编码，应用系统房屋主键';\nCOMMENT ON COLUMN house_label_snapshot.zhantu_house_id IS '战图房屋编码，备用关联键';\nCOMMENT ON COLUMN house_label_snapshot.labels IS '动态 JSONB 标签，如水路多值数组、装修状态字符串、房龄/面积数值';\nCREATE INDEX IF NOT EXISTS idx_hls_city_community ON house_label_snapshot(city, community_id);\nCREATE INDEX IF NOT EXISTS idx_hls_org_scope ON house_label_snapshot(region, city, branch, station);\nCREATE INDEX IF NOT EXISTS idx_hls_labels_gin ON house_label_snapshot USING GIN (labels jsonb_path_ops);\nCREATE INDEX IF NOT EXISTS idx_hls_label_date ON house_label_snapshot(stat_date);";
+    var houseDetailInsert = "-- D. 从 PostgreSQL staging 写入/更新房屋明细。\n-- 当前仓库的正式实现为 HouseSyncService.mergeHouseLabels() 批量 upsert；\n-- 本 SQL 用于说明映射契约/数据核对，不要与服务层并行双写。\nINSERT INTO house_label_snapshot (\n  house_id, zhantu_house_id, house_name, community_id, community_name,\n  region, city, branch, station, station_code, labels, stat_date, synced_at, label_version\n)\nSELECT\n  s.house_id,\n  s.zhantu_house_id,\n  s.house_name,\n  s.community_id,\n  s.community_name,\n  s.region,\n  s.city,\n  s.branch,\n  s.station,\n  s.station_code,\n  jsonb_strip_nulls(jsonb_build_object(\n    'water_tags', CASE WHEN NULLIF(BTRIM(s.water_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.water_tags_raw), '\\s*,\\s*')) END,\n    'electric_tags', CASE WHEN NULLIF(BTRIM(s.electric_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.electric_tags_raw), '\\s*,\\s*')) END,\n    'appliance_tags', CASE WHEN NULLIF(BTRIM(s.appliance_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.appliance_tags_raw), '\\s*,\\s*')) END,\n    'env_tags', CASE WHEN NULLIF(BTRIM(s.env_tags_raw), '') IS NOT NULL\n      THEN to_jsonb(regexp_split_to_array(BTRIM(s.env_tags_raw), '\\s*,\\s*')) END,\n    'price_sensitivity', to_jsonb(NULLIF(BTRIM(s.price_sensitivity), '')),\n    'residence_status', to_jsonb(NULLIF(BTRIM(s.residence_status), '')),\n    'family_structure', to_jsonb(NULLIF(BTRIM(s.family_structure), '')),\n    'decorate_status', to_jsonb(NULLIF(BTRIM(s.decorate_status), '')),\n    'house_type_name', to_jsonb(NULLIF(BTRIM(s.house_type_name), '')),\n    'deliver_year', to_jsonb(s.deliver_year),\n    'property_area', to_jsonb(s.property_area),\n    'layout', to_jsonb(NULLIF(BTRIM(s.layout), '')),\n    'repair_kitchen', CASE WHEN s.repair_kitchen > 0 THEN to_jsonb(s.repair_kitchen) END,\n    'repair_balcony', CASE WHEN s.repair_balcony > 0 THEN to_jsonb(s.repair_balcony) END,\n    'repair_bathroom', CASE WHEN s.repair_bathroom > 0 THEN to_jsonb(s.repair_bathroom) END\n  )) AS labels,\n  s.stat_date,\n  now(),\n  'v1'\nFROM house_label_staging s\nWHERE s.stat_date = DATE '${bizdate}'\nON CONFLICT (house_id) DO UPDATE SET\n  zhantu_house_id = EXCLUDED.zhantu_house_id,\n  house_name = EXCLUDED.house_name,\n  community_id = EXCLUDED.community_id,\n  community_name = EXCLUDED.community_name,\n  region = EXCLUDED.region,\n  city = EXCLUDED.city,\n  branch = EXCLUDED.branch,\n  station = EXCLUDED.station,\n  station_code = EXCLUDED.station_code,\n  labels = EXCLUDED.labels,\n  stat_date = EXCLUDED.stat_date,\n  synced_at = EXCLUDED.synced_at,\n  label_version = EXCLUDED.label_version;";
+    var appendix='<section class="doc-section">'+section('05','建表与写入 SQL 附录','正文先展示表结构、字段和开发用途；SQL 默认折叠，方便开发需要时展开。')+
+      '<details class="doc-sql-appendix"><summary>① 标签明细长表 · MaxCompute 建表 SQL</summary><div class="doc-sql-explain">目标表：weijia.dwd_yx_house_tag_detail。按 pt 日分区；字段含义见上方表结构。</div><pre><code>'+escapeHtml(tagDetailDdl)+'</code></pre></details>'+
+      '<details class="doc-sql-appendix"><summary>② 标签明细长表 · 每日写入 SQL（15 个类别）</summary><div class="doc-sql-explain">固定枚举值字典需先就绪；多值拆行、单值一行、数值写入 tag_value_num；动态值编码在后续步骤回灌。</div><pre><code>'+escapeHtml(tagDetailInsert)+'</code></pre></details>'+
+      '<details class="doc-sql-appendix"><summary>③ 房屋明细 / 筛选服务表 · PostgreSQL 建表 SQL</summary><div class="doc-sql-explain">house_label_snapshot 已有同名 Prisma 模型；已有环境请以当前 migration/schema 为准，不要重复建表。</div><pre><code>'+escapeHtml(houseDetailDdl)+'</code></pre></details>'+
+      '<details class="doc-sql-appendix"><summary>④ 房屋明细 / 筛选服务表 · staging 写入与 upsert SQL</summary><div class="doc-sql-explain">按 house_id（Pride 编码）幂等更新。当前正式写入在 HouseSyncService.mergeHouseLabels()；这份 SQL 用于映射核对，不要与服务层双写。</div><pre><code>'+escapeHtml(houseDetailInsert)+'</code></pre></details>'+
+      '<div class="doc-sql-link"><span>完整 SQL 已单独存档，两个引擎的语句请分别在对应环境执行。</span><a href="https://github.com/qishen123456/yingxiaoshuzi/blob/main/sql/02_house_tag_detail_and_snapshot.sql" target="_blank" rel="noreferrer">打开完整 SQL 文件 ↗</a></div></section>';
 
     return ''+
-      '<section class="doc-hero"><div class="doc-hero-copy"><div class="doc-eyebrow">PROJECT BRIEF / DATA MODEL / SQL REVIEW</div>'+
-      '<h2>研选房屋标签体系与营销智能推送</h2>'+
-      '<p>把上游房屋标签标准化，形成前端可动态配置、SQL 可稳定圈选的人群数据层，再由产品规则与推送范围控制营销触达。</p>'+
-      '<div class="doc-hero-tags"><span>类别/值由字典驱动</span><span>宽表转长表</span><span>规则可组合</span><span>每日分区</span></div></div>'+
-      '<div class="doc-hero-side"><div class="dhs-label">SQL 设计评估</div><div class="dhs-value">总体方向符合</div><div class="dhs-caption">三表分层和四步依赖合理；上线前仍要核对应用库映射、数值规则、状态保留及字段口径。当前为静态评审，未执行 MaxCompute 作业。</div></div></section>'+
-
-      '<div class="doc-progress-grid">'+
-      progress("前端交互","已调整","done","产品并排对比；标签类别和值可浏览、搜索。")+
-      progress("上游标签模型","SQL 已设计","code","三表分层支持类别元信息、可选值和逐房屋标签明细。")+
-      progress("生产数据闭环","待对接","pending","需完成 ODPS 与应用库同步、后端联调和真实数据验收。")+
-      '</div>'+
-
-      '<section class="doc-section">'+section("01","表结构：三张表，各自负责一件事","维表定义标签含义与选项，明细事实表记录房屋实际命中的标签。")+modelHtml+'</section>'+
-      '<section class="doc-section">'+section("02","每日加工：四步有依赖，不能乱序","固定枚举先落字典，再加工长表，最后从当天数据补齐动态值。")+dagHtml+'</section>'+
-      '<section class="doc-section">'+section("03","圈选逻辑：同类 OR、跨类 AND","枚举标签支持组合，数值标签使用独立比较逻辑。")+semanticsHtml+
-      '<div class="doc-sql-note"><strong>示例：</strong>选择“水路=卫生间漏水或厨房漏水”并同时要求“居住状态=自住常住”。水路类别内命中任意一个值即可，但居住状态也必须满足；实现上通过 IN 与所选类别数校验组合条件。</div></section>'+
-      '<section class="doc-section">'+section("04","SQL 评审：方向符合要求，但上线前有 5 个核验点","以下为对设计稿与当前仓库后端契约的静态检查，尚未连接 MaxCompute 实际运行。")+risksHtml+'</section>'+
-      '<section class="doc-section">'+section("05","下一步分工","先对齐数据契约，再做命中准确性验收，最后接生产执行。")+
-      '<div class="doc-next-grid"><article class="doc-next-card"><h4>研发 / 数据团队</h4><ul><li>确定 ODPS 三张表到 staging / PostgreSQL 应用表的同步与字段映射。</li><li>用固定业务日期验证字典行数、多值拆分、JOIN 缺口和动态值变化。</li><li>确认启停状态方案、房龄字段语义及数值型规则支持。</li></ul></article>'+
-      '<article class="doc-next-card"><h4>运营 / 产品团队</h4><ul><li>确认哪些类别用于规则，哪些仅用于画像。</li><li>确认同类 OR、跨类 AND、数值区间与缺失值口径。</li><li>用真实城市项目核验命中人数、去重和频控排除原因。</li></ul></article></div></section>'+
-      '<div class="doc-report-close"><strong>汇报结论：</strong>SQL 的三表分层和四步调度整体符合“标签由数据维护、前端不写死清单”的方向。眼下最重要的是对齐 MaxCompute 与应用库的数据契约，并把数值标签、状态保留和关键字段口径验证清楚，再进入端到端联调。</div>'+
-      '<div class="doc-footer">说明根据用户提供的 MaxCompute SQL 设计及仓库当前后端代码整理；未执行的 SQL 和未验收的生产能力均明确列为待确认。</div>';
+      '<section class="doc-hero"><div class="doc-hero-copy"><div class="doc-eyebrow">PROJECT GUIDE / DATA MODEL / BUSINESS FLOW</div>'+
+      '<h2>营销智能推送 · 数据基础与业务流程</h2><p>先讲清楚数据来自哪里、开发可以读取哪些字段，再讲产品规则、筛选范围和推送限制。目标是让业务配置可理解、房屋筛选可复现、触达结果可追踪。</p>'+
+      '<div class="doc-hero-tags"><span>标签数据字典</span><span>房屋 / 线索明细</span><span>产品规则驱动</span><span>推送全程留痕</span></div></div>'+
+      '<div class="doc-hero-side"><div class="dhs-label">当前交付范围</div><div class="dhs-value">数据模型 + 系统方案</div><div class="dhs-caption">上游 SQL 定义仓库标签模型；应用层已有房屋快照、线索镜像和推送明细。按产品规则筛选房屋的接口及生产调度仍需开发联调。</div></div></section>'+
+      '<section class="doc-section">'+section('01','数据基础：上游表与数据去向','上游生产宽表保持只读，通过 DataWorks 同步到仓库与应用层，前端不直接连接来源库。')+dataSources+warehouseTables+appTables+'<div class="doc-layer-label">C. 开发与前端可取的数据</div>'+apis+'</section>'+
+      '<section class="doc-section">'+section('02','系统规则与功能','前端负责配置和呈现；真正的产品匹配、分页筛选、调度和频控由服务端执行。')+rulesHtml+'</section>'+
+      '<section class="doc-section">'+section('03','推送限制与执行保护','先圈选目标，再做客户去重、模式频控和任务校验；下列为当前方案定义的规则口径。')+limits+'</section>'+
+      '<section class="doc-section">'+section('04','一套完整的端到端流程','从两路上游数据到标签加工、产品匹配、范围过滤、频控、发送记录和线索回流。')+processFlow+'</section>'+
+      appendix+'<div class="doc-footer">字段表依据用户提供的 MaxCompute SQL、仓库 DATA-CONTRACT 和当前 Prisma 模型整理。标签明细使用 MaxCompute；房屋快照 SQL 使用 PostgreSQL，两个引擎不能混用。</div>';
   }
 
   /* ============ 渲染与路由 ============ */
