@@ -1026,7 +1026,17 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 1：产品-标签映射配置（产品级搜索选择） ============ */
   var RULE_TAG_SEARCH = {};
-  var CORE_RULE_TAG_KEYS = ["decorate_status", "shuilu_label", "envir_tag", "family_structure"];
+  function getRuleTagKeys() {
+    return Object.keys(TAG_DICT).filter(function (key) {
+      var meta = TAG_DICT[key];
+      return meta && (meta.valueType === "enum" || meta.valueType === "multi_enum") &&
+        Array.isArray(meta.values);
+    }).sort(function (a, b) {
+      var am = TAG_DICT[a], bm = TAG_DICT[b];
+      return String(am.tagGroup || "").localeCompare(String(bm.tagGroup || "")) ||
+        String(am.label || a).localeCompare(String(bm.label || b), "zh-CN");
+    });
+  }
 
   function renderConfig() {
     function getValues(rule,bucket) {
@@ -1049,7 +1059,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     }
     function optionGroups(rule,bucket) {
       var query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"").trim().toLocaleLowerCase();
-      return CORE_RULE_TAG_KEYS.map(function(tagKey) {
+      return getRuleTagKeys().map(function(tagKey) {
         var meta=TAG_DICT[tagKey];if(!meta)return "";
         var values=Array.isArray(meta.values)?meta.values:[];
         var matchCount=0;
@@ -1067,14 +1077,14 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
     function renderBucket(rule,bucket,title,help) {
       var items=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
-      var noValues=CORE_RULE_TAG_KEYS.every(function(key){return !TAG_DICT[key]||!Array.isArray(TAG_DICT[key].values)||!TAG_DICT[key].values.length;});
+      var noValues=getRuleTagKeys().every(function(key){return !TAG_DICT[key]||!Array.isArray(TAG_DICT[key].values)||!TAG_DICT[key].values.length;});
       return '<section class="rule-condition-block"><div class="rule-condition-title"><strong>'+title+'</strong><span class="condition-count">'+items.length+' 项</span></div><div class="rule-condition-help">'+help+'</div>'+
         '<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div><div class="tag-search-box"><span class="tag-search-icon">⌕</span>'+
         '<input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+'" placeholder="搜索标签类别或标签值…" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
         '<div class="tag-options" data-option-list="'+rule.id+":"+bucket+'">'+optionGroups(rule,bucket)+
         (query.trim()?'':'<div class="tag-search-empty">'+(noValues?'标签字典暂无可选值，请检查数据库 tag_dictionary。':'输入关键词后显示匹配标签，选项来自数据库标签字典。')+'</div>')+'</div></section>';
     }
-    var totalValues=CORE_RULE_TAG_KEYS.reduce(function(sum,key){return sum+(TAG_DICT[key]&&Array.isArray(TAG_DICT[key].values)?TAG_DICT[key].values.length:0);},0);
+    var totalValues=getRuleTagKeys().reduce(function(sum,key){return sum+(TAG_DICT[key]&&Array.isArray(TAG_DICT[key].values)?TAG_DICT[key].values.length:0);},0);
     var statusClass=TAG_SOURCE_STATUS.mode==="upstream"?" live":"";
     var statusText=TAG_SOURCE_STATUS.mode==="upstream"?"标签表已连接":"离线预览";
     var html='<div class="page-head map-page-head"><div><h2>产品标签规则</h2><p>每个产品独立维护必选条件与加分条件。输入关键词即可从标签表搜索和勾选，不再把所有标签铺成一张大矩阵。</p></div>'+
@@ -1087,9 +1097,9 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
           renderBucket(rule,"optional","加分条件","按标签类别分组计算命中，当前产品至少需要命中 "+rule.minOptionalHits+" 组。")+
           '<div class="rule-condition-help">当前产品按优先级和加分组命中门槛参与试算。</div></div></article>';
       }).join("")+'</div>'+
-      '<div class="mapping-bottom-bar"><span class="config-hint">仅展示原有四类核心标签：装修状态、水路、环境、家庭结构。以后维护数据库标签字典并刷新页面，新标签值会自动出现在搜索结果中。</span>'+
+      '<div class="mapping-bottom-bar"><span class="config-hint">只展示标签字典中标记为可用于规则的枚举类别。新增类别或标签值后，只要在数据库维护字典及取值并开放规则使用，刷新后就会自动出现在搜索结果中。</span>'+
       '<span class="config-buttons"><button class="btn" onclick="window._addRule()">'+icon("plus",13)+' 加产品规则</button><button class="btn" onclick="window._reset()">恢复默认</button><button class="btn primary" onclick="window._save()">'+icon("check",13)+' 保存规则</button></span></div>'+
-      '<div class="mapping-source-note"><span>ⓘ</span><div><strong>标签表是标签选项的唯一来源。</strong>此页不提供新增标签入口，只读取 /api/tags 并保存产品选择的规则；新增标签值无需修改前端代码。</div></div>';
+      '<div class="mapping-source-note"><span>ⓘ</span><div><strong>标签表是标签类别与标签值的唯一来源。</strong>此页不提供新增标签入口，只读取 /api/tags 并保存产品选择的规则。新增类别时维护 tag_dictionary 并设置 rule_enabled=true，再向 tag_value 添加可选值即可，无需修改前端类别清单。</div></div>';
     return html;
   }
 
