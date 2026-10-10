@@ -68,7 +68,7 @@ export class HouseSyncService {
   }
 
   /** 节点①：标签 staging upsert 进 house_label_snapshot（号码列不在此步更新，避免覆盖）。 */
-  async mergeHouseLabels(): Promise<{ upserted: number }> {
+  async mergeHouseLabels(): Promise<{ upserted: number; dictionaryValuesAdded: number }> {
     const BATCH = 5000;
     let upserted = 0;
     let cursor: bigint | undefined;
