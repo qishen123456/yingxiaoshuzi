@@ -673,6 +673,32 @@
   @media(max-width:1080px){.flowchart-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.flowchart-arrow{display:none}}
   @media(max-width:640px){.doc-flowchart{padding:12px}.flowchart-sources{grid-template-columns:1fr}.flowchart-merge{min-height:18px}.flowchart-row{grid-template-columns:1fr}}
 
+
+.rule-product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;align-items:start}
+.rule-product-card{min-width:0;border:1px solid #e3eaf2;border-radius:13px;background:#fff;box-shadow:0 3px 10px rgba(28,55,86,.035);overflow:hidden}
+.rule-product-head{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid #edf1f6;background:#fbfcfe}
+.rule-product-number{display:flex;align-items:center;justify-content:center;flex:0 0 32px;height:32px;border-radius:9px;background:#eaf2fb;color:#1d5a96;font-size:11px;font-weight:800}
+.rule-product-title{flex:1;min-width:0}.rule-product-title input{width:100%;font-size:14px;font-weight:700;color:#223f5d;border:0;border-bottom:1px solid transparent;background:transparent;padding:4px 0;outline:none}.rule-product-title input:focus{border-bottom-color:#77a2ce}
+.rule-product-sub{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:3px;color:#8091a5;font-size:10.5px}
+.rule-priority-pill{padding:2px 6px;border-radius:5px;background:#f0f4f8;color:#526980;font-weight:650}
+.rule-product-body{padding:15px;display:flex;flex-direction:column;gap:16px}
+.rule-condition-block{padding:12px;border:1px solid #e9eef4;border-radius:10px;background:#fff}
+.rule-condition-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}.rule-condition-title strong{font-size:12px;color:#293f57}.rule-condition-title .condition-count{color:#8493a5;font-size:10.5px}
+.rule-condition-help{font-size:10.5px;color:#8998a9;line-height:1.6;margin-bottom:10px}
+.selected-tag-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;min-height:22px}
+.selected-tag-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 7px 4px 8px;border:1px solid #dbe7f3;border-radius:7px;background:#f3f8fd;color:#355d82;font-size:10.5px;line-height:1.5;max-width:100%}
+.selected-tag-chip .chip-group{color:#8397ac;font-size:9.5px;white-space:nowrap}.selected-tag-chip .chip-value{overflow-wrap:anywhere}
+.selected-tag-chip button{border:0;background:transparent;color:#7890a7;cursor:pointer;font-size:14px;line-height:1;padding:0 1px}.selected-tag-chip button:hover{color:#bd4b50}
+.tag-search-box{position:relative}.tag-search-input{display:block;width:100%;box-sizing:border-box;padding:9px 11px 9px 34px;border:1px solid #dfe7f0;border-radius:8px;background:#fbfcfe;font-size:11.5px;color:#2c435a;outline:none}.tag-search-input:focus{border-color:#8ab0d8;background:#fff;box-shadow:0 0 0 3px rgba(39,104,166,.08)}
+.tag-search-icon{position:absolute;left:11px;top:9px;color:#95a5b7;pointer-events:none;font-size:13px}.tag-search-empty{padding:11px 10px;color:#97a4b3;font-size:10.5px;line-height:1.6}
+.tag-options{max-height:205px;overflow:auto;margin-top:7px;border:1px solid #e5ebf3;border-radius:8px;background:#fff}
+.tag-options-group-title{padding:7px 10px 5px;background:#f7f9fc;color:#8292a5;font-size:9.5px;font-weight:750;border-bottom:1px solid #edf1f5}
+.tag-option{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-bottom:1px solid #f1f4f7;font-size:11px;color:#435970;cursor:pointer}.tag-option:last-child{border-bottom:0}.tag-option:hover{background:#f5f9fd}
+.tag-option input{flex:0 0 auto;margin:2px 0 0;accent-color:#1d5a96}.tag-option-name{flex:1;min-width:0;overflow-wrap:anywhere}.tag-option-type{font-size:9.5px;color:#9aabbd;white-space:nowrap}
+.mapping-source-note{display:flex;gap:9px;align-items:flex-start;margin-top:14px;padding:12px 14px;border:1px solid #e3ebf3;border-radius:10px;background:#f8fbfe;color:#657c93;font-size:11px;line-height:1.7}.mapping-source-note strong{color:#355b7e}
+.mapping-bottom-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:16px}.mapping-bottom-bar .config-hint{flex:1;min-width:240px}
+@media(max-width:640px){.rule-product-grid{grid-template-columns:minmax(0,1fr)}.rule-product-body{padding:12px}.mapping-bottom-bar{align-items:stretch}}
+
 </style>
 </head>
 <body>
@@ -817,16 +843,6 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       var raw = window.localStorage.getItem(CONFIG_STORAGE_KEY);
       if (!raw) return;
       var saved = JSON.parse(raw);
-      if (saved && saved.tagDict && typeof saved.tagDict === "object") {
-        Object.keys(DEFAULT_TAG_DICT).forEach(function (key) {
-          var savedGroup = saved.tagDict[key];
-          if (!savedGroup || !Array.isArray(savedGroup.values)) return;
-          var values = savedGroup.values.filter(function (v) {
-            return typeof v === "string" && v.length > 0 && v.length <= 50;
-          });
-          TAG_DICT[key] = Object.assign({}, TAG_DICT[key] || DEFAULT_TAG_DICT[key], { values: values });
-        });
-      }
       if (saved && Array.isArray(saved.rules) && saved.rules.length) {
         RULES = saved.rules.filter(function (r) {
           return r && typeof r.id === "number" && typeof r.name === "string" &&
@@ -841,8 +857,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   function saveLocalConfig() {
     try {
       window.localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify({
-        rules: RULES,
-        tagDict: TAG_DICT
+        rules: RULES
       }));
       return true;
     } catch (e) {
@@ -996,111 +1011,95 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     return '<svg width="' + (size || 16) + '" height="' + (size || 16) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + p[name] + '</svg>';
   }
 
-  /* ============ 页面 1：产品-标签映射配置（竖版矩阵：行=标签，列=产品） ============ */
+  /* ============ 页面 1：产品-标签映射配置（产品级搜索选择） ============ */
+  var RULE_TAG_SEARCH = {};
+  var CORE_RULE_TAG_KEYS = ["decorate_status", "shuilu_label", "envir_tag", "family_structure"];
+
   function renderConfig() {
-    function cellBtns(r, tagKey, val) {
-      var inM = r.mandatory.some(function (c) { return c.tag === tagKey && c.value.indexOf(val) >= 0; });
-      var inO = r.optional.some(function (c) { return c.tag === tagKey && c.value.indexOf(val) >= 0; });
-      var valAttr = val.replace(/'/g, "\\'");
-      function btn(kind, label, on) {
-        return '<button class="tag-btn ' + kind + (on ? " on" : "") + '" onclick="window._setCell(event,' + r.id + ',\'' + tagKey + '\',\'' + valAttr + '\',\'' + kind + '\')" title="' + (kind === "mand" ? "必选：缺一不可" : "加分：命中越多越优先") + '">' + label + '</button>';
-      }
-      return '<div class="cell-btns">' + btn("mand", "必", inM) + btn("opt", "分", inO) + '</div>';
+    function getValues(rule,bucket) {
+      var items=[];
+      (rule[bucket]||[]).forEach(function(condition){(Array.isArray(condition.value)?condition.value:[]).forEach(function(value){items.push({tag:condition.tag,value:value});});});
+      return items;
     }
-
-    var enumKeys = Object.keys(TAG_DICT).filter(function (tk) { return TAG_DICT[tk].valueType === "enum" || TAG_DICT[tk].valueType === "multi_enum"; });
-    var tagOptions = enumKeys.map(function (tk) { return '<option value="' + escapeHtml(tk) + '">' + escapeHtml(TAG_DICT[tk].label) + '</option>'; }).join("");
-    var totalTags = Object.keys(TAG_DICT).reduce(function (sum, tk) { return sum + TAG_DICT[tk].values.length; }, 0);
-    var statusClass = TAG_SOURCE_STATUS.mode === "upstream" ? " live" : "";
-    var statusText = TAG_SOURCE_STATUS.mode === "upstream" ? "已连接上游字典" : "离线演示字典";
-    var html =
-      '<div class="page-head map-page-head"><div><h2>产品 × 标签映射</h2>' +
-        '<p>字段目录和值来自上游标签字典。每行代表标签值，每列代表产品规则；文本 / 数值字段会保留在完整字典表中。</p></div>' +
-        '<div class="cfg-legend"><span class="tag-source-status' + statusClass + '"><span class="dot"></span>' + statusText + '</span>' +
-          '<span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span>' +
-          '<span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span></div></div>' +
-
-      '<section class="mapping-tools">' +
-        '<div class="mapping-tools-copy"><span class="mt-eyebrow">TAG MANAGEMENT</span><strong>新增标签值</strong>' +
-          '<small>选择已有标签类别，添加一个可用于规则映射的标签值。新增标签不会自动补写到房屋样本数据。</small></div>' +
-        '<div class="mapping-form"><label for="newTagGroup">标签类别</label>' +
-          '<select id="newTagGroup">' + tagOptions + '</select>' +
-          '<label for="newTagValue">标签值</label>' +
-          '<input id="newTagValue" type="text" maxlength="50" placeholder="例如：管道老化" autocomplete="off" />' +
-          '<button class="btn primary" onclick="window._addTag()">' + icon("plus", 13) + ' 添加标签</button>' +
-        '</div>' +
-        '<div class="mapping-counter">当前 ' + Object.keys(TAG_DICT).length + ' 个标签类别 · ' + totalTags + ' 个标签值</div>' +
-      '</section>' +
-
-      '<div class="card mapping-table-card" style="padding:0;overflow-x:auto;max-height:calc(100vh - 310px);overflow-y:auto">' +
-        '<table class="matrix-table">' +
-          '<thead><tr><th class="sticky-col">标签类别 / 标签值</th>' +
-            RULES.map(function (r) {
-              return '<th class="prod-col' + (r.enabled ? '' : ' off') + '">' +
-                '<div class="prod-head">' +
-                  '<input type="text" class="prod-name" value="' + r.name + '" onchange="window._updRule(' + r.id + ',\'name\',this.value)"/>' +
-                  '<span class="switch"><input type="checkbox" ' + (r.enabled ? "checked" : "") + ' onchange="window._updRule(' + r.id + ',\'enabled\',this.checked)"/><span class="track"></span></span>' +
-                '</div><div class="prod-meta">优先级 P' + r.manual_priority + (r.enabled ? '' : ' · 已停用') + '</div>' +
-              '</th>';
-            }).join("") +
-          '</tr></thead><tbody>';
-
-    Object.keys(TAG_DICT).sort(function(a,b){var ga=TAG_DICT[a].tagGroup||"other",gb=TAG_DICT[b].tagGroup||"other";return ga.localeCompare(gb)||TAG_DICT[a].label.localeCompare(TAG_DICT[b].label,"zh-CN");}).forEach(function(tk){
-      var meta=TAG_DICT[tk],groupLabel=TAG_GROUP_LABELS[meta.tagGroup]||meta.tagGroup||"其他";
-      var typeLabel=meta.valueType==="multi_enum"?"多值枚举":meta.valueType==="enum"?"单值枚举":meta.valueType==="number"?"数值":"文本";
-      var sourceText=meta.sourceColumn?" · 源列 "+meta.sourceColumn:" · 上游源列未接入";
-      html+='<tr class="group-row"><td class="sticky-col group-td">'+escapeHtml(groupLabel)+'<span class="tag-group-count">'+escapeHtml(meta.label)+sourceText+' · '+typeLabel+'</span></td>'+RULES.map(function(){return '<td class="group-spacer"></td>';}).join("")+'</tr>';
-      if(meta.values.length){
-        meta.values.forEach(function(v){html+='<tr><td class="sticky-col tag-name" title="'+escapeHtml(meta.label+" / "+v)+'">'+escapeHtml(v)+'</td>'+RULES.map(function(r){return '<td class="cell">'+cellBtns(r,tk,v)+'</td>';}).join("")+'</tr>';});
-      }else{
-        html+='<tr><td class="sticky-col tag-name">'+escapeHtml(meta.label)+'<span class="tag-group-count">该字段无固定枚举值</span></td>'+RULES.map(function(){return '<td class="cell"><span class="map-disabled" title="文本/数值字段需用对应运算符规则">—</span></td>';}).join("")+'</tr>';
-      }
-    });
-
-    html += '</tbody></table></div>' +
-      '<div class="config-actions">' +
-        '<span class="config-hint">同一户命中多个产品时，按「优先级数字小者 → 命中标签更多 → 规则 ID 小者」确定唯一推送产品。</span>' +
-        '<span class="config-buttons">' +
-          '<button class="btn" onclick="window._addRule()">' + icon("plus", 13) + ' 加产品</button>' +
-          '<button class="btn" onclick="window._reset()">恢复默认</button>' +
-          '<button class="btn primary" onclick="window._save()">' + icon("check", 13) + ' 保存配置</button>' +
-        '</span>' +
-      '</div>' +
-      '<div class="config-note"><strong>数据口径</strong><span>复用数据库 <code>tag_dictionary</code> 管理字段、源列、值类型与枚举字典。每日标签同步会自动补录上游新出现的枚举；手动新增值也会尝试写回字典。新增值不会自动制造房屋样本，只有上游房屋存在该值时才可能命中。</span></div>' +
-      '<details class="tag-dictionary-details"><summary>' + icon("database", 14) + ' 查看完整标签字典（' + Object.keys(TAG_DICT).length + ' 个字段）</summary>' +
-        '<div class="table-wrap"><table class="tag-dictionary-table"><thead><tr><th>标签类别</th><th>业务名称</th><th>系统字段</th><th>上游源列</th><th>类型</th><th>枚举值</th></tr></thead><tbody>' +
-        Object.keys(TAG_DICT).sort().map(function(tk){var m=TAG_DICT[tk],vals=m.values.length?m.values.map(escapeHtml).join("、"):"无固定枚举 / 动态值",type=m.valueType==="multi_enum"?"多值枚举":m.valueType==="enum"?"单值枚举":m.valueType==="number"?"数值":"文本";return '<tr><td>'+escapeHtml(TAG_GROUP_LABELS[m.tagGroup]||m.tagGroup||"其他")+'</td><td>'+escapeHtml(m.label)+'</td><td><code>'+escapeHtml(m.tagKey||tk)+'</code></td><td>'+escapeHtml(m.sourceColumn||"未接入")+'</td><td><span class="dict-type">'+type+'</span></td><td style="white-space:normal;min-width:240px">'+vals+'</td></tr>';}).join("") +
-        '</tbody></table></div></details>' +
-      '<div class="sql-note">当前规则基准来自 0924 演示口径：渗漏 = 未装修 + 任一水路标签；浴改淋 = 未装修 + 环境或家构至少命中一组；刷新 = 装修状态命中配置门槛 + 环境与家构两组均命中。修改规则前，建议先用实际标签样本复核命中数。</div>';
+    function selectedFor(rule,bucket,tagKey,value) {
+      return (rule[bucket]||[]).some(function(condition){return condition.tag===tagKey&&Array.isArray(condition.value)&&condition.value.indexOf(value)>=0;});
+    }
+    function renderSelected(rule,bucket) {
+      var items=getValues(rule,bucket);
+      if(!items.length)return '<div class="tag-search-empty">尚未选择标签。输入关键词，从标签表中搜索并勾选。</div>';
+      return items.map(function(item) {
+        var meta=TAG_DICT[item.tag],title=meta?meta.label:item.tag;
+        return '<span class="selected-tag-chip"><span class="chip-group">'+escapeHtml(title)+'</span><span class="chip-value">'+escapeHtml(item.value)+'</span>'+
+          '<button type="button" title="移除此条件" data-tag-key="'+escapeHtml(item.tag)+'" data-tag-value="'+escapeHtml(item.value)+
+          '" onclick="window._removeRuleTag('+rule.id+',\''+bucket+'\',this.dataset.tagKey,this.dataset.tagValue)">×</button></span>';
+      }).join("");
+    }
+    function optionGroups(rule,bucket) {
+      var query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"").trim().toLocaleLowerCase();
+      return CORE_RULE_TAG_KEYS.map(function(tagKey) {
+        var meta=TAG_DICT[tagKey];if(!meta)return "";
+        var values=Array.isArray(meta.values)?meta.values:[];
+        var matches=values.map(function(value,index){return {value:value,index:index};}).filter(function(item){return (String(meta.label)+" "+String(item.value)).toLocaleLowerCase().indexOf(query)>=0;});
+        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"'+(query&&matches.length?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+
+          matches.map(function(item) {
+            var checked=selectedFor(rule,bucket,tagKey,item.value),typeLabel=meta.valueType==="multi_enum"?"多值":"单值";
+            return '<label class="tag-option" data-search-text="'+escapeHtml((String(meta.label)+" "+String(item.value)).toLocaleLowerCase())+'"><input type="checkbox" '+(checked?'checked':'')+
+              ' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+item.index+',this.checked)"/><span class="tag-option-name">'+escapeHtml(item.value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
+          }).join("")+'</div>';
+      }).join("");
+    }
+    function renderBucket(rule,bucket,title,help) {
+      var items=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
+      var noValues=CORE_RULE_TAG_KEYS.every(function(key){return !TAG_DICT[key]||!Array.isArray(TAG_DICT[key].values)||!TAG_DICT[key].values.length;});
+      return '<section class="rule-condition-block"><div class="rule-condition-title"><strong>'+title+'</strong><span class="condition-count">'+items.length+' 项</span></div><div class="rule-condition-help">'+help+'</div>'+
+        '<div class="selected-tag-list">'+renderSelected(rule,bucket)+'</div><div class="tag-search-box"><span class="tag-search-icon">⌕</span>'+
+        '<input class="tag-search-input" type="search" autocomplete="off" value="'+escapeHtml(query)+'" placeholder="搜索标签类别或标签值…" oninput="window._tagSearch('+rule.id+',\''+bucket+'\',this.value)"/></div>'+
+        '<div class="tag-options" data-option-list="'+rule.id+":"+bucket+'">'+optionGroups(rule,bucket)+
+        (query.trim()?'':'<div class="tag-search-empty">'+(noValues?'标签字典暂无可选值，请检查数据库 tag_dictionary。':'输入关键词后显示匹配标签，选项来自数据库标签字典。')+'</div>')+'</div></section>';
+    }
+    var totalValues=CORE_RULE_TAG_KEYS.reduce(function(sum,key){return sum+(TAG_DICT[key]&&Array.isArray(TAG_DICT[key].values)?TAG_DICT[key].values.length:0);},0);
+    var statusClass=TAG_SOURCE_STATUS.mode==="upstream"?" live":"";
+    var statusText=TAG_SOURCE_STATUS.mode==="upstream"?"标签表已连接":"离线预览";
+    var html='<div class="page-head map-page-head"><div><h2>产品标签规则</h2><p>每个产品独立维护必选条件与加分条件。输入关键词即可从标签表搜索和勾选，不再把所有标签铺成一张大矩阵。</p></div>'+
+      '<div class="cfg-legend"><span class="tag-source-status'+statusClass+'"><span class="dot"></span>'+statusText+'</span><span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span><span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span></div></div>'+
+      '<div class="rule-product-grid">'+RULES.map(function(rule,index) {
+        return '<article class="rule-product-card" data-rule-card="'+rule.id+'"><div class="rule-product-head"><span class="rule-product-number">P'+String(index+1).padStart(2,"0")+'</span>'+
+          '<div class="rule-product-title"><input aria-label="产品名称" type="text" maxlength="64" value="'+escapeHtml(rule.name)+'" onchange="window._updRule('+rule.id+',\'name\',this.value)"/><div class="rule-product-sub"><span class="rule-priority-pill">优先级 '+rule.manual_priority+'</span><span>'+(rule.enabled?"参与匹配":"已停用")+'</span></div></div>'+
+          '<span class="switch"><input aria-label="启用产品规则" type="checkbox" '+(rule.enabled?"checked":"")+' onchange="window._updRule('+rule.id+',\'enabled\',this.checked)"/><span class="track"></span></span></div>'+
+          '<div class="rule-product-body">'+renderBucket(rule,"mandatory","必选条件","所选标签必须满足；同一类别勾选多个值时，命中其中任意一个即可。")+
+          renderBucket(rule,"optional","加分条件","按标签类别分组计算命中，当前产品至少需要命中 "+rule.minOptionalHits+" 组。")+
+          '<div class="rule-condition-help">当前产品按优先级和加分组命中门槛参与试算。</div></div></article>';
+      }).join("")+'</div>'+
+      '<div class="mapping-bottom-bar"><span class="config-hint">仅展示原有四类核心标签：装修状态、水路、环境、家庭结构。以后维护数据库标签字典并刷新页面，新标签值会自动出现在搜索结果中。</span>'+
+      '<span class="config-buttons"><button class="btn" onclick="window._addRule()">'+icon("plus",13)+' 加产品规则</button><button class="btn" onclick="window._reset()">恢复默认</button><button class="btn primary" onclick="window._save()">'+icon("check",13)+' 保存规则</button></span></div>'+
+      '<div class="mapping-source-note"><span>ⓘ</span><div><strong>标签表是标签选项的唯一来源。</strong>此页不提供新增标签入口，只读取 /api/tags 并保存产品选择的规则；新增标签值无需修改前端代码。</div></div>';
     return html;
   }
 
-  // 设置格子状态：kind = 'mand' | 'opt'；同格互斥，再点取消
-  window._setCell = function (ev, ruleId, tagKey, val, kind) {
-    if (ev && ev.stopPropagation) ev.stopPropagation();
-    var r = RULES.find(function (x) { return x.id === ruleId; });
-    if (!r) return;
-    function has(list) {
-      return list.some(function (c) { return c.tag === tagKey && c.value.indexOf(val) >= 0; });
-    }
-    function rmFrom(list) {
-      list.forEach(function (c) { if (c.tag === tagKey) c.value = c.value.filter(function (x) { return x !== val; }); });
-      for (var i = list.length - 1; i >= 0; i--) if (list[i].value.length === 0) list.splice(i, 1);
-    }
-    function addTo(list, op) {
-      var c = null;
-      for (var i = 0; i < list.length; i++) if (list[i].tag === tagKey) { c = list[i]; break; }
-      if (!c) { c = { tag: tagKey, op: op, value: [] }; list.push(c); }
-      if (c.value.indexOf(val) < 0) c.value.push(val);
-    }
-
-    if (kind === "mand") {
-      if (has(r.mandatory)) { rmFrom(r.mandatory); }          // 再点取消
-      else { rmFrom(r.optional); addTo(r.mandatory, "in"); }  // 切为必选（自动取消加分）
-    } else {
-      if (has(r.optional)) { rmFrom(r.optional); }            // 再点取消
-      else { rmFrom(r.mandatory); addTo(r.optional, "contains_any"); } // 切为加分
-    }
+  window._tagSearch = function(ruleId,bucket,query) {
+    RULE_TAG_SEARCH[ruleId+":"+bucket]=String(query||"");
+    var root=document.querySelector('[data-rule-card="'+ruleId+'"]');if(!root)return;
+    var list=root.querySelector('[data-option-list="'+ruleId+":"+bucket+'"]');if(!list)return;
+    var q=String(query||"").trim().toLocaleLowerCase(),groups=list.querySelectorAll(".tag-options-group"),visible=0;
+    groups.forEach(function(group){var rows=group.querySelectorAll(".tag-option"),inGroup=0;rows.forEach(function(row){var show=!!q&&(row.getAttribute("data-search-text")||"").indexOf(q)>=0;row.style.display=show?"flex":"none";if(show){inGroup++;visible++;}});group.style.display=inGroup?"block":"none";});
+    var empty=list.querySelector(".tag-search-empty");if(empty)empty.remove();
+    if(!q)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">输入关键词后显示匹配标签，选项来自数据库标签字典。</div>');
+    else if(!visible)list.insertAdjacentHTML("beforeend",'<div class="tag-search-empty">没有找到匹配标签，请检查标签表是否已维护该值。</div>');
+  };
+  window._toggleRuleTagByIndex = function(ruleId,bucket,tagKey,valueIndex,checked) {
+    var rule=RULES.find(function(item){return item.id===ruleId;}),meta=TAG_DICT[tagKey],value=meta&&Array.isArray(meta.values)?meta.values[Number(valueIndex)]:undefined;
+    if(!rule||value===undefined)return;
+    var target=bucket==="mandatory"?rule.mandatory:rule.optional,other=bucket==="mandatory"?rule.optional:rule.mandatory;
+    function removeValue(list,key,val){list.forEach(function(condition){if(condition.tag===key)condition.value=(condition.value||[]).filter(function(item){return item!==val;});});for(var i=list.length-1;i>=0;i--)if(!list[i].value||list[i].value.length===0)list.splice(i,1);}
+    if(!checked)removeValue(target,tagKey,value);
+    else{removeValue(other,tagKey,value);var condition=target.find(function(item){return item.tag===tagKey;});if(!condition){var op=(tagKey==="decorate_status"||tagKey==="family_structure")?"in":"contains_any";condition={tag:tagKey,op:op,value:[]};target.push(condition);}if(condition.value.indexOf(value)<0)condition.value.push(value);}
+    render();
+  };
+  window._removeRuleTag = function(ruleId,bucket,tagKey,value) {
+    var rule=RULES.find(function(item){return item.id===ruleId;});if(!rule)return;
+    var list=bucket==="mandatory"?rule.mandatory:rule.optional;
+    list.forEach(function(condition){if(condition.tag===tagKey)condition.value=(condition.value||[]).filter(function(item){return item!==value;});});
+    for(var i=list.length-1;i>=0;i--)if(!list[i].value||list[i].value.length===0)list.splice(i,1);
     render();
   };
 
