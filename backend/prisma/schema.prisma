@@ -56,18 +56,20 @@ model MutexGroup {
 }
 
 model TagDictionary {
-  id           BigInt     @id @default(autoincrement())
-  tagGroup     String     @map("tag_group") @db.VarChar(64)
-  tagKey       String     @unique @map("tag_key") @db.VarChar(64)
-  tagName      String     @map("tag_name") @db.VarChar(128)
-  valueType    String     @map("value_type") @db.VarChar(16) // enum/multi_enum/number/string
-  enumValues   Json?      @map("enum_values") // 仅作为历史初始化来源；线上可选值以 tag_value 行为准
-  minValue     Decimal?   @map("min_value")
-  maxValue     Decimal?   @map("max_value")
-  sourceColumn String?    @map("source_column") @db.VarChar(64) // 上游拼音列名，GAP 标签为 null
-  tagValues    TagValue[]
+  id            BigInt     @id @default(autoincrement())
+  tagGroup      String     @map("tag_group") @db.VarChar(64)
+  tagKey        String     @unique @map("tag_key") @db.VarChar(64)
+  tagName       String     @map("tag_name") @db.VarChar(128)
+  valueType     String     @map("value_type") @db.VarChar(16) // enum/multi_enum/number/string
+  enumValues    Json?      @map("enum_values") // 仅作为历史初始化来源；线上可选值以 tag_value 行为准
+  minValue      Decimal?   @map("min_value")
+  maxValue      Decimal?   @map("max_value")
+  sourceColumn  String?    @map("source_column") @db.VarChar(64) // 上游拼音列名，GAP 标签为 null
+  ruleEnabled   Boolean    @default(true) @map("rule_enabled") // 是否在产品规则搜索器中提供选择
+  tagValues     TagValue[]
 
   @@index([tagGroup])
+  @@index([ruleEnabled, valueType])
   @@map("tag_dictionary")
 }
 
