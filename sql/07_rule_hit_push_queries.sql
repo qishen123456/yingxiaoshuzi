@@ -67,7 +67,7 @@ BEGIN
       );
 
     WHEN 'not_in' THEN
-      IF jsonb_typeof(v_expected) <> 'array' THEN
+      IF jsonb_typeof(v_expected) IS DISTINCT FROM 'array' THEN
         RETURN FALSE;
       END IF;
       IF v_actual IS NULL THEN
@@ -79,7 +79,7 @@ BEGIN
       );
 
     WHEN 'contains_any' THEN
-      IF v_actual IS NULL OR jsonb_typeof(v_expected) <> 'array' THEN
+      IF v_actual IS NULL OR jsonb_typeof(v_expected) IS DISTINCT FROM 'array' THEN
         RETURN FALSE;
       END IF;
       v_actual_values := CASE jsonb_typeof(v_actual)
@@ -95,7 +95,7 @@ BEGIN
       );
 
     WHEN 'contains_all' THEN
-      IF v_actual IS NULL OR jsonb_typeof(v_expected) <> 'array' OR jsonb_array_length(v_expected) = 0 THEN
+      IF v_actual IS NULL OR jsonb_typeof(v_expected) IS DISTINCT FROM 'array' OR jsonb_array_length(v_expected) = 0 THEN
         RETURN FALSE;
       END IF;
       v_actual_values := CASE jsonb_typeof(v_actual)
@@ -130,7 +130,7 @@ BEGIN
       RETURN v_actual_text::NUMERIC <= v_expected_text::NUMERIC;
 
     WHEN 'between' THEN
-      IF v_actual IS NULL OR jsonb_typeof(v_expected) <> 'array'
+      IF v_actual IS NULL OR jsonb_typeof(v_expected) IS DISTINCT FROM 'array'
          OR jsonb_array_length(v_expected) <> 2 THEN
         RETURN FALSE;
       END IF;
