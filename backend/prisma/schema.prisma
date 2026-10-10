@@ -56,18 +56,36 @@ model MutexGroup {
 }
 
 model TagDictionary {
-  id           BigInt  @id @default(autoincrement())
-  tagGroup     String  @map("tag_group") @db.VarChar(64)
-  tagKey       String  @unique @map("tag_key") @db.VarChar(64)
-  tagName      String  @map("tag_name") @db.VarChar(128)
-  valueType    String  @map("value_type") @db.VarChar(16) // enum/multi_enum/number/string
-  enumValues   Json?   @map("enum_values")
-  minValue     Decimal? @map("min_value")
-  maxValue     Decimal? @map("max_value")
-  sourceColumn String? @map("source_column") @db.VarChar(64) // 上游拼音列名，GAP 标签为 null
+  id           BigInt     @id @default(autoincrement())
+  tagGroup     String     @map("tag_group") @db.VarChar(64)
+  tagKey       String     @unique @map("tag_key") @db.VarChar(64)
+  tagName      String     @map("tag_name") @db.VarChar(128)
+  valueType    String     @map("value_type") @db.VarChar(16) // enum/multi_enum/number/string
+  enumValues   Json?      @map("enum_values") // 仅作为历史初始化来源；线上可选值以 tag_value 行为准
+  minValue     Decimal?   @map("min_value")
+  maxValue     Decimal?   @map("max_value")
+  sourceColumn String?    @map("source_column") @db.VarChar(64) // 上游拼音列名，GAP 标签为 null
+  tagValues    TagValue[]
 
   @@index([tagGroup])
   @@map("tag_dictionary")
+}
+
+// 一个可供产品规则搜索和勾选的标签值一行。
+// 新增标签值只需往 tag_value 插入记录，无需修改前端或产品规则代码。
+model TagValue {
+  id        BigInt        @id @default(autoincrement())
+  tagKey    String        @map("tag_key") @db.VarChar(64)
+  tagValue  String        @map("tag_value") @db.VarChar(128)
+  status    String        @default("enabled") @db.VarChar(16)
+  sortOrder Int           @default(0) @map("sort_order")
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+  tag       TagDictionary @relation(fields: [tagKey], references: [tagKey], onDelete: Cascade)
+
+  @@unique([tagKey, tagValue], map: "uq_tag_value_key_value")
+  @@index([tagKey, status, sortOrder])
+  @@map("tag_value")
 }
 
 model MappingRule {
