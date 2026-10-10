@@ -1155,18 +1155,18 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
         var values=Array.isArray(meta.values)?meta.values:[];
         var stateKey=rule.id+":"+bucket+":"+tagKey,expanded=!!TAG_CATEGORY_OPEN[stateKey];
         var matches=values.filter(function(value){return (String(meta.label)+" "+String(value)).toLocaleLowerCase().indexOf(q)>=0;});
-        if(q&&!matches.length)return "";
-        var listValues=q?matches:values;
-        var rows=listValues.map(function(value){
+        var rows=values.map(function(value){
           var index=values.indexOf(value),searchText=(String(meta.label)+" "+String(value)).toLocaleLowerCase();
-          return '<label class="tag-option" data-search-text="'+escapeHtml(searchText)+'"'+(!q&&!expanded?' style="display:none"':'')+'>'+
+          var match=!q||searchText.indexOf(q)>=0;
+          var show=match&&(!!q||expanded);
+          return '<label class="tag-option" data-search-text="'+escapeHtml(searchText)+'"'+(show?'':' style="display:none"')+'>'+
             '<input type="checkbox" '+(selectedFor(rule,bucket,tagKey,value)?'checked':'')+' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/>'+
             '<span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+(meta.valueType==="multi_enum"?"多值标签":"单值标签")+'</span></label>';
         }).join("");
-        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"><button type="button" class="tag-category-toggle" aria-expanded="'+(q||expanded)+'" '+
-          'onmousedown="event.preventDefault()" onclick="window._toggleTagCategory('+rule.id+',\''+bucket+'\',\''+tagKey+'\')">'+
+        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"'+(q&&!matches.length?' style="display:none"':'')+'>'+
+          '<button type="button" class="tag-category-toggle" aria-expanded="'+(q||expanded)+'" onmousedown="event.preventDefault()" onclick="window._toggleTagCategory('+rule.id+',\''+bucket+'\',\''+tagKey+'\')">'+
           '<span class="tag-category-name">'+escapeHtml(meta.label)+'</span><span class="tag-category-count">'+(q?matches.length+" / ":"")+values.length+' 个</span><span class="tag-category-chevron">›</span></button>'+
-          '<div class="tag-category-values"'+(!q&&!expanded?' style="display:none"':'')+'>'+rows+'</div></div>';
+          '<div class="tag-category-values"'+((!q&&!expanded)||(q&&!matches.length)?' style="display:none"':'')+'>'+rows+'</div></div>';
       }).join("");
     }
 
