@@ -1071,15 +1071,19 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       return CORE_RULE_TAG_KEYS.map(function(tagKey) {
         var meta=TAG_DICT[tagKey];if(!meta)return "";
         var values=Array.isArray(meta.values)?meta.values:[];
-        var matches=values.map(function(value,index){return {value:value,index:index};}).filter(function(item){return (String(meta.label)+" "+String(item.value)).toLocaleLowerCase().indexOf(query)>=0;});
-        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"'+(query&&matches.length?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+
-          matches.map(function(item) {
-            var checked=selectedFor(rule,bucket,tagKey,item.value),typeLabel=meta.valueType==="multi_enum"?"多值":"单值";
-            return '<label class="tag-option" data-search-text="'+escapeHtml((String(meta.label)+" "+String(item.value)).toLocaleLowerCase())+'"><input type="checkbox" '+(checked?'checked':'')+
-              ' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+item.index+',this.checked)"/><span class="tag-option-name">'+escapeHtml(item.value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
-          }).join("")+'</div>';
+        var matchCount=0;
+        var optionHtml=values.map(function(value,index) {
+          var searchText=(String(meta.label)+" "+String(value)).toLocaleLowerCase();
+          var visible=!!query&&searchText.indexOf(query)>=0;
+          if(visible)matchCount++;
+          var checked=selectedFor(rule,bucket,tagKey,value),typeLabel=meta.valueType==="multi_enum"?"多值":"单值";
+          return '<label class="tag-option" data-search-text="'+escapeHtml(searchText)+'"'+(visible?'':' style="display:none"')+'><input type="checkbox" '+(checked?'checked':'')+
+            ' onchange="window._toggleRuleTagByIndex('+rule.id+',\''+bucket+'\',\''+tagKey+'\','+index+',this.checked)"/><span class="tag-option-name">'+escapeHtml(value)+'</span><span class="tag-option-type">'+typeLabel+'</span></label>';
+        }).join("");
+        return '<div class="tag-options-group" data-tag-group="'+escapeHtml(tagKey)+'"'+(matchCount?'':' style="display:none"')+'><div class="tag-options-group-title">'+escapeHtml(meta.label)+'</div>'+optionHtml+'</div>';
       }).join("");
     }
+
     function renderBucket(rule,bucket,title,help) {
       var items=getValues(rule,bucket),query=String(RULE_TAG_SEARCH[rule.id+":"+bucket]||"");
       var noValues=CORE_RULE_TAG_KEYS.every(function(key){return !TAG_DICT[key]||!Array.isArray(TAG_DICT[key].values)||!TAG_DICT[key].values.length;});
@@ -1595,13 +1599,15 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       '" placeholder="搜索项目名称…" oninput="window._scheduleProjectSearch(this.value)"/></div>' +
       '<div class="schedule-project-list" data-schedule-project-list>' +
       (!AUTO.cities.length ? '<div class="schedule-project-empty">先在左侧选择城市。选中后自动勾选该城市所有项目。</div>' :
-       (!visibleProjectIndexes.length ? '<div class="schedule-project-empty">没有找到匹配项目，请换一个关键词。</div>' :
-        visibleProjectIndexes.map(function (i) {
-          return '<label class="schedule-project-choice" data-project-search="' + escapeHtml((PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase()) + '">' +
+       (!scopedProjectIndexes.length ? '<div class="schedule-project-empty">所选城市暂无项目数据。</div>' :
+        scopedProjectIndexes.map(function (i) {
+          var searchText=(PROJECTS[i] + " " + CITY_OF_PROJECT[i]).toLocaleLowerCase();
+          var visible=!query||searchText.indexOf(query)>=0;
+          return '<label class="schedule-project-choice" data-project-search="' + escapeHtml(searchText) + '"' + (visible?'':' style="display:none"') + '>' +
             '<input type="checkbox" ' + (AUTO.projectIndexes.indexOf(i) >= 0 ? "checked" : "") +
             ' onchange="window._toggleScheduleProjectByIndex(' + i + ',this.checked)"/><span class="project-name">' + escapeHtml(PROJECTS[i]) +
             '<span class="project-city">' + escapeHtml(CITY_OF_PROJECT[i]) + '</span></span></label>';
-        }).join(""))) +
+        }).join("") + (query && !visibleProjectIndexes.length ? '<div class="schedule-project-empty">没有找到匹配项目，请换一个关键词。</div>' : ''))) +
       '</div><div class="schedule-project-actions"><span>所选城市范围内共 ' + scopedProjectIndexes.length + ' 个项目</span>' +
       '<button type="button" onclick="window._clearScheduleProjects()">清空项目选择</button></div></section>';
     var prodOpts = [["all", "全部命中产品"]].concat(RULES.filter(function (r) { return r.enabled; }).map(function (r) { return [r.name, "仅命中：" + r.name]; }));
