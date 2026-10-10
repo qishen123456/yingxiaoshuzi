@@ -1883,24 +1883,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     render();
     flash("已推送所选 " + cnt + " 个号码（模拟）");
   };
-  window._addTag = function () {
-    var groupEl=document.getElementById("newTagGroup"),valueEl=document.getElementById("newTagValue");
-    if(!groupEl||!valueEl)return;
-    var key=groupEl.value,value=valueEl.value.replace(/^\s+|\s+$/g,""),meta=TAG_DICT[key];
-    if(!meta||(meta.valueType!=="enum"&&meta.valueType!=="multi_enum")){flash("请选择支持枚举值维护的标签字段");return;}
-    if(!value){flash("请输入标签值");valueEl.focus();return;}
-    if(value.length>128||!/^[\u3400-\u9fffA-Za-z0-9_（）()·\/、\-+ ]{1,128}$/.test(value)){flash("标签值请使用中文、英文、数字、空格或常见分隔符，最多 128 个字符");valueEl.focus();return;}
-    if(meta.values.indexOf(value)>=0){flash("该标签值已存在，无需重复添加");valueEl.focus();return;}
-    meta.values.push(value);render();
-    var dbKey=meta.tagKey||key;
-    if(TAG_SOURCE_STATUS.mode==="upstream"){
-      fetch("/api/tags/"+encodeURIComponent(dbKey)+"/values",{method:"PATCH",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({value:value})})
-      .then(function(response){if(!response.ok)throw new Error("写入标签字典失败（"+response.status+"）");saveLocalConfig();flash("标签值已写入上游字典「"+meta.label+"」；规则配置完成后再保存");})
-      .catch(function(){flash("页面已临时添加该标签；后端写入失败，请检查接口后重试");});
-    }else flash("已在离线演示表中添加「"+value+"」；保存后仅保存在当前浏览器");
-  };
   window._save = function () {
-    if(saveLocalConfig())flash("映射配置已保存到当前浏览器；连接上游时标签值同时写入字典");
+    if(saveLocalConfig())flash("产品规则已保存到当前浏览器");
     else flash("浏览器未允许本地存储，配置仅在当前页面有效");
   };
 
