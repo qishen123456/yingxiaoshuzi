@@ -5,13 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>研选责任盘 · 营销智能推送系统（Demo v3 · 真实数据版）</title>
 <!--
-  v3 变更（用户 2026-10-09 整改指令）：
-  1. 数据 = 资料/0924 真实数据（1053 户房屋明细 + 1036 唯一号码），手机号脱敏嵌入
-  2. 标签 = 1.标签.sql 真实标签宽表字段：shuilu_label(多值) / envir_tag(多值) / family_structure / decorate_status
-  3. 规则 = 映射关系.md + 0924 SQL 真实规则（渗漏/浴改淋/刷新），每条 = 必选组 + 可选组
-  4. 页面砍到 2 个：①产品-标签映射配置页 ②筛选结果推送页
-  评估引擎在 1053 户真实数据上与原 0924 SQL 结果 100% 一致（渗漏853/浴改淋299/双命中99）
-  视觉规范：禁 emoji 图标（内联 SVG）、禁紫粉渐变、Design Token 墨钢蓝 #1D5A96
+  v3 基准（0924 批次演示数据）：1053 户房屋样本、1036 个唯一脱敏号码。
+  标签来源口径：shuilu_label / envir_tag / family_structure / decorate_status。
+  工作区：产品标签映射、筛选推送、海报配置、定时推送、项目说明。
+  注意：静态 HTML 的推送与计划为演示交互，不等同于生产环境真实发送；上线前须进行数据和 SQL 对账。
+  视觉规范：内联 SVG 图标、墨钢蓝主色 #1D5A96、清晰层级与响应式布局。
+
 -->
 <style>
   /* ================================================================
@@ -473,6 +472,157 @@
     .page-head h2 { font-size: 19px; }
     .data-badge { display: none; }
   }
+
+  /* ===== UI refinement: cleaner hierarchy and quieter surfaces ===== */
+  :root {
+    --bg-page: #f4f7fb; --bg-soft: #f7f9fc;
+    --line-1: #dce4ef; --line-2: #e9eef5;
+    --sh-xs: 0 1px 2px rgba(16,35,62,.04);
+    --sh-sm: 0 2px 8px rgba(16,35,62,.045);
+    --sh-md: 0 8px 24px rgba(16,35,62,.09);
+  }
+  body::before { background: radial-gradient(900px 360px at 85% -140px, rgba(29,90,150,.055), transparent 68%); }
+  .sidebar { width: 244px; flex-basis: 244px; background: #10243b; border-right: 1px solid rgba(255,255,255,.08); }
+  .sidebar::before { height: 2px; background: #4c91c6; }
+  .brand { padding: 24px 20px 22px; }
+  .brand .logo { border-radius: 10px; box-shadow: none; }
+  .nav { padding: 18px 12px; gap: 6px; }
+  .nav-item { border-radius: 9px; padding: 11px 14px; }
+  .nav-item.active { background: rgba(73,139,193,.22); box-shadow: inset 3px 0 0 #66a4d6; }
+  .topbar { height: 68px; padding: 0 32px; background: rgba(255,255,255,.94); backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(16,35,62,.025); }
+  .topbar .crumb { font-size: 15px; letter-spacing: 0; }
+  .data-badge { box-shadow: none; padding: 5px 11px; }
+  .content { padding: 32px clamp(20px,3vw,44px) 52px; max-width: 1840px; margin: 0 auto; }
+  .page-head { margin-bottom: 24px; }
+  .page-head h2 { font-size: 24px; letter-spacing: -.035em; margin-bottom: 7px; }
+  .page-head p { max-width: 900px; color: #62738a; line-height: 1.75; }
+  .card { border-color: #e3e9f1; border-radius: 14px; box-shadow: 0 2px 8px rgba(16,35,62,.035); padding: 24px; }
+  .card .card-title { margin-bottom: 18px; }
+  .grid-kpi { gap: 14px; }
+  .kpi { border-color: #e3e9f1; border-radius: 14px; box-shadow: none; padding: 18px; }
+  .kpi:hover { transform: translateY(-1px); box-shadow: 0 7px 18px rgba(16,35,62,.06); }
+  .kpi .k-icon { border-radius: 10px; }
+  .kpi.accent { background: #1d5a96; box-shadow: none; }
+  .btn { border-radius: 8px; box-shadow: none; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(16,35,62,.06); }
+  .btn.primary { background: #1d5a96; box-shadow: none; }
+  .btn.primary:hover { background: #174a7c; box-shadow: 0 4px 10px rgba(23,74,124,.16); }
+  .tag-btn.mand.on { background: #c96e14; border-color: #c96e14; box-shadow: none; text-shadow: none; }
+  .tag-btn.opt.on { background: #1d5a96; border-color: #1d5a96; box-shadow: none; text-shadow: none; }
+  .matrix-table thead th, .matrix-table thead .sticky-col { background: #f7f9fc; }
+  .group-row td, .matrix-table .group-row .group-td { background: #edf4fb; }
+  .matrix-table .tag-name { background: #fff; }
+  .mapping-tools { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; padding:17px 19px; margin:-5px 0 14px; background:#fff; border:1px solid #e3e9f1; border-radius:13px; box-shadow:0 2px 8px rgba(16,35,62,.025); }
+  .mapping-tools-copy { min-width:190px; display:flex; flex-direction:column; gap:4px; }
+  .mapping-tools-copy strong { font-size:13.5px; color:var(--ink-1); }
+  .mapping-tools-copy small { font-size:11.5px; color:var(--ink-3); line-height:1.6; }
+  .mapping-tools-copy .mt-eyebrow { font-size:10.5px; font-weight:750; color:var(--brand-600); letter-spacing:.09em; text-transform:uppercase; }
+  .mapping-form { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .mapping-form label { font-size:12px; color:var(--ink-2); font-weight:600; }
+  .mapping-form select { min-width:132px; }
+  .mapping-form input { width:210px; max-width:100%; }
+  .mapping-counter { color:var(--ink-3); font-size:11.5px; white-space:nowrap; }
+  .map-page-head { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; }
+  .map-page-head .cfg-legend { margin:0 0 2px; }
+  .tag-group-count { margin-left:6px; font-size:10px; font-weight:500; color:#7690ad; letter-spacing:0; }
+  .config-note { display:flex; gap:10px; align-items:flex-start; padding:13px 15px; border:1px solid #e4eaf2; background:#f8fafc; border-radius:10px; color:#5a6b82; font-size:12px; line-height:1.75; margin-top:14px; }
+  .config-note strong { color:#243b55; white-space:nowrap; }
+  .config-actions { display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-top:13px; }
+  .config-actions .config-hint { color:var(--ink-3); font-size:12px; line-height:1.6; flex:1; min-width:220px; }
+  .config-actions .config-buttons { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .doc-hero { position:relative; overflow:hidden; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr); gap:26px; align-items:center; padding:30px 32px; margin-bottom:22px; color:#fff; background:#153d63; border-radius:17px; box-shadow:0 10px 26px rgba(16,52,86,.12); }
+  .doc-hero::after { content:""; position:absolute; width:300px; height:300px; right:-110px; top:-170px; border:1px solid rgba(255,255,255,.11); border-radius:50%; box-shadow:0 0 0 28px rgba(255,255,255,.025),0 0 0 58px rgba(255,255,255,.02); pointer-events:none; }
+  .doc-hero-copy, .doc-hero-side { position:relative; z-index:1; }
+  .doc-eyebrow { font-size:10.5px; letter-spacing:.13em; font-weight:750; color:#a9c9e4; margin-bottom:11px; }
+  .doc-hero h2 { font-size:clamp(24px,2.4vw,32px); line-height:1.3; letter-spacing:-.04em; margin:0 0 11px; color:#fff; }
+  .doc-hero p { font-size:13px; line-height:1.85; color:rgba(255,255,255,.76); margin:0; max-width:760px; }
+  .doc-hero-tags { display:flex; gap:7px; flex-wrap:wrap; margin-top:18px; }
+  .doc-hero-tags span { padding:5px 9px; border-radius:6px; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.07); color:rgba(255,255,255,.84); font-size:10.5px; }
+  .doc-hero-side { border-left:1px solid rgba(255,255,255,.16); padding-left:25px; }
+  .doc-hero-side .dhs-label { color:#a9c9e4; font-size:11.5px; margin-bottom:6px; }
+  .doc-hero-side .dhs-value { font-size:39px; font-weight:760; line-height:1.05; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .doc-hero-side .dhs-caption { font-size:11.5px; line-height:1.65; color:rgba(255,255,255,.70); margin-top:8px; }
+  .doc-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:24px; }
+  .doc-stat { padding:17px 18px; border:1px solid #e3e9f1; border-radius:12px; background:#fff; }
+  .doc-stat .ds-label { color:#6e7e92; font-size:11.5px; margin-bottom:7px; }
+  .doc-stat .ds-value { color:#18334f; font-size:27px; font-weight:750; line-height:1.15; letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .doc-stat .ds-note { color:#8a98aa; font-size:10.5px; line-height:1.5; margin-top:5px; }
+  .doc-section { margin:25px 0; }
+  .doc-section-heading { display:flex; gap:12px; align-items:flex-start; margin-bottom:15px; }
+  .doc-section-no { width:29px; height:29px; flex:0 0 29px; border-radius:9px; display:inline-flex; justify-content:center; align-items:center; background:#e7f0f9; color:#1d5a96; font-size:11.5px; font-weight:800; }
+  .doc-section-heading h3 { color:#162b42; margin:0 0 4px; font-size:17px; letter-spacing:-.02em; }
+  .doc-section-heading p { color:#728197; margin:0; font-size:12px; line-height:1.7; }
+  .doc-goal-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; }
+  .doc-goal { padding:19px; background:#fff; border:1px solid #e3e9f1; border-radius:12px; }
+  .doc-goal .dg-head { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .doc-goal .dg-ico { width:32px; height:32px; border-radius:9px; background:#edf4fb; color:#1d5a96; display:flex; justify-content:center; align-items:center; flex:0 0 auto; }
+  .doc-goal .dg-title { font-size:13.5px; font-weight:750; color:#1a3048; }
+  .doc-goal p { margin:0; font-size:12px; line-height:1.75; color:#6c7b8e; }
+  .doc-steps { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+  .doc-step { position:relative; padding:17px 15px; border:1px solid #e3e9f1; border-radius:11px; background:#fff; min-width:0; }
+  .doc-step .ds-no { color:#2a6cb0; font-size:10.5px; font-weight:800; letter-spacing:.1em; }
+  .doc-step h4 { margin:9px 0 6px; color:#1b324a; font-size:13px; }
+  .doc-step p { margin:0; color:#728197; font-size:11.5px; line-height:1.72; }
+  .doc-module-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .doc-module { background:#fff; border:1px solid #e3e9f1; border-radius:12px; padding:18px; }
+  .doc-module .dm-top { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .doc-module .dm-icon { width:33px; height:33px; display:inline-flex; align-items:center; justify-content:center; border-radius:9px; background:#edf4fb; color:#1d5a96; flex:0 0 auto; }
+  .doc-module .dm-title { color:#1b324a; font-size:13.5px; font-weight:750; }
+  .doc-module .dm-index { margin-left:auto; color:#9aa8b9; font-size:10.5px; font-weight:750; letter-spacing:.05em; }
+  .doc-module p { margin:0; color:#6f7f93; font-size:12px; line-height:1.75; }
+  .doc-module .dm-status { display:inline-block; margin-top:12px; padding:4px 7px; border-radius:6px; background:#f3f6fa; color:#64758c; font-size:10.5px; }
+  .doc-table-wrap { overflow-x:auto; border:1px solid #e3e9f1; border-radius:12px; background:#fff; }
+  .doc-rule-table { min-width:790px; }
+  .doc-rule-table th { background:#f6f8fb; }
+  .doc-rule-table td { vertical-align:top; line-height:1.7; }
+  .doc-rule-table .rule-name { white-space:nowrap; color:#1b4f7f; font-weight:750; }
+  .doc-pill { display:inline-block; border-radius:5px; padding:3px 6px; margin:1px 3px 1px 0; font-size:10.5px; font-weight:700; }
+  .doc-pill.mand { background:#fff1e3; color:#a7590d; }
+  .doc-pill.opt { background:#e8f1fa; color:#1d5a96; }
+  .doc-callout { padding:14px 16px; border:1px solid #e3e9f1; border-radius:11px; margin-top:13px; background:#f8fafc; color:#5f6f84; font-size:11.5px; line-height:1.8; }
+  .doc-callout strong { color:#233c56; }
+  .doc-boundary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .doc-boundary { border:1px solid #e3e9f1; border-radius:12px; padding:17px 18px; background:#fff; }
+  .doc-boundary h4 { margin:0 0 7px; font-size:12.5px; color:#1d354e; }
+  .doc-boundary p { margin:0; color:#6f7f93; font-size:11.5px; line-height:1.8; }
+  .doc-boundary.warning { border-left:3px solid #d98a29; }
+  .doc-role-list { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+  .doc-role { padding:15px; border:1px solid #e3e9f1; border-radius:10px; background:#fff; }
+  .doc-role strong { display:block; font-size:12px; color:#213951; margin-bottom:5px; }
+  .doc-role span { display:block; font-size:11px; line-height:1.7; color:#78869a; }
+  .doc-footer { margin-top:20px; padding-top:14px; border-top:1px solid #e3e9f1; color:#8794a6; font-size:10.5px; line-height:1.7; }
+  @media (max-width:1080px) {
+    .doc-hero { grid-template-columns:1fr; }
+    .doc-hero-side { border-left:0; border-top:1px solid rgba(255,255,255,.16); padding:17px 0 0; }
+    .doc-hero-side .dhs-value { font-size:30px; }
+    .doc-steps { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .doc-role-list { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+  @media (max-width:860px) {
+    .sidebar { width:66px; flex-basis:66px; }
+    .doc-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .doc-goal-grid { grid-template-columns:1fr; }
+    .doc-module-grid, .doc-boundary-grid { grid-template-columns:1fr; }
+    .doc-steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .mapping-tools { align-items:flex-start; }
+    .mapping-form { width:100%; }
+    .mapping-form input { flex:1; width:auto; min-width:140px; }
+  }
+  @media (max-width:640px) {
+    .content { padding:18px 13px 30px; }
+    .topbar { padding:0 15px; }
+    .topbar .crumb { font-size:14px; }
+    .doc-hero { padding:23px 20px; }
+    .doc-stats { gap:8px; }
+    .doc-stat { padding:13px; }
+    .doc-stat .ds-value { font-size:23px; }
+    .doc-steps, .doc-role-list { grid-template-columns:1fr; }
+    .map-page-head { align-items:flex-start; }
+    .mapping-form label { width:100%; }
+    .mapping-form select, .mapping-form input { width:100%; }
+    .config-actions { align-items:flex-start; }
+    .config-actions .config-buttons { width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -487,7 +637,7 @@
     </div>
     <nav class="nav" id="nav"></nav>
     <div class="sidebar-foot">
-      <div class="sf-row"><span class="sf-dot"></span>0924 真实跑批数据</div>
+      <div class="sf-row"><span class="sf-dot"></span>0924 批次样本（脱敏）</div>
       <div class="sf-meta">1053 户 · 1036 号码<br/>金域松湖 + 第五园 · 演示版</div>
     </div>
   </aside>
@@ -496,7 +646,7 @@
       <div class="crumb" id="crumb"></div>
       <span class="data-badge" id="data-badge">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        数据源：0924 真实跑批 · 与原 SQL 结果一致
+        样本：0924 批次数据 · 脱敏演示版
       </span>
     </div>
     <div class="content" id="content"></div>
@@ -557,6 +707,48 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       minOptionalHits: 2 } // 环境 AND 家庭结构 都得命中
   ];
   var RULES = JSON.parse(JSON.stringify(DEFAULT_RULES));
+  var DEFAULT_TAG_DICT = JSON.parse(JSON.stringify(TAG_DICT));
+  var CONFIG_STORAGE_KEY = "yingxiaoshuzi.mapping-config.v3";
+
+  function loadSavedConfig() {
+    try {
+      var raw = window.localStorage.getItem(CONFIG_STORAGE_KEY);
+      if (!raw) return;
+      var saved = JSON.parse(raw);
+      if (saved && saved.tagDict && typeof saved.tagDict === "object") {
+        Object.keys(DEFAULT_TAG_DICT).forEach(function (key) {
+          var savedGroup = saved.tagDict[key];
+          if (!savedGroup || !Array.isArray(savedGroup.values)) return;
+          var values = savedGroup.values.filter(function (v) {
+            return typeof v === "string" && v.length > 0 && v.length <= 50;
+          });
+          TAG_DICT[key] = { label: DEFAULT_TAG_DICT[key].label, values: values };
+        });
+      }
+      if (saved && Array.isArray(saved.rules) && saved.rules.length) {
+        RULES = saved.rules.filter(function (r) {
+          return r && typeof r.id === "number" && typeof r.name === "string" &&
+            Array.isArray(r.mandatory) && Array.isArray(r.optional);
+        });
+      }
+    } catch (e) {
+      /* 本地存储不可用或旧配置损坏时，继续使用默认配置。 */
+    }
+  }
+
+  function saveLocalConfig() {
+    try {
+      window.localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify({
+        rules: RULES,
+        tagDict: TAG_DICT
+      }));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  loadSavedConfig();
 
   /* ============ 评估引擎（必选全中 + 可选命中数 ≥ min） ============ */
   function evalCond(cond, tags) {
@@ -714,50 +906,65 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
       return '<div class="cell-btns">' + btn("mand", "必", inM) + btn("opt", "分", inO) + '</div>';
     }
 
+    var tagOptions = Object.keys(TAG_DICT).map(function (tk) {
+      return '<option value="' + tk + '">' + TAG_DICT[tk].label + '</option>';
+    }).join("");
+    var totalTags = Object.keys(TAG_DICT).reduce(function (sum, tk) { return sum + TAG_DICT[tk].values.length; }, 0);
     var html =
-      '<div class="page-head"><h2>产品-标签映射配置</h2>' +
-      '<div class="cfg-legend">' +
-        '<span class="lg-item">行 = 标签，列 = 产品</span>' +
-        '<span class="lg-item"><span class="tag-btn mand on">必</span> 必选 · 缺一不可</span>' +
-      '</div></div>' +
+      '<div class="page-head map-page-head"><div><h2>产品 × 标签映射</h2>' +
+        '<p>用同一张规则矩阵维护产品与标签的关系。为标签选择「必选门槛」或「加分条件」，规则调整后可在下方保存。</p></div>' +
+        '<div class="cfg-legend">' +
+          '<span class="lg-item">行 = 标签类别与标签值，列 = 产品规则</span>' +
+          '<span class="lg-item"><span class="tag-btn mand on">必</span> 必选条件</span>' +
+          '<span class="lg-item"><span class="tag-btn opt on">分</span> 加分条件</span>' +
+        '</div></div>' +
 
-      '<div class="card" style="padding:0;overflow-x:auto;max-height:calc(100vh - 240px);overflow-y:auto">' +
+      '<section class="mapping-tools">' +
+        '<div class="mapping-tools-copy"><span class="mt-eyebrow">TAG MANAGEMENT</span><strong>新增标签值</strong>' +
+          '<small>选择已有标签类别，添加一个可用于规则映射的标签值。新增标签不会自动补写到房屋样本数据。</small></div>' +
+        '<div class="mapping-form"><label for="newTagGroup">标签类别</label>' +
+          '<select id="newTagGroup">' + tagOptions + '</select>' +
+          '<label for="newTagValue">标签值</label>' +
+          '<input id="newTagValue" type="text" maxlength="50" placeholder="例如：管道老化" autocomplete="off" />' +
+          '<button class="btn primary" onclick="window._addTag()">' + icon("plus", 13) + ' 添加标签</button>' +
+        '</div>' +
+        '<div class="mapping-counter">当前 ' + Object.keys(TAG_DICT).length + ' 个标签类别 · ' + totalTags + ' 个标签值</div>' +
+      '</section>' +
+
+      '<div class="card mapping-table-card" style="padding:0;overflow-x:auto;max-height:calc(100vh - 310px);overflow-y:auto">' +
         '<table class="matrix-table">' +
-          '<thead><tr>' +
-            '<th class="sticky-col">标签</th>' +
+          '<thead><tr><th class="sticky-col">标签类别 / 标签值</th>' +
             RULES.map(function (r) {
               return '<th class="prod-col' + (r.enabled ? '' : ' off') + '">' +
                 '<div class="prod-head">' +
                   '<input type="text" class="prod-name" value="' + r.name + '" onchange="window._updRule(' + r.id + ',\'name\',this.value)"/>' +
                   '<span class="switch"><input type="checkbox" ' + (r.enabled ? "checked" : "") + ' onchange="window._updRule(' + r.id + ',\'enabled\',this.checked)"/><span class="track"></span></span>' +
-                '</div>' +
-                '<div class="prod-meta">P' + r.manual_priority + (r.enabled ? '' : ' · 已停用') + '</div>' +
+                '</div><div class="prod-meta">优先级 P' + r.manual_priority + (r.enabled ? '' : ' · 已停用') + '</div>' +
               '</th>';
             }).join("") +
           '</tr></thead><tbody>';
 
-    // 按标签字段分组输出行
     Object.keys(TAG_DICT).forEach(function (tk) {
-      html += '<tr class="group-row"><td class="sticky-col group-td">' + TAG_DICT[tk].label + '</td>' +
+      html += '<tr class="group-row"><td class="sticky-col group-td">' + TAG_DICT[tk].label +
+        '<span class="tag-group-count">' + TAG_DICT[tk].values.length + ' 个值</span></td>' +
         RULES.map(function () { return '<td class="group-spacer"></td>'; }).join("") + '</tr>';
       TAG_DICT[tk].values.forEach(function (v) {
-        html += '<tr>' +
-          '<td class="sticky-col tag-name">' + v + '</td>' +
-          RULES.map(function (r) { return '<td class="cell">' + cellBtns(r, tk, v) + '</td>'; }).join("") +
-        '</tr>';
+        html += '<tr><td class="sticky-col tag-name">' + v + '</td>' +
+          RULES.map(function (r) { return '<td class="cell">' + cellBtns(r, tk, v) + '</td>'; }).join("") + '</tr>';
       });
     });
 
     html += '</tbody></table></div>' +
-      '<div style="display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap">' +
-        '<span style="font-size:12.5px;color:var(--ink-3)">一户命中多个产品时：优先级数字小者胜，同级按命中标签多者胜，每户只推一个产品。</span>' +
-        '<span style="margin-left:auto;display:flex;gap:8px">' +
+      '<div class="config-actions">' +
+        '<span class="config-hint">同一户命中多个产品时，按「优先级数字小者 → 命中标签更多 → 规则 ID 小者」确定唯一推送产品。</span>' +
+        '<span class="config-buttons">' +
           '<button class="btn" onclick="window._addRule()">' + icon("plus", 13) + ' 加产品</button>' +
           '<button class="btn" onclick="window._reset()">恢复默认</button>' +
-          '<button class="btn primary" onclick="window._save()">' + icon("check", 13) + ' 保存</button>' +
+          '<button class="btn primary" onclick="window._save()">' + icon("check", 13) + ' 保存配置</button>' +
         '</span>' +
       '</div>' +
-      '<div class="sql-note">默认口径（来自 0924 跑批）：渗漏 = 未装修 + 水路任一；浴改淋 = 未装修 + 环境/家构任一；刷新 = 装修 5-10 年或未装修 + 环境、家构都得命中（家构行里两个"必"用于门槛，环境、家构列的"分"需同时命中 ≥2 组）。</div>';
+      '<div class="config-note"><strong>使用说明</strong><span>「必」代表该标签值必须命中；「分」代表加分条件。新增标签值后，需要将它映射到一个或多个产品，再点击保存。配置保存在当前浏览器，不会同步到服务器；如需让新增标签参与真实房屋匹配，还需在上游数据中提供对应字段和值。</span></div>' +
+      '<div class="sql-note">当前规则基准来自 0924 演示口径：渗漏 = 未装修 + 任一水路标签；浴改淋 = 未装修 + 环境或家构至少命中一组；刷新 = 装修状态命中配置门槛 + 环境与家构两组均命中。修改规则前，建议先用实际标签样本复核命中数。</div>';
     return html;
   }
 
@@ -1323,141 +1530,100 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
   /* ============ 页面 5：系统说明 ============ */
   function renderDoc() {
-    function kpi(color, ico, label, value, sub) {
-      return '<div class="kpi"><div class="k-icon ' + color + '">' + icon(ico, 18) + '</div>' +
-        '<div class="k-body"><div class="k-label">' + label + '</div>' +
-        '<div class="k-value">' + value + '</div><div class="k-sub">' + sub + '</div></div></div>';
+    function section(no, title, desc) {
+      return '<div class="doc-section-heading"><span class="doc-section-no">' + no + '</span><div><h3>' + title + '</h3><p>' + desc + '</p></div></div>';
     }
-    function mod(ico, t, n, d, kv, style) {
-      var kvHtml = kv.map(function (k) {
-        return '<div class="kv"><b>' + k[0] + '</b><span>' + k[1] + '</span></div>';
-      }).join("");
-      return '<div class="doc-mod"' + (style ? ' style="' + style + '"' : '') + '>' +
-        '<div class="dm-head">' + icon(ico, 17) + '<div class="dm-t">' + t + '</div><div class="dm-n">' + n + '</div></div>' +
-        '<div class="dm-d">' + d + '</div>' +
-        '<div class="doc-kv">' + kvHtml + '</div></div>';
+    function stat(label, value, note) {
+      return '<div class="doc-stat"><div class="ds-label">' + label + '</div><div class="ds-value">' + value + '</div><div class="ds-note">' + note + '</div></div>';
     }
-    function layer(tag, t, m, mods) {
-      return '<div class="doc-layer">' +
-        '<div class="dl-head"><span class="dl-tag">' + tag + '</span><span class="dl-t">' + t + '</span><span class="dl-m">' + m + '</span></div>' +
-        '<div class="doc-mod-grid">' + mods + '</div></div>';
+    function goal(ico, title, desc) {
+      return '<div class="doc-goal"><div class="dg-head"><span class="dg-ico">' + icon(ico, 17) + '</span><span class="dg-title">' + title + '</span></div><p>' + desc + '</p></div>';
     }
-
-    var flow = [
-      ["底层数据结构", "责任盘 125.7 万房屋标签（T+1）"],
-      ["标签预处理与筛选", "归一化 · 多值拆分 · 缺失补全"],
-      ["标签映射表", "必选全中 + 加分项达标"],
-      ["推送规则", "频控 · DRY_RUN 双门槛"],
-      ["推送图片明细表", "模板套版 + AI 改文案"],
-      ["推送记录", "时间 · 文案 · 海报 · 渠道"],
-      ["定时任务", "按项目计划 · 实时频控估算"]
-    ];
-    var flowHtml = "";
-    for (var i = 0; i < flow.length; i++) {
-      flowHtml += '<div class="doc-node"><span class="dn-idx">' + (i + 1) + '</span>' +
-        '<div class="dn-t">' + flow[i][0] + '</div><div class="dn-d">' + flow[i][1] + '</div></div>';
-      if (i < flow.length - 1) flowHtml += '<div class="doc-arrow">' + icon("arrow", 16) + '</div>';
+    function step(no, title, desc) {
+      return '<div class="doc-step"><span class="ds-no">' + no + '</span><h4>' + title + '</h4><p>' + desc + '</p></div>';
+    }
+    function module(ico, title, idx, desc, status) {
+      return '<div class="doc-module"><div class="dm-top"><span class="dm-icon">' + icon(ico, 17) + '</span><span class="dm-title">' + title + '</span><span class="dm-index">' + idx + '</span></div><p>' + desc + '</p><span class="dm-status">' + status + '</span></div>';
+    }
+    function boundary(title, desc, warning) {
+      return '<div class="doc-boundary' + (warning ? ' warning' : '') + '"><h4>' + title + '</h4><p>' + desc + '</p></div>';
+    }
+    function role(title, desc) {
+      return '<div class="doc-role"><strong>' + title + '</strong><span>' + desc + '</span></div>';
     }
 
-    var l1 = layer("第一层", "数据与规则层", "离线 · T+1 · 决定「推给谁、推什么」",
-      mod("database", "底层数据结构", "MODULE 01", "系统基座。责任盘 125.7 万户房屋标签按天（T+1）沉淀为标签宽表，是「标签圈人」的唯一数据来源。", [
-        ["标签宽表字段", '<span class="code">shuilu_label</span>（多值）· <span class="code">envir_tag</span>（多值）· <span class="code">family_structure</span> · <span class="code">decorate_status</span>'],
-        ["更新周期", "T+1（上海自然日）"],
-        ["唯一键", "customer_key = 归一化手机号 HMAC-SHA256（三级降级）"]
-      ]) +
-      mod("filter", "标签预处理与筛选", "MODULE 02", "把原始标签清洗成可被规则引擎消费的标准形态，是圈人前的必要加工。", [
-        ["归一化", "标签值去重、别名合并、大小写与空白统一"],
-        ["多值拆分", "多值字段拆为独立标签供命中判断"],
-        ["缺失补全", "GAP-1 标签宽表无手机号 → 三源补号（覆盖率待核查）"]
-      ]) +
-      mod("grid", "标签映射表", "MODULE 03", "把「标签组合」映射到「可售产品」，是规则引擎的核心，采用「必选全中 + 加分项达标」的评估口径。", [
-        ["规则结构", "conditionJson = { mandatory, optional, minOptionalHits }"],
-        ["评估逻辑", "mandatory 全中 AND optional 命中数 ≥ minOptionalHits"],
-        ["三级排序", "manual_priority ↑ → hit_count ↓ → id ↑"],
-        ["UI 口径", "硬性门槛 / 加分项 / 至少命中几个 / 匹配度（不暴露 JSON）"]
-      ]) +
-      mod("zap", "推送规则", "MODULE 04", "控制「能不能推、推几次」，守住频控与合规底线。", [
-        ["频控（同模式）", "30 天内已推送则跳过"],
-        ["频控（跨模式）", "7 天内已推送则跳过"],
-        ["频控范围", "仅作用于 msg_type=marketing，notice 类短路放行"],
-        ["DRY_RUN 门槛", "号码覆盖率 ≥70% 且合规口径书面认可"]
-      ]));
+    var goals =
+      goal("filter", "精准圈人", "以房屋标签和产品规则筛选目标人群，把业务判断从手动查表转成可检查、可复核的规则配置。") +
+      goal("sliders", "规则可管理", "通过映射矩阵维护必选门槛、加分项、产品启停与优先级，降低修改规则对技术人员的依赖。") +
+      goal("history", "触达可追踪", "把筛选结果、海报素材、推送计划和发送记录纳入同一条业务链路，为后续频控与效果回看留出接口。");
 
-    var l2 = layer("第二层", "执行与调度层", "在线 · 实时 · 决定「怎么推、何时推」",
-      mod("image", "推送图片明细表", "MODULE 05", "海报采用「模板套版 + Sharp 合成」，AI 在图片模板上直接修改标题 / 文案，不入跑批链路。", [
-        ["出图方式", "模板套版 + Sharp 合成（非生成式出图）"],
-        ["AI 角色", "外部团队在图片模板上改标题 / 文案"],
-        ["标签接口", "GET /api/poster/tags?product=X（供 AI 获取命中标签）"],
-        ["生成式降级", "通义万相（0.2 元/张）仅作背景素材池"]
-      ]) +
-      mod("history", "推送记录", "MODULE 06", "每次触达全量留痕，支撑频控判断与效果回流（一期只做「发送 → 15 天内是否产生线索」简单关联）。", [
-        ["记录字段", "时间 · 文案 · 海报 · 推送方式（4 渠道）· 确认时间"],
-        ["渠道", "推广短信 / 微信通知 / 住这儿通知 / 管家企微"],
-        ["效果口径", "发送 → 15 天内是否产生线索（参考值，非归因结论）"]
-      ]) +
-      mod("calendar", "定时任务", "MODULE 07", "针对某项目配置计划，系统按计划自动圈人、生成海报并推送，实时试算频控影响。", [
-        ["计划维度", "按项目 + 产品 + 规则 + 推送方式"],
-        ["频控估算", "命中 → 跳过同模式(30d)/跨模式(7d) → 实际将推"],
-        ["执行方式", "定时自动触达（可暂停 / 恢复 / 删除）"]
-      ], "grid-column:1/-1"));
+    var steps =
+      step("STEP 01", "数据输入", "读取房屋样本、项目归属、脱敏号码及水路、环境、家庭结构等标签。") +
+      step("STEP 02", "标签标准化", "拆分多值标签，按统一字段名和标签值组织成评估引擎可消费的结构。") +
+      step("STEP 03", "匹配产品规则", "校验必选条件，再计算加分组命中数；未通过门槛的产品不进入候选集。") +
+      step("STEP 04", "确定推送产品", "按手动优先级、命中数和规则 ID 排序，每户只保留一个胜出产品。") +
+      step("STEP 05", "配置并触达", "在推送页筛选人群，配置海报和计划；当前原型的发送行为为模拟操作。");
 
-    var before = [
-      "靠经验手动圈选目标房屋，漏圈、错圈多",
-      "标签筛选靠人肉查表比对，效率低、易出错",
-      "海报一张张手动套模板、改文案，重复劳动",
-      "推送逐条手动发送，频控靠记忆，易误触达",
-      "效果无法闭环回流，全靠事后人工统计"
-    ];
-    var after = [
-      "规则引擎自动圈人，命中结果与原 SQL 100% 一致",
-      "标签映射表统一管理，必选 / 加分口径清晰",
-      "模板套版 + AI 改文案，海报秒级产出",
-      "定时任务自动触达，频控（30/7 天）自动拦截",
-      "推送记录全量留痕，效果关联自动回流看板"
-    ];
-    function cmpLi(arr) {
-      return arr.map(function (x) { return '<li>' + x + '</li>'; }).join("");
-    }
+    var modules =
+      module("sliders", "产品与标签映射", "01 / CONFIG", "管理标签类别、标签值与产品规则之间的关系；支持新增标签值、设定必选/加分、启停规则和恢复默认。", "页面内可交互 · 浏览器本地保存") +
+      module("filter", "筛选与推送", "02 / AUDIENCE", "按城市、项目、产品、标签及其他筛选条件查看样本，支持选择房屋并模拟推送反馈。", "演示数据 · 不会真实发送") +
+      module("image", "海报配置", "03 / CREATIVE", "集中查看海报模板与文案变量，调整标题、正文和触达话术，便于统一营销素材口径。", "模板演示 · 需接入生产素材服务") +
+      module("clock", "定时推送", "04 / SCHEDULE", "按项目、产品范围、推送渠道和频率创建计划，并基于样本估算频控后的待触达人群。", "当前计划为内存演示") +
+      module("file", "项目说明", "05 / PROJECT", "说明业务目标、规则口径、系统边界、职责分工和上线前的验证项，作为产品、研发及运营共同对齐的说明页。", "项目与交付说明");
 
-    var bullets = [
-      ["layers", "配置零培训", "用「硬性门槛 / 加分项 / 至少命中几个」包装，命中预览 + 冲突提示 + 可回滚"],
-      ["check", "真实数据驱动", "1053 户真实跑批数据，评估引擎复现原 SQL（渗漏 853 / 浴改淋 299 / 双命中 99）"],
-      ["database", "合规与频控兜底", "明文手机号仅存 staging 表、notice 短路放行、DRY_RUN 双门槛"],
-      ["zap", "设计规范统一", "禁 emoji 图标、禁紫粉渐变、Design Token 主色 #1D5A96"],
-      ["grid", "分层解耦", "数据与规则层（T+1 离线）与执行调度层（实时）清晰分离，各司其职"],
-      ["filter", "角色边界清晰", "规则正确性由总部营销管理岗负责；海报文案由外部 AI 团队负责；PM 只配模板与标签"]
-    ];
-    var bulletHtml = bullets.map(function (b) {
-      return '<div class="doc-bullet"><div class="db-ico">' + icon(b[0], 17) + '</div>' +
-        '<div><div class="db-t">' + b[1] + '</div><div class="db-d">' + b[2] + '</div></div></div>';
-    }).join("");
+    var ruleRows =
+      '<tr><td class="rule-name">渗漏</td><td><span class="doc-pill mand">必选</span>装修状态 = 未装修</td><td><span class="doc-pill opt">加分</span>水路标签任一命中：卫生间漏水、水管老化、阳台漏水、厨房漏水</td><td>至少命中 1 组</td><td>1</td></tr>' +
+      '<tr><td class="rule-name">浴改淋</td><td><span class="doc-pill mand">必选</span>装修状态 = 未装修</td><td><span class="doc-pill opt">加分</span>环境标签组或家庭结构组任一命中</td><td>至少命中 1 组</td><td>2</td></tr>' +
+      '<tr><td class="rule-name">刷新</td><td><span class="doc-pill mand">必选</span>装修状态命中 5–10 年或未装修</td><td><span class="doc-pill opt">加分</span>环境标签组 + 家庭结构组</td><td>两组都需命中</td><td>3</td></tr>';
+
+    var boundaries =
+      boundary("演示版与生产版的边界", "当前 HTML 是可交互原型：推送按钮显示模拟结果，定时计划在页面内存中维护；并未接入真实短信、微信或住这儿发送服务。上线前需要由后端承接身份权限、任务执行、失败重试和发送回执。", true) +
+      boundary("装修状态字段需核实", "现有演示函数把每户装修状态统一设为“未装修”，并非逐户读取真实 decorate_status。因此，“5–10 年”条件在当前样本中尚未被真实验证；正式验收前应接入真实字段并重新核对产品命中数。", true) +
+      boundary("新增标签的生效条件", "新增标签值可以在映射矩阵中保存到当前浏览器，但样本不会自动获得该标签。要让新标签参与实际圈人，必须同步维护上游标签宽表、字段到 houseTags 的映射及数据校验。", false) +
+      boundary("发送合规与频控", "项目说明记录的目标控制包括同模式 30 天、跨模式 7 天频控，以及 DRY_RUN 双门槛。真实触达前应确认手机号覆盖率达到约定阈值、业务与合规审批完成，并通过小流量验证。", false);
+
+    var roles =
+      role("营销业务负责人", "确认产品适用人群、必选条件、加分门槛及最终命中口径。") +
+      role("产品经理", "维护映射配置、标签定义、海报变量和页面操作流程。") +
+      role("研发 / 数据团队", "负责标签取数、字段映射、规则执行、权限、日志与实际触达接口。") +
+      role("运营执行人员", "检查筛选人群与素材，确认项目、渠道、频率后执行并复核结果。");
 
     return '' +
-      '<div class="page-head"><h2>系统说明</h2>' +
-      '<p>研选营销智能推送系统 · 从「人工手动操作」到「自动化 / 定时任务处理」的完整功能链路与底层结构说明</p></div>' +
+      '<section class="doc-hero"><div class="doc-hero-copy">' +
+        '<div class="doc-eyebrow">PROJECT BRIEF / BUSINESS & DELIVERY</div>' +
+        '<h2>让责任盘数据，转化为可执行的营销触达</h2>' +
+        '<p>研选营销智能推送系统以房屋标签为输入，以产品映射规则为判断依据，将人群筛选、素材配置、推送计划和结果留痕组织成可复核的业务流程。此页面用于讲清项目价值、规则口径与当前交付边界，而不只是罗列功能模块。</p>' +
+        '<div class="doc-hero-tags"><span>标签驱动</span><span>规则可配置</span><span>触达可追踪</span><span>当前为演示原型</span></div>' +
+      '</div><div class="doc-hero-side"><div class="dhs-label">样本基准 · 0924 批次（文件注释口径）</div><div class="dhs-value">1,053 户</div><div class="dhs-caption">房屋样本 1,053 户 · 唯一脱敏号码 1,036 个。下方统计用于说明当前演示样本规模；正式验收仍需重新跑批和对账。</div></div></section>' +
 
-      '<div class="grid-kpi">' +
-        kpi("blue", "layers", "核心模块", "7", "标签 → 产品 → 海报 → 触达 → 留痕") +
-        kpi("blue", "database", "系统分层", "2", "数据与规则层 + 执行与调度层") +
-        kpi("amber", "zap", "运营升级", "自动化", "从人工手动 → 定时自动触达") +
-        kpi("green", "check", "真实数据验证", "1053", "评估引擎与原 SQL 结果一致") +
+      '<div class="doc-stats">' +
+        stat("房屋样本", "1,053", "演示文件内置房屋明细") +
+        stat("唯一脱敏号码", "1,036", "号码已在页面数据中脱敏") +
+        stat("渗漏命中基准", "853", "项目注释记录的 0924 口径") +
+        stat("浴改淋命中基准", "299", "双命中基准：99 户") +
       '</div>' +
 
-      '<div class="card"><div class="card-title">' + icon("layers", 16) +
-        '端到端全链路<span class="meta">7 大核心模块 · 按数据流顺序</span></div>' +
-        '<div class="doc-flow">' + flowHtml + '</div></div>' +
+      '<section class="doc-section">' + section("01", "项目要解决什么问题", "把分散在标签数据、人工筛选和素材执行中的动作统一成一套可以检查的流程。") +
+        '<div class="doc-goal-grid">' + goals + '</div></section>' +
 
-      l1 + l2 +
+      '<section class="doc-section">' + section("02", "业务链路与判断顺序", "规则先决定适不适合，再决定优先推哪个产品；发送动作必须建立在样本核验、频控和合规确认之后。") +
+        '<div class="doc-steps">' + steps + '</div>' +
+        '<div class="doc-callout"><strong>产品胜出顺序：</strong>先比较手动优先级（数字越小越优先），再比较命中标签组数（越多越优先），最后比较规则 ID；每户只保留一个胜出产品，避免同一批次重复推荐多个产品。</div></section>' +
 
-      '<div class="card"><div class="card-title">' + icon("zap", 16) +
-        '升级对比<span class="meta">人工手动 → 自动化 / 定时任务</span></div>' +
-        '<div class="compare-grid">' +
-          '<div class="compare-col before"><div class="cc-head">' + icon("history", 16) + '过去 · 人工手动操作</div><ul>' + cmpLi(before) + '</ul></div>' +
-          '<div class="compare-col after"><div class="cc-head">' + icon("zap", 16) + '现在 · 自动化 / 定时任务</div><ul>' + cmpLi(after) + '</ul></div>' +
-        '</div></div>' +
+      '<section class="doc-section">' + section("03", "产品规则口径", "下面按当前前端规则配置整理。这里的“加分组”按规则组计数，而不是简单统计单个标签文字的出现次数。") +
+        '<div class="doc-table-wrap"><table class="doc-rule-table"><thead><tr><th>产品</th><th>必选门槛</th><th>可选 / 加分组</th><th>最低命中要求</th><th>优先级</th></tr></thead><tbody>' + ruleRows + '</tbody></table></div>' +
+        '<div class="doc-callout"><strong>重要口径提醒：</strong>当前规则以代码中的 mandatory / optional / minOptionalHits 为准。变更标签映射后，应使用完整房屋样本重新运行评估，并与 0924 SQL 逐项对账；不要仅凭界面配置或静态注释宣称命中结果完全一致。</div></section>' +
 
-      '<div class="card"><div class="card-title">' + icon("check", 16) + '系统能力特性</div>' +
-        '<div class="doc-bullets">' + bulletHtml + '</div></div>';
+      '<section class="doc-section">' + section("04", "五个工作区分别做什么", "各工作区覆盖规则配置、样本查看、素材准备与计划管理；实际外部系统调用仍需后端接口支持。") +
+        '<div class="doc-module-grid">' + modules + '</div></section>' +
+
+      '<section class="doc-section">' + section("05", "交付边界与上线前检查", "明确哪些能力当前已在前端演示，哪些仍需要真实数据或服务端能力，避免把原型行为误认为生产链路。") +
+        '<div class="doc-boundary-grid">' + boundaries + '</div></section>' +
+
+      '<section class="doc-section">' + section("06", "职责分工建议", "规则准确性、数据治理和实际触达分别由对应角色负责，避免全部责任落到页面配置人员身上。") +
+        '<div class="doc-role-list">' + roles + '</div></section>' +
+
+      '<div class="doc-footer">说明范围：基于当前 demo/index-v3.html 中的数据结构、规则配置与交互行为编写。页面中的样本规模和基准命中数来自文件注释；生产环境上线前，仍须完成真实标签字段接入、SQL 对账、频控验证、合规审批及真实发送链路验收。</div>';
   }
 
   /* ============ 渲染与路由 ============ */
@@ -1466,7 +1632,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     { id: "push", label: "筛选推送", icon: "send" },
     { id: "poster", label: "海报配置", icon: "image" },
     { id: "auto", label: "定时推送", icon: "clock" },
-    { id: "doc", label: "系统说明", icon: "doc" }
+    { id: "doc", label: "项目说明", icon: "doc" }
   ];
 
   function render() {
@@ -1475,7 +1641,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
         icon(p.icon, 16) + '<span>' + p.label + '</span></div>';
     }).join("");
     document.getElementById("crumb").innerHTML =
-      (PAGE === "config" ? "映射配置" : PAGE === "poster" ? "海报配置" : PAGE === "auto" ? "定时推送" : PAGE === "doc" ? "系统说明" : "筛选推送") +
+      (PAGE === "config" ? "映射配置" : PAGE === "poster" ? "海报配置" : PAGE === "auto" ? "定时推送" : PAGE === "doc" ? "项目说明" : "筛选推送") +
       '<span class="sub">/ 渗漏 · 浴改淋 · 刷新 · 真实数据 1053 户</span>';
     document.getElementById("content").innerHTML = PAGE === "config" ? renderConfig() : PAGE === "poster" ? renderPoster() : PAGE === "auto" ? renderAuto() : PAGE === "doc" ? renderDoc() : renderPush();
   }
@@ -1536,12 +1702,40 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
     render();
     flash("已推送所选 " + cnt + " 个号码（模拟）");
   };
-  window._save = function () { flash("配置已保存（演示版，未持久化）"); };
+  window._addTag = function () {
+    var groupEl = document.getElementById("newTagGroup");
+    var valueEl = document.getElementById("newTagValue");
+    if (!groupEl || !valueEl) return;
+    var key = groupEl.value;
+    var value = valueEl.value.replace(/^\s+|\s+$/g, "");
+    if (!TAG_DICT[key]) { flash("请先选择有效的标签类别"); return; }
+    if (!value) { flash("请输入标签值"); valueEl.focus(); return; }
+    if (value.length > 50 || !/^[\u3400-\u9fffA-Za-z0-9_（）()·\/、\-+ ]{1,50}$/.test(value)) {
+      flash("标签值请使用中文、英文、数字、空格或常见分隔符，最多 50 个字符");
+      valueEl.focus();
+      return;
+    }
+    if (TAG_DICT[key].values.indexOf(value) >= 0) {
+      flash("该标签值已存在，无需重复添加");
+      valueEl.focus();
+      return;
+    }
+    TAG_DICT[key].values.push(value);
+    render();
+    flash("已添加标签「" + value + "」；配置完规则后请点击保存");
+  };
+
+  window._save = function () {
+    if (saveLocalConfig()) flash("映射与标签配置已保存到当前浏览器");
+    else flash("浏览器未允许本地存储，配置仅在当前页面有效");
+  };
   window._reset = function () {
     RULES = JSON.parse(JSON.stringify(DEFAULT_RULES));
+    TAG_DICT = JSON.parse(JSON.stringify(DEFAULT_TAG_DICT));
+    try { window.localStorage.removeItem(CONFIG_STORAGE_KEY); } catch (e) {}
     pushedPhones = {};
     window._clearFilter();
-    flash("已恢复默认规则并清空筛选");
+    flash("已恢复默认规则与标签，并清空筛选");
   };
 
   render();
