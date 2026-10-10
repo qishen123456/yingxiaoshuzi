@@ -2240,7 +2240,7 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
 
     var risksHtml =
       '<div class="doc-review-grid">'+
-      reviewItem("01","MaxCompute 与应用库还需同步契约","SQL 产出 ODPS 三张表；当前应用 API 读取 PostgreSQL 的 tag_dictionary、tag_value 与 house_label_snapshot.labels。需要明确 ODPS → staging / 应用库的同步方式和字段映射，不能将两套表视为已经直连。")+
+      reviewItem("01","MaxCompute 与应用库还需同步契约","SQL 产出 ODPS 三张表；当前应用 API 读取 PostgreSQL 的 tag_dictionary、tag_value 与 house_label_snapshot.labels，尚非直接查询 ODPS。还要明确 category_code/value_code 与 tag_key/tag_value 的映射，以及字段类型 ENUM_SINGLE/ENUM_MULTI/NUMERIC 到 enum/multi_enum/number 的转换。房屋标识也需统一：本 SQL 的 house_code 是战图码、house_pride_code 是 Pride 码，而应用快照 houseId 的注释以 Pride 码为主；asset_code/asset_name、city_group_name 也需分别映射到 communityId/communityName、city。")+
       reviewItem("02","数值类标签尚未贯通规则页面","SQL 定义了房屋年限、面积及维修次数等 NUMERIC 标签，但当前 /api/tags 只返回 enum / multi_enum，产品规则页也没有数值阈值控件。若要参与圈选，需要同步补充规则存储、控件与命中引擎。")+
       reviewItem("03","全量覆盖会重置启停状态","步骤 01、02、04 使用 INSERT OVERWRITE 且在 SQL 中写固定 is_enabled；人工停用类别/值可能在下一次调度后被重置。建议让启停由权威 SQL 管理，或将运营开关单独存放在不会被覆盖的配置表。")+
       reviewItem("04","动态值字典只保留当天出现的值","步骤 04 从当天 pt 分区 DISTINCT 后全量覆盖值表；某个动态值若当日没有房屋出现，可能从可选字典消失。需要确认是否只展示当天有效值，并防止已有规则引用失效值。")+
