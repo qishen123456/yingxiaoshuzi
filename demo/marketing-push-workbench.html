@@ -126,7 +126,7 @@
   }
   function navTo(view){
     currentView=view;
-    document.querySelectorAll(".nav-item[data-view]").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-view")===view);});
+    var activeNav=document.querySelector(".nav-item[data-view=\""+view+"\"]");document.querySelectorAll(".nav-item[data-view]").forEach(function(b){b.classList.toggle("active",b===activeNav);});
     var tab=document.getElementById("currentTab");
     var title=view==="audience"?"潜客挖掘":view==="tags"?"标签与映射维护":view==="records"?"推送人群包记录":"已保存人群包";
     tab.innerHTML=esc(title)+' <span class="x">×</span>';
