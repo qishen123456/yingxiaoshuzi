@@ -20,7 +20,7 @@ function extractArray(source: string, name: string): unknown[] {
   const match = declaration.exec(source);
   if (!match) throw new Error('在 index-v3.html 中找不到数组：' + name);
   let start = match.index + match[0].length;
-  while (/\\s/.test(source[start] ?? '')) start++;
+  while (/\s/.test(source[start] ?? '')) start++;
   if (source[start] !== '[') throw new Error(name + ' 不是数组字面量');
   const begin = start;
   let depth = 0;
@@ -30,7 +30,7 @@ function extractArray(source: string, name: string): unknown[] {
     const ch = source[i];
     if (quote) {
       if (escaped) { escaped = false; continue; }
-      if (ch === '\\\\') { escaped = true; continue; }
+      if (ch === '\\') { escaped = true; continue; }
       if (ch === quote) quote = null;
       continue;
     }
