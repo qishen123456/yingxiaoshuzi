@@ -174,7 +174,7 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
     { title: '房屋名称', dataIndex: 'houseName', width: 240, render: (v: string | null, r) => <Typography.Text strong>{v || r.houseId}</Typography.Text> },
     { title: '城市', dataIndex: 'city', width: 80 },
     { title: '业主', dataIndex: 'ownerNameMasked', width: 100, render: (v: string | null) => v || '-' },
-    { title: '联系电话', dataIndex: 'mobileMasked', width: 130, render: (v: string | null) => v ? <Tag color="blue">{v}</Tag> : <Tag color="orange">无号码</Tag> },
+    { title: '联系电话', dataIndex: 'mobileMasked', width: 170, render: (v: string | null, row) => row.hasMobile ? <Tag color="blue">{v}</Tag> : v ? <Tag color="gold" title="index-v3 样本中的脱敏号码，只作页面展示，不是可触达的真实联系方式">{v} · 样本号</Tag> : <Tag color="orange">无号码</Tag> },
     { title: '标签命中', dataIndex: 'labels', width: 300, render: (v: Record<string, unknown>) => {
       const flat = labelText(v, tags).slice(0, 6);
       return <Space size={[3, 4]} wrap>{flat.map((label) => <Tag key={label}>{label}</Tag>)}{!flat.length && '-'}</Space>;

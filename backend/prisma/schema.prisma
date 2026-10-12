@@ -207,6 +207,7 @@ model HouseLabelSnapshot {
   stationCode       String?  @map("station_code")
   ownerNameMasked   String?  @map("owner_name_masked")
   contactMobileEnc  String?  @map("contact_mobile_enc") // 无号码为 null -> NO_MOBILE
+  demoMobileMasked  String?  @map("demo_mobile_masked") @db.VarChar(32) // index-v3 样本脱敏显示号，不可用于触达
   customerKeyHash   String?  @map("customer_key_hash") @db.VarChar(128)
   labels            Json
   statDate          DateTime @map("stat_date") @db.Date

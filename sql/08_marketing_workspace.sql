@@ -1,6 +1,7 @@
 -- 08. 研选系统人群包、推送内容快照与海报预览
 -- 在测试库核验后再部署；这些表记录营销批次，不代表真实渠道发送。
 ALTER TABLE poster_template ADD COLUMN IF NOT EXISTS preview_data TEXT;
+ALTER TABLE house_label_snapshot ADD COLUMN IF NOT EXISTS demo_mobile_masked VARCHAR(32);
 CREATE TABLE IF NOT EXISTS audience_package (
  id BIGSERIAL PRIMARY KEY, name VARCHAR(160) NOT NULL, criteria TEXT,
  created_by VARCHAR(128) NOT NULL DEFAULT '未接入登录', status VARCHAR(16) NOT NULL DEFAULT 'saved',

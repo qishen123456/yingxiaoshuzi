@@ -7,8 +7,8 @@ import { HousesService } from '../houses/houses.service';
 export class MarketingWorkspaceService {
   constructor(private readonly prisma:PrismaService,private readonly houses:HousesService){}
   private async countUniquePhones(ids:string[]) {
-    const rows=await this.prisma.houseLabelSnapshot.findMany({where:{houseId:{in:ids}},select:{houseId:true,customerKeyHash:true}});
-    const keys=new Set<string>();rows.forEach(r=>keys.add(r.customerKeyHash||`house:${r.houseId}`));return keys.size;
+    const rows=await this.prisma.houseLabelSnapshot.findMany({where:{houseId:{in:ids}},select:{houseId:true,customerKeyHash:true,demoMobileMasked:true}});
+    const keys=new Set<string>();rows.forEach(r=>keys.add(r.customerKeyHash||(r.demoMobileMasked?`sample-mobile:${r.demoMobileMasked}`:`house:${r.houseId}`)));return keys.size;
   }
   async listAudiencePackages() {
     const rows=await this.prisma.audiencePackage.findMany({orderBy:{createdAt:'desc'},take:100,

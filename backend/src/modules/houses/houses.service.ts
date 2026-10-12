@@ -85,9 +85,9 @@ export class HousesService {
     const leads=new Map<string,number>();for(const r of leadRows)if(r.houseId)leads.set(r.houseId,r._count._all);
     const pushes=new Map<string,{at:Date;status:string}>();for(const r of pushRows)if(!pushes.has(r.houseId))pushes.set(r.houseId,{at:r.createdAt,status:r.status});
     return rows.map(({house,labels,matchedProducts,winningPackage,winningRuleId})=>{
-      const latest=pushes.get(house.houseId);const mobile=mobiles.get(house.houseId)??null;
+      const latest=pushes.get(house.houseId);const contactMobile=mobiles.get(house.houseId)??null;const mobile=contactMobile??house.demoMobileMasked??null;
       return {houseId:house.houseId,houseName:house.houseName,communityId:house.communityId,communityName:house.communityName,
-        city:house.city,region:house.region,ownerNameMasked:house.ownerNameMasked,mobileMasked:mobile,hasMobile:!!mobile,
+        city:house.city,region:house.region,ownerNameMasked:house.ownerNameMasked,mobileMasked:mobile,hasMobile:!!contactMobile,
         statDate:house.statDate.toISOString().slice(0,10),syncedAt:house.syncedAt.toISOString(),labels,matchedProducts,winningPackage,winningRuleId,
         leadCount:leads.get(house.houseId)??0,openLeadCount:0,lastPushAt:latest?.at.toISOString()??null,lastPushStatus:latest?.status??null};
     });
