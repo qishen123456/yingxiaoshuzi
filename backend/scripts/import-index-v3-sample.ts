@@ -55,7 +55,6 @@ async function main() {
   const htmlPath = resolve(process.cwd(), '..', 'demo', 'index-v3.html');
   const html = await readFile(htmlPath, 'utf8');
   const projects = extractArray(html, 'PROJECTS') as string[];
-  const relations = extractArray(html, 'RELATIONS') as string[];
   const phones = extractArray(html, 'PHONES') as string[];
   const houses = extractArray(html, 'HOUSES') as LegacyHouse[];
   if (houses.length !== 1053) throw new Error('预期导入 1053 套样本，实际读取到 ' + houses.length + ' 套；请先核对 index-v3 数据源。');
@@ -63,7 +62,7 @@ async function main() {
   const statDate = new Date('2026-09-24T00:00:00.000Z');
   const syncedAt = new Date();
   const rows = houses.map((house, index) => {
-    const [projectIndex, fullName, waterRaw, envRaw, familyRaw, phoneIndex, relationIndex] = house;
+    const [projectIndex, fullName, waterRaw, envRaw, familyRaw, phoneIndex] = house;
     const projectName = projects[projectIndex];
     if (!projectName || !fullName || !phones[phoneIndex]) throw new Error('index-v3 样本字段异常，记录行：' + (index + 1));
     const houseName = fullName.startsWith(projectName) ? fullName.slice(projectName.length) : fullName;
