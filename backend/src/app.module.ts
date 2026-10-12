@@ -10,6 +10,8 @@ import { CampaignsModule } from './modules/campaigns/campaigns.module';
 import { PushRecordsModule } from './modules/push-records/push-records.module';
 import { AttributionModule } from './modules/attribution/attribution.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { HousesModule } from './modules/houses/houses.module';
+import { MarketingWorkspaceModule } from './modules/marketing-workspace/marketing-workspace.module';
 import { DailyJob } from './jobs/daily.job';
 
 @Module({
@@ -25,6 +27,8 @@ import { DailyJob } from './jobs/daily.job';
     PushRecordsModule,
     AttributionModule,
     AnalyticsModule,
+    HousesModule,
+    MarketingWorkspaceModule,
   ],
   providers: [DailyJob],
 })
