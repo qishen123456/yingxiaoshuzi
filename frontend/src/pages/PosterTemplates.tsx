@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { App as AntApp, Alert, Button, Card, Col, Image, Input, Modal, Row, Select, Space, Table, Tag, Typography, Upload } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { FileImage, UploadCloud } from 'lucide-react';
-import { api, type PosterTemplateRow } from '../api';
+import { api, type PosterTemplateRow, type ProductPackageOption } from '../api';
 
 async function compressImage(file: File): Promise<string> {
   const original = await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||''));reader.onerror=()=>reject(new Error('读取图片失败'));reader.readAsDataURL(file);});
@@ -15,10 +15,10 @@ async function compressImage(file: File): Promise<string> {
 }
 export default function PosterTemplates() {
   const { message } = AntApp.useApp();
-  const [rows,setRows]=useState<PosterTemplateRow[]>([]),[loading,setLoading]=useState(false);
+  const [rows,setRows]=useState<PosterTemplateRow[]>([]),[loading,setLoading]=useState(false),[products,setProducts]=useState<ProductPackageOption[]>([]);
   const [open,setOpen]=useState(false),[name,setName]=useState(''),[packageId,setPackageId]=useState<string>(),[previewData,setPreviewData]=useState(''),[uploadName,setUploadName]=useState('');
   const load=()=>{setLoading(true);api.get<PosterTemplateRow[]>('/poster-templates').then(setRows).catch((e)=>message.error(e.message)).finally(()=>setLoading(false));};
-  useEffect(load,[]);
+  useEffect(()=>{load();api.get<ProductPackageOption[]>('/packages').then(setProducts).catch(()=>undefined);},[]);
   const save=async()=>{
     if(!name.trim()){message.warning('请填写海报模板名称');return;}
     try{await api.post('/poster-templates',{name:name.trim(),packageId:packageId||null,previewData,width:750,height:1600,svgSpec:{canvas:{width:750,height:1600},slots:{}}});message.success('海报模板已保存到数据库（草稿状态）');setOpen(false);setName('');setPackageId(undefined);setPreviewData('');setUploadName('');load();}
@@ -44,7 +44,7 @@ export default function PosterTemplates() {
     <Modal title="上传海报模板" open={open} onCancel={()=>setOpen(false)} onOk={save} okText="保存模板" cancelText="取消">
       <Space direction="vertical" style={{width:'100%'}} size="middle">
         <div><Typography.Text>模板名称 *</Typography.Text><Input value={name} onChange={(e)=>setName(e.target.value)} placeholder="例如：局部焕新通用海报"/></div>
-        <div><Typography.Text>适配产品包</Typography.Text><Select allowClear style={{width:'100%'}} value={packageId} onChange={setPackageId} placeholder="通用模板（不绑定产品包）" options={[]} /></div>
+        <div><Typography.Text>适配产品包</Typography.Text><Select allowClear style={{width:'100%'}} value={packageId} onChange={setPackageId} placeholder="通用模板（不绑定产品包）" options={products.map((p)=>({label:p.name,value:p.id}))} /></div>
         <Upload accept="image/png,image/jpeg,image/webp" maxCount={1} showUploadList={false} beforeUpload={async(file)=>{try{setPreviewData(await compressImage(file));setUploadName(file.name);message.success('图片已加载');}catch(e){message.error((e as Error).message);}return false;}}><Button icon={<UploadCloud size={14}/>}>选择背景海报</Button></Upload>
         {previewData&&<Image src={previewData} height={220} style={{objectFit:'contain',background:'#f6f8fb',padding:8}}/>}
         <Typography.Text type="secondary" style={{fontSize:11}}>{uploadName||'PNG / JPG / WEBP，上传后压缩为 JPEG 保存到数据库。模板首次保存为草稿。'}</Typography.Text>

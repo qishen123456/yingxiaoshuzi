@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { App as AntApp, Alert, Button, Card, Checkbox, Col, Descriptions, Divider, Input, Modal, Row, Select, Space, Statistic, Table, Tag, Typography, Upload } from 'antd';
+import { App as AntApp, Alert, Button, Card, Checkbox, Col, Divider, Input, Modal, Row, Select, Space, Statistic, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Filter, Save, Send, Users } from 'lucide-react';
-import { api, type AudiencePackageRow, type HouseListItem, type HouseSearchResponse, type ProjectCatalogRow, type TagAdminRow } from '../api';
+import { api, type AudiencePackageRow, type HouseListItem, type HouseSearchResponse, type ProductPackageOption, type ProjectCatalogRow, type TagAdminRow } from '../api';
 
 interface Props {
   prefill: { ids: string[]; packageId?: string; packageName?: string; criteria?: string } | null;
@@ -54,6 +54,8 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
   const { message } = AntApp.useApp();
   const [projects, setProjects] = useState<ProjectCatalogRow[]>([]);
   const [tags, setTags] = useState<TagAdminRow[]>([]);
+  const [products, setProducts] = useState<ProductPackageOption[]>([]);
+  const [prefillPackageId, setPrefillPackageId] = useState<string | undefined>();
   const [rows, setRows] = useState<HouseListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<React.Key[]>([]);
@@ -84,11 +86,13 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
   useEffect(() => {
     api.get<ProjectCatalogRow[]>('/project-catalog').then(setProjects).catch((e) => setError(e.message));
     api.get<TagAdminRow[]>('/tags/admin').then(setTags).catch(() => api.get<TagAdminRow[]>('/tags').then((items) => setTags(items)));
+    api.get<ProductPackageOption[]>('/packages').then(setProducts).catch(() => undefined);
   }, []);
 
   useEffect(() => {
     if (prefill?.ids?.length) {
       setSelectedIds(prefill.ids);
+      setPrefillPackageId(prefill.packageId);
       setPushName(prefill.packageName || '已保存人群包再次推送');
       setCriteria(prefill.criteria || '来自已保存人群包');
       setPage(1);
@@ -114,7 +118,6 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
     return () => { cancelled = true; };
   }, [city, communityId, keyword, tagKey, tagValue, packageId, page, pageSize]);
 
-  const reload = () => setPage((v) => v);
   const reset = () => {
     setCity(undefined); setCommunityId(undefined); setPackageId(undefined); setTagKey(undefined); setTagValue(undefined);
     setKeyword(''); setPage(1); setSelectedIds([]);
@@ -156,7 +159,7 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
       await api.post('/marketing-push-batches', {
         packageName: pushName.trim(), contentSnapshot: copy.trim(), posterName: posterName || '系统默认模板',
         posterData, channels, criteria, houseIds: selectedIds.map(String),
-        audiencePackageId: prefill?.packageId || undefined,
+        audiencePackageId: prefillPackageId || undefined,
       });
       message.success('推送批次已保存。当前为演示记录，未调用真实触达通道。');
       setPushOpen(false);
@@ -202,8 +205,8 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
         <Row gutter={[12, 12]}>
           <Col xs={24} md={6}><Typography.Text type="secondary">城市</Typography.Text><Select allowClear showSearch style={{ width: '100%', marginTop: 5 }} placeholder="全部城市" value={city} onChange={(value) => { setCity(value); setCommunityId(undefined); setPage(1); }} options={cities.map((value) => ({ label: value, value }))} /></Col>
           <Col xs={24} md={6}><Typography.Text type="secondary">责任盘项目</Typography.Text><Select allowClear showSearch optionFilterProp="label" style={{ width: '100%', marginTop: 5 }} placeholder="全部项目" value={communityId} onChange={(value) => { setCommunityId(value); setPage(1); }} options={projectOptions} /></Col>
-          <Col xs={24} md={6}><Typography.Text type="secondary">命中产品包</Typography.Text><Select allowClear style={{ width: '100%', marginTop: 5 }} placeholder="全部产品" value={packageId} onChange={(value) => { setPackageId(value); setPage(1); }} options={[{ label: '未命中产品', value: 'none' }, ...Array.from(new Map(rows.flatMap((r) => r.matchedProducts).map((p) => [p.id, p])).values()).map((p) => ({ label: p.name, value: p.id }))]} /></Col>
-          <Col xs={24} md={6}><Typography.Text type="secondary">搜索房屋 / 业主</Typography.Text><Input allowClear value={keyword} onChange={(e) => { setKeyword(e.target.value); setPage(1); }} onPressEnter={reload} placeholder="房屋名称、编号、脱敏业主" style={{ marginTop: 5 }} /></Col>
+          <Col xs={24} md={6}><Typography.Text type="secondary">命中产品包</Typography.Text><Select allowClear style={{ width: '100%', marginTop: 5 }} placeholder="全部产品" value={packageId} onChange={(value) => { setPackageId(value); setPage(1); }} options={[{ label: '未命中产品', value: 'none' }, ...products.map((p) => ({ label: p.name, value: p.id }))]} /></Col>
+          <Col xs={24} md={6}><Typography.Text type="secondary">搜索房屋 / 业主</Typography.Text><Input allowClear value={keyword} onChange={(e) => { setKeyword(e.target.value); setPage(1); }} placeholder="房屋名称、编号、脱敏业主" style={{ marginTop: 5 }} /></Col>
           <Col xs={24} md={6}><Typography.Text type="secondary">标签类型</Typography.Text><Select allowClear showSearch style={{ width: '100%', marginTop: 5 }} placeholder="全部标签" value={tagKey} onChange={(value) => { setTagKey(value); setTagValue(undefined); setPage(1); }} options={tagChoices} /></Col>
           <Col xs={24} md={6}><Typography.Text type="secondary">标签取值</Typography.Text><Select allowClear showSearch style={{ width: '100%', marginTop: 5 }} placeholder="全部取值" disabled={!tagKey} value={tagValue} onChange={(value) => { setTagValue(value); setPage(1); }} options={valueChoices} /></Col>
           <Col xs={24} md={12} style={{ display: 'flex', alignItems: 'end', justifyContent: 'flex-end' }}><Typography.Text type="secondary">数据源：house_label_snapshot · 规则由后端统一计算</Typography.Text></Col>

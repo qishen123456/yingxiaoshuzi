@@ -180,3 +180,5 @@ export interface PosterTemplateRow {
   svgSpec: unknown;
   status: string;
 }
+
+export interface ProductPackageOption { id: string; code: string; name: string; status?: string; }

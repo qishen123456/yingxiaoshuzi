@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma, type HouseLabelSnapshot } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { matchRulesForHouse, selectWinningRule, type HouseLabels, type RuleMatchInput } from '../../engine/rule-engine';
@@ -9,7 +9,7 @@ export interface HouseSearchQuery {
 }
 type PackageInfo = { id: string; code: string; name: string };
 type MatchRow = { house: HouseLabelSnapshot; labels: HouseLabels; matchedProducts: PackageInfo[]; winningPackage: PackageInfo | null; winningRuleId: string | null };
-export type HouseListItem = MatchRow['house'] extends never ? never : {
+export type HouseListItem = {
   houseId:string; houseName:string|null; communityId:string|null; communityName:string|null; city:string|null; region:string|null;
   ownerNameMasked:string|null; mobileMasked:string|null; hasMobile:boolean; statDate:string; syncedAt:string;
   labels:HouseLabels; matchedProducts:PackageInfo[]; winningPackage:PackageInfo|null; winningRuleId:string|null;
@@ -43,8 +43,10 @@ export class HousesService {
       include:{package:{select:{id:true,code:true,name:true}}},
     });
     const inputs:RuleMatchInput[]=rows.map(r=>({id:r.id,packageId:r.packageId,priority:r.priority,mutexGroupId:r.mutexGroupId,conditionJson:r.conditionJson,status:r.status}));
-    const byId=new Map(rows.map(r=>[r.id.toString(),{id:r.package.id.toString(),code:r.package.code,name:r.package.name}]));
-    return {inputs,byId};
+    const packageInfo = (row: (typeof rows)[number]): PackageInfo => ({ id: row.package.id.toString(), code: row.package.code, name: row.package.name });
+    const byRuleId = new Map(rows.map(r => [r.id.toString(), packageInfo(r)]));
+    const byPackageId = new Map(rows.map(r => [r.package.id.toString(), packageInfo(r.package ? r : r)]));
+    return { inputs, byRuleId, byPackageId };
   }
   private tagMatches(labels:HouseLabels,key?:string,value?:string) {
     if(!key) return true;
@@ -64,10 +66,10 @@ export class HousesService {
       if(query.packageId&&query.packageId!=='none'&&winner?.packageId.toString()!==query.packageId) continue;
       const products:PackageInfo[]=[]; const seen=new Set<string>();
       for(const match of matches) {
-        const info=rules.byId.get(match.ruleId.toString());
+        const info=rules.byRuleId.get(match.ruleId.toString());
         if(info&&!seen.has(info.id)){products.push(info);seen.add(info.id);}
       }
-      out.push({house,labels,matchedProducts:products,winningPackage:winner?rules.byId.get(winner.packageId.toString())??null:null,winningRuleId:winner?.ruleId.toString()??null});
+      out.push({house,labels,matchedProducts:products,winningPackage:winner?rules.byPackageId.get(winner.packageId.toString())??null:null,winningRuleId:winner?.ruleId.toString()??null});
     }
     return out;
   }

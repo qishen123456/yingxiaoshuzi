@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Layout, Menu, Typography, theme } from 'antd';
 import type { MenuProps } from 'antd';
 import {
-  Activity, CalendarClock, ClipboardList, Database, FileImage, History,
+  Activity, CalendarClock, ClipboardList, FileImage, History,
   LayoutDashboard, Send, SlidersHorizontal, Tags, Users,
 } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
@@ -68,7 +68,7 @@ export default function App() {
     setPrefill({ ids, packageId: packageMeta?.id, packageName: packageMeta?.name, criteria: packageMeta?.criteria ?? undefined });
     setActive('audience');
   };
-  const clearPrefill = () => setPrefill(null);
+  const clearPrefill = useCallback(() => setPrefill(null), []);
 
   let page = null;
   if (active === 'dashboard') page = <Dashboard />;
