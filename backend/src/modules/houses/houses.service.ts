@@ -45,7 +45,7 @@ export class HousesService {
     const inputs:RuleMatchInput[]=rows.map(r=>({id:r.id,packageId:r.packageId,priority:r.priority,mutexGroupId:r.mutexGroupId,conditionJson:r.conditionJson,status:r.status}));
     const packageInfo = (row: (typeof rows)[number]): PackageInfo => ({ id: row.package.id.toString(), code: row.package.code, name: row.package.name });
     const byRuleId = new Map(rows.map(r => [r.id.toString(), packageInfo(r)]));
-    const byPackageId = new Map(rows.map(r => [r.package.id.toString(), packageInfo(r.package ? r : r)]));
+    const byPackageId = new Map(rows.map(r => [r.package.id.toString(), packageInfo(r)]));
     return { inputs, byRuleId, byPackageId };
   }
   private tagMatches(labels:HouseLabels,key?:string,value?:string) {

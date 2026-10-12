@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { Key } from 'react';
 import { App as AntApp, Alert, Button, Card, Checkbox, Col, Divider, Input, Modal, Row, Select, Space, Statistic, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Filter, Save, Send, Users } from 'lucide-react';
@@ -58,7 +59,7 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
   const [prefillPackageId, setPrefillPackageId] = useState<string | undefined>();
   const [rows, setRows] = useState<HouseListItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<React.Key[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Key[]>([]);
   const [city, setCity] = useState<string>();
   const [communityId, setCommunityId] = useState<string>();
   const [packageId, setPackageId] = useState<string>();
