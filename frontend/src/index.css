@@ -8,3 +8,9 @@ body {
   background: #fafafa !important;
   color: rgba(0, 0, 0, 0.45);
 }
+
+.ant-layout-sider .ant-menu-item-group-title { color: rgba(221,235,248,.56) !important; font-size: 11px !important; font-weight: 750; letter-spacing: .09em; }
+.ant-layout-sider .ant-menu-dark .ant-menu-item-selected { background: rgba(75,142,196,.28) !important; box-shadow: inset 3px 0 0 #75b4e0; }
+.ant-layout-sider .ant-menu-dark .ant-menu-item { border-radius: 8px; margin-inline: 6px; width: calc(100% - 12px); }
+.ant-layout-sider .ant-menu-dark { background: transparent; }
+body { background: #f4f7fb; }
