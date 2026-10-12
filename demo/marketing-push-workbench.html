@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>研选责任盘 · 满盘营销推送工作台 Demo</title>
+<style>
+:root{--brand-600:#1d5a96;--brand-700:#174a7c;--brand-500:#2a6cb0;--brand-100:#dcebf7;--brand-50:#eef5fb;--bg-page:#f2f5f9;--bg-card:#fff;--bg-soft:#f7f9fc;--line:#e3e9f0;--text:#24384d;--muted:#718197;--success:#21966f;--warning:#c2862e;--danger:#d45c5c;--shadow:0 4px 14px rgba(24,52,81,.045);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg-page);color:var(--text);font-size:13px}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.topbar{height:42px;display:flex;align-items:stretch;background:#fff;border-bottom:1px solid #e6ebf1;position:sticky;top:0;z-index:20}.brand{width:166px;flex:0 0 166px;display:flex;align-items:center;justify-content:center;gap:8px;background:#2389f5;color:#fff;font-size:18px;font-weight:850;letter-spacing:.04em}.brand-mark{width:23px;height:23px;border:2px solid rgba(255,255,255,.9);border-radius:7px;display:grid;place-items:center;font-size:13px}.brand small{font-size:9px;align-self:flex-start;margin-top:9px}.topnav{display:flex;align-items:center;gap:0;min-width:0;flex:1;overflow:hidden}.topnav a{height:42px;padding:0 12px;display:flex;align-items:center;justify-content:center;color:#5f6875;text-decoration:none;font-size:12px;white-space:nowrap}.topnav a:hover,.topnav a.active{color:var(--brand-600);background:#f5f9fd}.topright{display:flex;align-items:center;gap:16px;padding:0 18px;color:#657183;white-space:nowrap;font-size:11px}.badge-red{display:inline-block;margin-left:3px;background:#e64a56;color:white;border-radius:10px;font-size:9px;padding:2px 5px}.shell{display:flex;min-height:calc(100vh - 42px)}.sidebar{width:166px;flex:0 0 166px;background:#fff;border-right:1px solid #e8edf2;display:flex;flex-direction:column}.side-heading{padding:16px 18px 10px;color:#4383b9;font-size:12px;font-weight:750;display:flex;align-items:center;justify-content:space-between}.side-nav{display:flex;flex-direction:column;padding:0 0 12px}.nav-item{height:38px;border:0;border-left:3px solid transparent;background:#fff;display:flex;align-items:center;gap:10px;padding:0 15px;color:#536170;text-align:left;font-size:12px}.nav-item:hover{background:#f6f9fc}.nav-item.active{background:#e6f5fc;border-left-color:#168bfa;color:#1682df;font-weight:750}.nav-item .ni{width:15px;text-align:center;color:inherit;font-size:13px}.nav-sub{padding:0 0 6px}.nav-sub .nav-item{padding-left:37px}.side-bottom{margin-top:auto;border-top:1px solid #f0f2f5;padding:12px 15px;color:#95a0ad;font-size:10px}.main{flex:1;min-width:0;padding:0 12px 28px}.tabbar{height:46px;display:flex;align-items:center;gap:6px}.tab{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#e9edf2;border-radius:5px 5px 0 0;color:#6a7380;font-size:11px;cursor:pointer;border:1px solid transparent}.tab.active{background:#fff;color:#197dd8;font-weight:750;box-shadow:0 -1px 0 white}.tab .x{color:#a9b2bd;font-size:10px}.demo-flag{margin-left:auto;display:inline-flex;gap:6px;align-items:center;color:#8b6b32;background:#fff9ed;border:1px solid #f3dfb7;padding:5px 9px;border-radius:7px;font-size:10px}.demo-flag b{width:6px;height:6px;background:#d99b3e;border-radius:50%}.view-root{min-height:600px}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:4px 0 13px}.page-title{font-size:18px;font-weight:800;color:#20374e;margin:0}.page-desc{margin:5px 0 0;color:#7c8998;font-size:11px;line-height:1.6}.head-actions{display:flex;gap:8px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:31px;padding:0 12px;border:1px solid #d6dee7;border-radius:4px;background:#fff;color:#45586b;font-size:11px;white-space:nowrap;transition:.15s}.btn:hover{border-color:#8db6dc;color:var(--brand-600);background:#fbfdff}.btn-primary{background:#2389f5;color:#fff;border-color:#2389f5;font-weight:750}.btn-primary:hover{background:#1679e3;border-color:#1679e3;color:#fff}.btn-soft{background:var(--brand-50);border-color:#d8e8f6;color:var(--brand-600)}.btn-danger{color:#c85353;border-color:#f0d3d3}.btn-small{min-height:27px;padding:0 9px;font-size:10px}.panel{background:#fff;border:1px solid #edf0f4;border-radius:6px;box-shadow:0 1px 2px rgba(29,51,76,.015);margin-bottom:12px}.filter-panel{padding:13px 13px 11px}.filter-grid{display:grid;grid-template-columns:1.2fr 1.2fr 1.2fr 1fr 1fr;gap:10px;margin-bottom:10px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field label{font-size:10px;color:#798697}.control{min-width:0;width:100%;height:32px;padding:0 9px;border:1px solid #d5dbe3;border-radius:3px;background:#fff;color:#374c61;font-size:11px;outline:none}.control:focus,.textarea:focus{border-color:#78addc;box-shadow:0 0 0 2px rgba(35,137,245,.08)}.filter-line{display:flex;align-items:flex-start;gap:10px;min-height:27px;margin:3px 0;color:#738093;font-size:10px;line-height:1.8}.filter-line-title{width:52px;flex:0 0 52px;color:#3f4e5f;font-weight:750}.filter-options{display:flex;flex-wrap:wrap;align-items:center;gap:4px 11px;flex:1}.filter-chip{border:0;padding:2px 1px;background:transparent;color:#7e8a9a;font-size:10px}.filter-chip:hover{color:var(--brand-600)}.filter-chip.selected{color:var(--brand-600);font-weight:800}.filter-check{display:inline-flex;align-items:center;gap:5px;color:#63758a}.filter-check input{accent-color:var(--brand-600);margin:0}.filter-right{margin-left:auto;color:#1686e8;white-space:nowrap;cursor:pointer;font-size:10px}.filter-bottom{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}.filter-summary{margin-left:5px;color:#8a95a3;font-size:10px}.filter-summary .tag{display:inline-block;background:#f4f7fa;border:1px solid #e4e9ef;padding:3px 7px;border-radius:3px;margin-right:4px;color:#596e82}.filter-spacer{flex:1}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}.metric{padding:11px 13px;background:#fff;border:1px solid #edf0f4;border-radius:6px;display:flex;align-items:center;gap:11px;min-width:0}.metric-icon{width:33px;height:33px;flex:0 0 33px;display:grid;place-items:center;border-radius:9px;background:#edf5fc;color:#2979bd;font-size:16px}.metric:nth-child(2) .metric-icon{background:#eaf7f1;color:#21966f}.metric:nth-child(3) .metric-icon{background:#fff5e7;color:#bf8127}.metric:nth-child(4) .metric-icon{background:#f2effb;color:#7860b6}.metric-label{font-size:10px;color:#8390a0;margin-bottom:3px}.metric-value{font-size:19px;font-weight:850;line-height:1.2;color:#203951}.metric-sub{font-size:9px;color:#9aa4b0;margin-top:3px}.list-panel{padding:0;overflow:hidden}.list-toolbar{min-height:47px;padding:10px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #edf0f4;flex-wrap:wrap}.list-heading{font-size:13px;font-weight:800;color:#283f55;margin-right:auto}.selected-hint{font-size:10px;color:#8794a3;margin-left:6px;font-weight:500}.table-wrap{width:100%;overflow:auto}.data-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:10.5px}.data-table th{height:37px;background:#fafbfd;border-bottom:1px solid #e7ecf1;text-align:left;color:#455668;font-weight:750;padding:0 11px}.data-table td{height:39px;padding:0 11px;border-bottom:1px solid #eef1f5;color:#526478;max-width:240px;overflow:hidden;text-overflow:ellipsis}.data-table tbody tr:hover{background:#f7fbff}.data-table .selected-row{background:#e7f6fc}.data-table .selected-row:hover{background:#def1fa}.data-table input[type=checkbox]{accent-color:#248af3;width:13px;height:13px;margin:0;vertical-align:middle}.link{border:0;background:transparent;color:#1684e7;padding:0;font-size:10.5px;font-weight:700}.link:hover{text-decoration:underline}.status-pill{display:inline-flex;align-items:center;padding:3px 6px;border-radius:4px;background:#f3f6f9;color:#6c7d90;font-size:9px}.status-pill.green{background:#edf8f2;color:#23865f}.status-pill.blue{background:#eaf4fc;color:#2676b6}.status-pill.orange{background:#fff5e8;color:#af7420}.tag-mini{display:inline-flex;padding:3px 5px;margin-right:4px;background:#f0f5fa;color:#64809a;border-radius:3px;font-size:9px}.pagination{height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;color:#8995a2;font-size:10px}.pager{display:flex;align-items:center;gap:5px}.page-btn{width:24px;height:25px;border:1px solid #dfe5eb;background:#fff;border-radius:2px;color:#5b6d7f;font-size:10px}.page-btn.active{border-color:#2b8bf0;color:#1683eb}.saved-packages{padding:13px}.saved-package-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.package-item{display:flex;align-items:center;gap:12px;border:1px solid #e1eaf2;border-radius:7px;padding:9px 11px;background:#fbfdff;min-width:230px;flex:1}.package-item strong{display:block;font-size:11px;color:#2d4d6a}.package-item small{display:block;color:#8493a3;font-size:9px;margin-top:4px}.package-item .package-actions{margin-left:auto;display:flex;gap:5px}.empty-state{text-align:center;padding:36px 15px;color:#8b98a7;font-size:11px}.empty-icon{font-size:25px;margin-bottom:8px}.tab-switch{display:flex;gap:4px;padding:4px;background:#f3f6f9;border-radius:6px;width:max-content;margin:0 0 12px}.tab-switch button{border:0;background:transparent;padding:7px 13px;color:#718197;border-radius:4px;font-size:11px}.tab-switch button.active{background:#fff;color:var(--brand-600);font-weight:800;box-shadow:0 1px 4px #dfe6ee}.tag-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}.tag-summary{padding:13px 15px}.tag-summary-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.tag-summary b{font-size:13px;color:#30485f}.tag-summary strong{display:block;font-size:23px;margin-top:8px;color:#1d5a96}.tag-summary small{display:block;color:#8d99a7;font-size:10px;margin-top:4px}.rule-note{padding:11px 13px;background:#f3f8fc;border:1px solid #dceaf6;border-radius:6px;color:#64809a;font-size:10px;line-height:1.8;margin-bottom:12px}.tag-value-list{display:flex;flex-wrap:wrap;gap:4px}.tag-value{padding:3px 6px;border-radius:4px;background:#f1f5f9;color:#627b92;font-size:9px}.modal-backdrop{display:none;position:fixed;inset:0;z-index:100;background:rgba(20,36,54,.42);align-items:center;justify-content:center;padding:20px}.modal-backdrop.open{display:flex}.modal{width:min(700px,100%);max-height:min(90vh,900px);overflow:auto;background:#fff;border-radius:10px;box-shadow:0 18px 60px rgba(18,43,69,.25);animation:modalIn .16s ease-out}.modal.wide{width:min(900px,100%)}@keyframes modalIn{from{opacity:.65;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:17px 20px;border-bottom:1px solid #edf0f4}.modal-title{margin:0;font-size:16px;font-weight:850;color:#263e54}.modal-subtitle{margin:5px 0 0;color:#8491a0;font-size:10px;line-height:1.6}.modal-close{border:0;background:transparent;color:#8290a0;font-size:22px;line-height:20px;padding:0 2px}.modal-body{padding:17px 20px}.modal-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;border-top:1px solid #edf0f4;background:#fbfcfe}.modal-foot .foot-hint{color:#98a2ae;font-size:9px;line-height:1.5}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.form-grid .full{grid-column:1/-1}.textarea{display:block;width:100%;min-height:98px;border:1px solid #d5dce5;border-radius:4px;padding:10px;color:#34495e;line-height:1.7;font-size:11px;resize:vertical;outline:none}.help{margin-top:5px;font-size:9px;color:#8a97a6;line-height:1.6}.upload-zone{display:flex;align-items:center;justify-content:center;gap:14px;min-height:130px;border:1px dashed #adc4da;border-radius:7px;background:#f8fbfe;padding:14px;text-align:center;color:#6c8196;position:relative}.upload-zone:hover{border-color:#4d94d1;background:#f3f9fe}.upload-zone input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.upload-icon{font-size:25px;color:#6394bd}.poster-preview{max-width:130px;max-height:120px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px #d7e1ea}.channel-row{display:flex;gap:10px;flex-wrap:wrap}.channel-option{display:flex;align-items:center;gap:7px;border:1px solid #e1e7ee;border-radius:6px;padding:9px 12px;color:#4e657a;font-size:11px}.channel-option input{accent-color:var(--brand-600)}.push-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:11px;background:#f6f9fc;border:1px solid #e6edf4;border-radius:7px}.push-summary-item span{display:block;font-size:9px;color:#8a98a8}.push-summary-item b{display:block;font-size:13px;color:#365771;margin-top:5px}.detail-block{border:1px solid #e5ebf1;border-radius:7px;margin-bottom:12px;overflow:hidden}.detail-block h4{margin:0;padding:10px 12px;background:#f7f9fc;border-bottom:1px solid #e8edf2;font-size:11px;color:#36516b}.detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.detail-field{padding:10px 12px;border-right:1px solid #edf1f5;border-bottom:1px solid #edf1f5;min-width:0}.detail-field span{display:block;color:#94a0ad;font-size:9px;margin-bottom:5px}.detail-field b{display:block;color:#42586e;font-size:10.5px;line-height:1.6;overflow-wrap:anywhere}.poster-thumb{max-width:140px;max-height:100px;object-fit:contain;border:1px solid #e4eaf0;border-radius:5px}.toast{position:fixed;top:56px;left:50%;transform:translate(-50%,-10px);z-index:200;padding:10px 16px;background:#263e55;color:#fff;border-radius:6px;box-shadow:0 5px 20px #18314930;font-size:11px;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.muted{color:#8b98a7}.text-brand{color:var(--brand-600)}.nowrap{white-space:nowrap}.icon-inline{display:inline-block;width:14px;text-align:center}
+@media(max-width:1180px){.topnav a{padding:0 8px}.topright{gap:8px;padding:0 10px}.filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.tag-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:860px){.brand,.sidebar{width:58px;flex-basis:58px}.brand{font-size:0}.brand small{display:none}.brand-mark{font-size:13px}.topnav a:nth-child(n+6){display:none}.topright{padding:0 7px;font-size:10px}.side-heading{justify-content:center;padding:14px 0;font-size:0}.side-heading span:last-child{display:none}.nav-item{justify-content:center;padding:0;border-left-width:3px;font-size:0}.nav-item .ni{font-size:15px}.nav-sub .nav-item{padding:0}.side-bottom{font-size:0;text-align:center;padding:10px 0}.main{padding:0 8px 20px}.filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page-head{flex-direction:column}.head-actions{width:100%}.tag-cards{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.topnav{display:none}.topright{margin-left:auto}.filter-grid{grid-template-columns:1fr 1fr;gap:7px}.filter-line{gap:6px}.filter-line-title{width:42px;flex-basis:42px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.metric{padding:9px}.metric-value{font-size:16px}.metric-icon{width:28px;height:28px;flex-basis:28px}.list-toolbar{gap:6px}.list-heading{width:100%;margin-bottom:2px}.pagination{align-items:flex-start;height:auto;padding:12px;flex-direction:column}.head-actions .btn{flex:1}.tag-cards{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.modal-body{padding:14px}.modal-head,.modal-foot{padding:13px 14px}.push-summary{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}.tab{padding:7px 8px}.demo-flag{font-size:9px}.saved-package-list .package-item{min-width:100%}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">研</span>研选园<small>TM</small></div>
+  <nav class="topnav" aria-label="主导航">
+    <a href="#" class="active">工作台</a><a href="#">线索</a><a href="#">订单</a><a href="#">交付</a><a href="#">产品</a><a href="#">供应链</a><a href="#">营销</a><a href="#">AI快设计</a><a href="#">云店</a><a href="#">业财</a><a href="#">螺蛳</a><a href="#">报表</a><a href="#">客服</a><a href="#">知识库</a>
+  </nav>
+  <div class="topright"><span>🔔 消息 <i class="badge-red">99+</i></span><span>▦ 待办</span><span>刘文琪 ▾</span><span>退出</span></div>
+</header>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="side-heading"><span>▣ 满盘管理</span><span>⌃</span></div>
+    <div class="side-nav nav-sub">
+      <button class="nav-item active" data-view="audience"><span class="ni">◫</span>潜客挖掘</button>
+      <button class="nav-item" data-view="audience"><span class="ni">▦</span>满盘运营平台</button>
+    </div>
+    <div class="side-heading"><span>营销推送</span><span>⌄</span></div>
+    <div class="side-nav">
+      <button class="nav-item" data-view="tags"><span class="ni">⌘</span>标签与映射维护</button>
+      <button class="nav-item" data-view="records"><span class="ni">▤</span>推送人群包记录</button>
+      <button class="nav-item" data-view="packages"><span class="ni">▣</span>已保存人群包</button>
+    </div>
+    <div class="side-heading"><span>其他功能</span><span>⌄</span></div>
+    <div class="side-nav">
+      <button class="nav-item" data-view="audience"><span class="ni">♧</span>线索管理</button>
+      <button class="nav-item" data-view="audience"><span class="ni">◷</span>入户检测</button>
+      <button class="nav-item" data-view="audience"><span class="ni">▧</span>新交付潜客</button>
+    </div>
+    <div class="side-bottom">演示环境 · 本地交互数据</div>
+  </aside>
+  <main class="main">
+    <div class="tabbar">
+      <div class="tab">首页 <span class="x">×</span></div>
+      <div class="tab">全部线索 <span class="x">×</span></div>
+      <div class="tab active" id="currentTab">潜客挖掘 <span class="x">×</span></div>
+      <span class="demo-flag"><b></b>演示模式 · 不会真实发送</span>
+    </div>
+    <div id="viewRoot" class="view-root"></div>
+  </main>
+</div>
+<div id="modalRoot" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="操作弹窗"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var currentView = "audience";
+  var tagTab = "dictionary";
+  var selectedIds = new Set(["h1","h2","h3"]);
+  var pendingPoster = "";
+  var pendingPosterName = "";
+  var toastTimer = null;
+  var tags = [
+    {id:"T001",name:"高频维修",category:"房屋状态",source:"house_tag_snapshot.repair_freq",type:"枚举",values:["高","中","低"],status:"启用",note:"近12个月维修频次达到阈值"},
+    {id:"T002",name:"新业主过户",category:"产权变化",source:"house_tag_snapshot.new_owner_flag",type:"布尔",values:["是","否"],status:"启用",note:"识别近期产权变更房屋"},
+    {id:"T003",name:"装修后可能会装修",category:"装修意向",source:"house_tag_snapshot.renovation_intent",type:"枚举",values:["高意向","中意向","低意向"],status:"启用",note:"由上游标签快照提供"},
+    {id:"T004",name:"在装修",category:"装修状态",source:"house_tag_snapshot.renovation_status",type:"布尔",values:["是","否"],status:"启用",note:"用于过滤暂不适合营销的房屋"},
+    {id:"T005",name:"下水道堵塞",category:"维修问题",source:"house_tag_snapshot.water_pipe_issue",type:"布尔",values:["是","否"],status:"启用",note:"维修问题标签"},
+    {id:"T006",name:"地面问题",category:"维修问题",source:"house_tag_snapshot.floor_issue",type:"布尔",values:["是","否"],status:"启用",note:"维修问题标签"},
+    {id:"T007",name:"墙面问题",category:"维修问题",source:"house_tag_snapshot.wall_issue",type:"布尔",values:["是","否"],status:"停用",note:"历史字段，待业务复核"}
+  ];
+  var rules = [
+    {id:"R001",product:"局部焕新",required:["高频维修"],logic:"必选条件全部满足",priority:10,status:"启用",updated:"2026-10-10"},
+    {id:"R002",product:"厨卫升级",required:["下水道堵塞","墙面问题"],logic:"命中任一条件",priority:20,status:"启用",updated:"2026-10-09"},
+    {id:"R003",product:"全屋翻新",required:["新业主过户","装修后可能会装修"],logic:"必选 + 组合条件",priority:30,status:"启用",updated:"2026-10-08"},
+    {id:"R004",product:"局部维修",required:["地面问题"],logic:"命中任一条件",priority:40,status:"启用",updated:"2026-10-07"}
+  ];
+  var houses = [
+    {id:"h1",house:"深圳临湖花园9栋深圳临湖花园9栋1单元201",owner:"刘静",mobile:"138****1021",project:"深圳临湖花园",unit:"9栋1单元201",labels:["高频维修","地面问题"],product:"局部焕新",hasLead:"是",leadStatus:"待清洗",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h2",house:"深圳临湖花园15栋深圳临湖花园15栋1单元302",owner:"朱琳",mobile:"136****8056",project:"深圳临湖花园",unit:"15栋1单元302",labels:["新业主过户","装修后可能会装修"],product:"全屋翻新",hasLead:"是",leadStatus:"无需需求",moveStatus:"疑似出租",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h3",house:"深圳临湖花园10栋深圳临湖花园10栋2单元203",owner:"尚华伟",mobile:"189****7625",project:"深圳临湖花园",unit:"10栋2单元203",labels:["下水道堵塞","在装修"],product:"局部维修",hasLead:"是",leadStatus:"有需求未成交",moveStatus:"空置",lastPush:"2026-08-11",sourceDate:"2026-10-11"},
+    {id:"h4",house:"深圳临湖花园3栋深圳临湖花园3栋2单元201",owner:"王红梅",mobile:"135****9042",project:"深圳临湖花园",unit:"3栋2单元201",labels:["墙面问题"],product:"厨卫升级",hasLead:"是",leadStatus:"有需求未成交",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h5",house:"深圳临湖花园8栋深圳临湖花园8栋2单元205",owner:"白艳梅",mobile:"137****4008",project:"深圳临湖花园",unit:"8栋2单元205",labels:["在装修"],product:"-",hasLead:"是",leadStatus:"无需需求",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h6",house:"深圳临湖花园9栋深圳临湖花园9栋2单元205",owner:"陈爱平",mobile:"139****3117",project:"深圳临湖花园",unit:"9栋2单元205",labels:["高频维修","墙面问题"],product:"局部焕新",hasLead:"是",leadStatus:"有需求未成交",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h7",house:"深圳临湖花园5栋深圳临湖花园5栋3单元411",owner:"袁强",mobile:"158****0998",project:"深圳临湖花园",unit:"5栋3单元411",labels:["新业主过户"],product:"全屋翻新",hasLead:"是",leadStatus:"无需需求",moveStatus:"疑似出租",lastPush:"2026-03-05",sourceDate:"2026-10-11"},
+    {id:"h8",house:"深圳临湖花园3栋深圳临湖花园3栋6单元101",owner:"王惠平",mobile:"186****0711",project:"深圳临湖花园",unit:"3栋6单元101",labels:["装修后可能会装修"],product:"全屋翻新",hasLead:"是",leadStatus:"有需求未成交",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h9",house:"深圳临湖花园14栋深圳临湖花园14栋2单元202",owner:"张淼",mobile:"188****2308",project:"深圳临湖花园",unit:"14栋2单元202",labels:["地面问题"],product:"局部维修",hasLead:"是",leadStatus:"有需求未成交",moveStatus:"空置",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h10",house:"深圳临湖花园7栋深圳临湖花园7栋5单元501",owner:"黄丽萍",mobile:"133****8774",project:"深圳临湖花园",unit:"7栋5单元501",labels:["墙面问题","下水道堵塞"],product:"厨卫升级",hasLead:"是",leadStatus:"无需需求",moveStatus:"空置",lastPush:"2026-07-24",sourceDate:"2026-10-11"},
+    {id:"h11",house:"深圳云栖雅苑2栋3单元1002",owner:"周晓宁",mobile:"139****1262",project:"深圳云栖雅苑",unit:"2栋3单元1002",labels:["高频维修"],product:"局部焕新",hasLead:"是",leadStatus:"待清洗",moveStatus:"自住",lastPush:"-",sourceDate:"2026-10-11"},
+    {id:"h12",house:"深圳云栖雅苑6栋1单元702",owner:"林嘉怡",mobile:"137****5819",project:"深圳云栖雅苑",unit:"6栋1单元702",labels:["新业主过户","在装修"],product:"全屋翻新",hasLead:"否",leadStatus:"无",moveStatus:"空置",lastPush:"-",sourceDate:"2026-10-11"}
+  ];
+  var audiencePackages = [];
+  var pushRecords = [{
+    id:"PUSH-20261010-001",packageName:"临湖花园 · 高频维修意向人群",sender:"刘文琪",createdAt:"2026-10-10 15:36:22",channels:["企微通知"],content:"家里的小问题拖久了更费心，近期可预约上门检测。回复【预约】了解服务详情。",posterName:"局部焕新活动海报.png",posterData:"",count:3,criteria:"项目=深圳临湖花园；标签=高频维修",houseIds:["h1","h3","h6"],status:"演示成功",detail:"演示记录：仅记录推送任务信息，未调用外部渠道。"
+  }];
+  var products = ["局部焕新","厨卫升级","全屋翻新","局部维修"];
+
+  function esc(value){
+    return String(value == null ? "" : value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function fmt(n){return Number(n||0).toLocaleString("zh-CN");}
+  function nowText(){
+    var d=new Date();function pad(v){return v<10?"0"+v:v;}
+    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+" "+pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+  }
+  function toast(message){
+    var el=document.getElementById("toast");el.textContent=message;el.classList.add("show");
+    if(toastTimer)clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){el.classList.remove("show");},2600);
+  }
+  function selectedHouses(){return houses.filter(function(h){return selectedIds.has(h.id);});}
+  function houseById(id){return houses.find(function(h){return h.id===id;});}
+  function activeTagNames(){return tags.filter(function(t){return t.status==="启用";}).map(function(t){return t.name;});}
+  function modal(title,subtitle,body,foot,wide){
+    var root=document.getElementById("modalRoot");
+    root.innerHTML='<div class="modal'+(wide?' wide':'')+'"><div class="modal-head"><div><h2 class="modal-title">'+esc(title)+'</h2><p class="modal-subtitle">'+esc(subtitle||"")+'</p></div><button class="modal-close" type="button" data-close-modal aria-label="关闭">×</button></div><div class="modal-body">'+body+'</div><div class="modal-foot">'+foot+'</div></div>';
+    root.classList.add("open");
+    root.onclick=function(e){if(e.target===root||e.target.closest("[data-close-modal]"))closeModal();};
+    document.onkeydown=function(e){if(e.key==="Escape")closeModal();};
+  }
+  function closeModal(){
+    var root=document.getElementById("modalRoot");root.classList.remove("open");root.innerHTML="";root.onclick=null;document.onkeydown=null;
+  }
+  function navTo(view){
+    currentView=view;
+    document.querySelectorAll(".nav-item[data-view]").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-view")===view);});
+    var tab=document.getElementById("currentTab");
+    var title=view==="audience"?"潜客挖掘":view==="tags"?"标签与映射维护":view==="records"?"推送人群包记录":"已保存人群包";
+    tab.innerHTML=esc(title)+' <span class="x">×</span>';
+    renderView();
+  }
+  function renderView(){
+    var root=document.getElementById("viewRoot");
+    if(currentView==="audience"){root.innerHTML=audienceView();bindAudience();renderAudienceRows();}
+    else if(currentView==="tags"){root.innerHTML=tagsView();bindTags();}
+    else if(currentView==="records"){root.innerHTML=recordsView();bindRecords();}
+    else {root.innerHTML=packagesView();bindPackages();}
+  }
+  function tagFilterOptions(){
+    return tags.filter(function(t){return t.status==="启用";}).map(function(t){
+      return '<label class="filter-check"><input type="checkbox" class="tag-filter" value="'+esc(t.name)+'"> '+esc(t.name)+'</label>';
+    }).join("");
+  }
+  function audienceView(){
+    return '<div class="page-head"><div><h1 class="page-title">潜客挖掘</h1><p class="page-desc">基于满盘房屋标签筛选目标人群，先生成可复核的人群包，再通过推送弹窗配置海报与文案。</p></div><div class="head-actions"><button class="btn" data-action="go-tags">⚙ 标签与映射维护</button><button class="btn" data-action="go-records">▤ 推送人群包记录</button></div></div>'+
+    '<div class="metrics">'+
+      '<div class="metric"><span class="metric-icon">⌕</span><div><div class="metric-label">当前样例房屋</div><div class="metric-value">'+houses.length+'</div><div class="metric-sub">演示数据 · 以房屋编码关联</div></div></div>'+
+      '<div class="metric"><span class="metric-icon">◈</span><div><div class="metric-label">已维护标签</div><div class="metric-value" id="metricTags">'+tags.filter(function(t){return t.status==="启用";}).length+'</div><div class="metric-sub">字典与映射独立维护</div></div></div>'+
+      '<div class="metric"><span class="metric-icon">▣</span><div><div class="metric-label">已保存人群包</div><div class="metric-value" id="metricPackages">'+audiencePackages.length+'</div><div class="metric-sub">保存筛选快照，可再次发起推送</div></div></div>'+
+      '<div class="metric"><span class="metric-icon">↗</span><div><div class="metric-label">推送批次记录</div><div class="metric-value" id="metricRecords">'+pushRecords.length+'</div><div class="metric-sub">推送人、内容和房屋明细可回溯</div></div></div>'+
+    '</div>'+
+    '<section class="panel filter-panel">'+
+      '<div class="filter-grid">'+
+        '<div class="field"><label>项目 / 小区</label><select id="fProject" class="control"><option value="">全部项目</option><option>深圳临湖花园</option><option>深圳云栖雅苑</option></select></div>'+
+        '<div class="field"><label>命中产品</label><select id="fProduct" class="control"><option value="">全部产品</option>'+products.map(function(p){return '<option>'+esc(p)+'</option>';}).join("")+'</select></div>'+
+        '<div class="field"><label>线索状态</label><select id="fLead" class="control"><option value="">全部线索状态</option><option>待清洗</option><option>无需需求</option><option>有需求未成交</option><option>无</option></select></div>'+
+        '<div class="field"><label>是否存在有效线索</label><select id="fHasLead" class="control"><option value="">全部</option><option>是</option><option>否</option></select></div>'+
+        '<div class="field"><label>房屋 / 业主 / 手机号</label><input id="fKeyword" class="control" placeholder="输入关键词搜索"></div>'+
+      '</div>'+
+      '<div class="filter-line"><span class="filter-line-title">标签筛选</span><div class="filter-options">'+activeTagNames().slice(0,7).map(function(t){return '<button type="button" class="filter-chip" data-label-filter="'+esc(t)+'">'+esc(t)+'</button>';}).join("")+'<button type="button" class="filter-chip" data-label-filter="">不限</button></div><span class="filter-right" id="expandFilters">展开更多筛选⌄</span></div>'+
+      '<div id="moreFilters" class="filter-line" style="display:none"><span class="filter-line-title">标签组合</span><div class="filter-options">'+tagFilterOptions()+'</div><span class="muted">多选标签按“全部满足”筛选</span></div>'+
+      '<div class="filter-line"><span class="filter-line-title">居住状态</span><div class="filter-options"><button class="filter-chip" data-move-filter="">不限</button><button class="filter-chip" data-move-filter="自住">自住</button><button class="filter-chip" data-move-filter="疑似出租">疑似出租</button><button class="filter-chip" data-move-filter="空置">空置</button></div><span class="muted">标签源日期：2026-10-11</span></div>'+
+      '<div class="filter-bottom"><button class="btn btn-primary" id="searchBtn">⌕ 查 询</button><button class="btn" id="resetBtn">重 置</button><span class="filter-summary" id="filterSummary"></span><span class="filter-spacer"></span><span class="filter-summary">规则命中只代表符合产品条件，不代表已获触达资格。</span></div>'+
+    '</section>'+
+    '<section class="panel list-panel">'+
+      '<div class="list-toolbar"><div class="list-heading">客户列表 <span class="selected-hint" id="selectedCount">已选 3 套</span></div>'+
+        '<button class="btn btn-small" id="exportBtn">批量导出</button><button class="btn btn-small" id="savePackageBtn">保存为人群包</button><button class="btn btn-primary btn-small" id="pushBtn">✦ 推送人群包</button>'+
+      '</div>'+
+      '<div class="table-wrap"><table class="data-table"><thead><tr><th style="width:34px"><input id="selectAll" type="checkbox" aria-label="选择当前页"></th><th>房源名称</th><th>业主姓名</th><th>手机号（脱敏）</th><th>标签命中</th><th>建议产品</th><th>是否有线索</th><th>线索状态</th><th>入住状态</th><th>上次推送</th><th>标签日期</th><th>操作</th></tr></thead><tbody id="houseRows"></tbody></table></div>'+
+      '<div class="pagination"><span id="rowCount">共检索到 '+houses.length+' 条样例数据</span><div class="pager"><button class="page-btn" disabled>‹</button><button class="page-btn active">1</button><button class="page-btn" disabled>›</button><span>10 条/页</span></div></div>'+
+    '</section>'+
+    '<section class="panel saved-packages" id="savedPackagePanel" style="'+(audiencePackages.length?'':'display:none')+'"><div class="list-heading">最近保存的人群包</div><div class="saved-package-list" id="savedPackageList">'+packageCards(audiencePackages.slice(-3).reverse())+'</div></section>'+
+    '<div class="rule-note">建议的产品边界：一线在本页选择已维护标签和筛选条件；标签名称、数据来源、可选值及产品映射由“标签与映射维护”统一管理。点击推送时记录人群快照、推送人、文案、海报与渠道，但真实发送必须等待后续接入公司触达接口。</div>';
+  }
+  function applyFilter(){
+    var project=document.getElementById("fProject")?document.getElementById("fProject").value:"";
+    var product=document.getElementById("fProduct")?document.getElementById("fProduct").value:"";
+    var lead=document.getElementById("fLead")?document.getElementById("fLead").value:"";
+    var hasLead=document.getElementById("fHasLead")?document.getElementById("fHasLead").value:"";
+    var keyword=(document.getElementById("fKeyword")?document.getElementById("fKeyword").value:"").trim().toLowerCase();
+    var move=document.querySelector("[data-move-filter].selected");var moveValue=move?move.getAttribute("data-move-filter"):"";
+    var labelButtons=document.querySelectorAll("[data-label-filter].selected");
+    var quickLabels=Array.from(labelButtons).map(function(b){return b.getAttribute("data-label-filter");}).filter(Boolean);
+    var tagsPicked=Array.from(document.querySelectorAll(".tag-filter:checked")).map(function(c){return c.value;});
+    return houses.filter(function(h){
+      if(project&&h.project!==project)return false;
+      if(product&&h.product!==product)return false;
+      if(lead&&h.leadStatus!==lead)return false;
+      if(hasLead&&h.hasLead!==hasLead)return false;
+      if(moveValue&&h.moveStatus!==moveValue)return false;
+      if(keyword&&([h.house,h.owner,h.mobile,h.project,h.unit].join(" ").toLowerCase().indexOf(keyword)<0))return false;
+      if(quickLabels.length&&!quickLabels.some(function(t){return h.labels.indexOf(t)>=0;}))return false;
+      if(tagsPicked.length&&!tagsPicked.every(function(t){return h.labels.indexOf(t)>=0;}))return false;
+      return true;
+    });
+  }
+  function renderAudienceRows(){
+    var tbody=document.getElementById("houseRows");if(!tbody)return;
+    var list=applyFilter();
+    tbody.innerHTML=list.map(function(h){
+      var checked=selectedIds.has(h.id);
+      var chips=h.labels.map(function(t){return '<span class="tag-mini">'+esc(t)+'</span>';}).join("");
+      var leadColor=h.leadStatus==="有需求未成交"?"orange":h.leadStatus==="待清洗"?"blue":"";
+      return '<tr class="'+(checked?'selected-row':'')+'">'+
+        '<td><input type="checkbox" data-house-check="'+esc(h.id)+'" '+(checked?'checked':'')+' aria-label="选择'+esc(h.unit)+'"></td>'+
+        '<td title="'+esc(h.house)+'" style="max-width:260px"><span class="text-brand">'+esc(h.house)+'</span></td>'+
+        '<td>'+esc(h.owner)+'</td><td>'+esc(h.mobile)+'</td><td>'+chips+'</td>'+
+        '<td>'+ (h.product==="-"?'<span class="muted">暂未命中</span>':'<span class="status-pill blue">'+esc(h.product)+'</span>')+'</td>'+
+        '<td>'+esc(h.hasLead)+'</td><td><span class="status-pill '+leadColor+'">'+esc(h.leadStatus)+'</span></td>'+
+        '<td>'+esc(h.moveStatus)+'</td><td>'+esc(h.lastPush)+'</td><td>'+esc(h.sourceDate)+'</td>'+
+        '<td><button class="link" data-house-detail="'+esc(h.id)+'">查看</button></td></tr>';
+    }).join("")||'<tr><td colspan="12"><div class="empty-state"><div class="empty-icon">⌕</div>没有符合当前筛选条件的房屋，请调整标签或筛选条件。</div></td></tr>';
+    var selected=selectedHouses().length;
+    document.getElementById("selectedCount").textContent="已选 "+selected+" 套";
+    document.getElementById("rowCount").textContent="共检索到 "+list.length+" 条样例数据";
+    var all=document.getElementById("selectAll");
+    if(all){all.checked=list.length>0&&list.every(function(h){return selectedIds.has(h.id);});all.indeterminate=list.some(function(h){return selectedIds.has(h.id);})&&!all.checked;}
+    var summary=document.getElementById("filterSummary");
+    if(summary){var active=[];var p=document.getElementById("fProject").value;if(p)active.push(p);var prod=document.getElementById("fProduct").value;if(prod)active.push(prod);var kw=document.getElementById("fKeyword").value.trim();if(kw)active.push("关键词："+kw);summary.innerHTML=active.map(function(x){return '<span class="tag">'+esc(x)+'</span>';}).join("");}
+    var pushButton=document.getElementById("pushBtn");if(pushButton)pushButton.disabled=!selected;
+    var saveButton=document.getElementById("savePackageBtn");if(saveButton)saveButton.disabled=!selected;
+  }
+  function bindAudience(){
+    document.querySelectorAll("[data-action=go-tags]").forEach(function(b){b.onclick=function(){navTo("tags");};});
+    document.querySelectorAll("[data-action=go-records]").forEach(function(b){b.onclick=function(){navTo("records");};});
+    var expand=document.getElementById("expandFilters");
+    expand.onclick=function(){var panel=document.getElementById("moreFilters");var open=panel.style.display!=="none";panel.style.display=open?"none":"flex";expand.textContent=open?"展开更多筛选⌄":"收起筛选⌃";};
+    document.querySelectorAll("[data-label-filter]").forEach(function(b){b.onclick=function(){
+      document.querySelectorAll("[data-label-filter]").forEach(function(x){x.classList.remove("selected");});
+      if(b.getAttribute("data-label-filter"))b.classList.add("selected");
+      else document.querySelector('[data-label-filter=""]').classList.add("selected");
+      renderAudienceRows();
+    };});
+    document.querySelectorAll("[data-move-filter]").forEach(function(b){b.onclick=function(){document.querySelectorAll("[data-move-filter]").forEach(function(x){x.classList.remove("selected");});b.classList.add("selected");renderAudienceRows();};});
+    ["fProject","fProduct","fLead","fHasLead"].forEach(function(id){document.getElementById(id).addEventListener("change",renderAudienceRows);});
+    document.getElementById("fKeyword").addEventListener("keydown",function(e){if(e.key==="Enter")renderAudienceRows();});
+    document.getElementById("searchBtn").onclick=renderAudienceRows;
+    document.getElementById("resetBtn").onclick=function(){
+      document.getElementById("fProject").value="";document.getElementById("fProduct").value="";document.getElementById("fLead").value="";document.getElementById("fHasLead").value="";document.getElementById("fKeyword").value="";
+      document.querySelectorAll("[data-label-filter],[data-move-filter]").forEach(function(x){x.classList.remove("selected");});
+      document.querySelectorAll(".tag-filter").forEach(function(x){x.checked=false;});renderAudienceRows();
+    };
+    document.getElementById("selectAll").onchange=function(e){var list=applyFilter();list.forEach(function(h){if(e.target.checked)selectedIds.add(h.id);else selectedIds.delete(h.id);});renderAudienceRows();};
+    document.getElementById("houseRows").addEventListener("change",function(e){
+      var id=e.target.getAttribute("data-house-check");if(!id)return;
+      if(e.target.checked)selectedIds.add(id);else selectedIds.delete(id);renderAudienceRows();
+    });
+    document.getElementById("houseRows").addEventListener("click",function(e){
+      var detail=e.target.closest("[data-house-detail]");if(detail)showHouseDetail(detail.getAttribute("data-house-detail"));
+    });
+    document.getElementById("pushBtn").onclick=function(){openPushModal(selectedHouses(),null);};
+    document.getElementById("savePackageBtn").onclick=function(){openSavePackageModal(selectedHouses());};
+    document.getElementById("exportBtn").onclick=function(){toast("演示：已生成 "+applyFilter().length+" 条筛选结果的导出任务");};
+    var tagchecks=document.querySelectorAll(".tag-filter");tagchecks.forEach(function(c){c.addEventListener("change",renderAudienceRows);});
+    bindPackageCards();
+  }
+  function packageCards(list){
+    if(!list||!list.length)return '<div class="empty-state" style="width:100%;padding:18px">暂未保存人群包。勾选房屋后点击“保存为人群包”，保存可复用的人群快照。</div>';
+    return list.map(function(p){return '<div class="package-item"><div><strong>'+esc(p.name)+'</strong><small>'+esc(p.createdAt)+' · '+p.houseIds.length+' 套房屋</small></div><div class="package-actions"><button class="btn btn-small btn-soft" data-package-push="'+esc(p.id)+'">推送</button><button class="btn btn-small" data-package-detail="'+esc(p.id)+'">查看</button></div></div>';}).join("");
+  }
+  function bindPackageCards(){
+    document.querySelectorAll("[data-package-push]").forEach(function(b){b.onclick=function(){var p=audiencePackages.find(function(x){return x.id===b.getAttribute("data-package-push");});if(p)openPushModal(p.houseIds.map(houseById).filter(Boolean),p);};});
+    document.querySelectorAll("[data-package-detail]").forEach(function(b){b.onclick=function(){var p=audiencePackages.find(function(x){return x.id===b.getAttribute("data-package-detail");});if(p)showPackageDetail(p);};});
+  }
+  function openSavePackageModal(list){
+    var body='<div class="form-grid"><div class="field full"><label>人群包名称 *</label><input id="packageName" class="control" value="临湖花园 · 标签筛选人群包" maxlength="80" placeholder="例如：临湖花园-高频维修-10月"></div><div class="field full"><label>筛选条件摘要</label><textarea id="packageCriteria" class="textarea" style="min-height:65px">项目 / 标签等当前筛选条件；本次快照共 '+list.length+' 套房屋。</textarea><div class="help">保存后锁定当前房屋明细快照；后续底账更新不会自动改变此人群包。</div></div><div class="field"><label>房屋数量</label><input class="control" value="'+list.length+' 套" disabled></div><div class="field"><label>创建人</label><input class="control" value="刘文琪（当前用户）" disabled></div></div>';
+    modal("保存为人群包","将当前勾选的房屋保存为可复用的人群快照。",body,'<span class="foot-hint">此操作只保存人群包，不会发送消息。</span><div><button class="btn" data-close-modal>取消</button> <button class="btn btn-primary" id="confirmSavePackage">保存人群包</button></div>');
+    document.getElementById("confirmSavePackage").onclick=function(){
+      var name=document.getElementById("packageName").value.trim();if(!name){toast("请填写人群包名称");return;}
+      var ids=list.map(function(h){return h.id;});
+      var criteria=document.getElementById("packageCriteria").value.trim();
+      audiencePackages.push({id:"PKG-"+Date.now(),name:name,createdAt:nowText(),creator:"刘文琪",houseIds:ids.slice(),criteria:criteria});
+      closeModal();renderView();toast("人群包已保存，共 "+ids.length+" 套房屋");
+    };
+  }
+  function openPushModal(list,pack){
+    if(!list||!list.length){toast("请先筛选并勾选房屋，或从已保存人群包发起推送");return;}
+    pendingPoster="";pendingPosterName="";
+    var name=pack?pack.name:"潜客挖掘 · "+(new Date().toISOString().slice(0,10))+" 推送人群";
+    var criteria=pack?pack.criteria:"根据当前项目、产品、标签等筛选条件生成；以勾选房屋为准。";
+    var body='<div class="push-summary"><div class="push-summary-item"><span>本次推送对象</span><b>'+list.length+' 套房屋</b></div><div class="push-summary-item"><span>触达人员</span><b>'+new Set(list.map(function(h){return h.mobile;})).size+' 个号码</b></div><div class="push-summary-item"><span>推送发起人</span><b>刘文琪</b></div></div>'+
+      '<div class="form-grid" style="margin-top:15px">'+
+        '<div class="field full"><label>推送人群包名称 *</label><input class="control" id="pushPackageName" value="'+esc(name)+'" maxlength="100"></div>'+
+        '<div class="field full"><label>本次人群包规则 / 来源</label><textarea id="pushCriteria" class="textarea" style="min-height:62px">'+esc(criteria)+'</textarea><div class="help">这段说明会与本次发送内容一并写入推送记录。</div></div>'+
+        '<div class="field full"><label>上传海报（可选，支持 PNG / JPG / WEBP）</label><div class="upload-zone" id="uploadZone"><div id="posterPreviewArea"><div class="upload-icon">▧</div><b>点击选择海报图片，或将图片拖放到此处</b><div class="help">Demo 仅在当前浏览器会话中预览与留存；真实环境需接入对象存储。</div></div><input id="posterFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></div></div>'+
+        '<div class="field full"><label>推送文案 *</label><textarea class="textarea" id="pushContent" maxlength="1000" placeholder="请填写推送给业主的消息文案">您好，关注到您家的房屋情况，我们为您准备了专属焕新服务。近期可预约上门检测，了解适合您家的改善方案。回复【预约】获取详情。</textarea><div class="help"><span id="contentLength">0</span>/1000 字。发送前请由业务负责人确认文案合规、活动有效期及退订话术。</div></div>'+
+        '<div class="field full"><label>触达渠道 *</label><div class="channel-row"><label class="channel-option"><input type="checkbox" name="pushChannel" value="企微通知" checked>企微通知</label><label class="channel-option"><input type="checkbox" name="pushChannel" value="推广短信">推广短信</label><label class="channel-option"><input type="checkbox" name="pushChannel" value="Call客任务">生成 Call 客任务</label></div><div class="help">当前均为模拟操作，不会连接公司真实通道；正式发送需接通后端统一闸门。</div></div>'+
+      '</div>';
+    modal("配置推送内容","上传海报、填写文案、选择渠道，并在确认后生成可追溯的推送批次。",body,'<span class="foot-hint">本 Demo 只创建推送记录，不真实联系业主。</span><div><button class="btn" data-close-modal>取消</button> <button class="btn btn-primary" id="confirmPush">确认并模拟推送</button></div>',true);
+    var content=document.getElementById("pushContent");
+    var updateLength=function(){document.getElementById("contentLength").textContent=content.value.length;};
+    updateLength();content.addEventListener("input",updateLength);
+    var input=document.getElementById("posterFile");
+    input.addEventListener("change",function(){
+      var file=input.files&&input.files[0];if(!file)return;
+      if(!file.type.match(/^image\//)){toast("请选择图片文件");input.value="";return;}
+      if(file.size>8*1024*1024){toast("Demo 图片请小于 8MB");input.value="";return;}
+      pendingPosterName=file.name;
+      var reader=new FileReader();
+      reader.onload=function(){pendingPoster=String(reader.result||"");document.getElementById("posterPreviewArea").innerHTML='<img class="poster-preview" src="'+pendingPoster+'" alt="海报预览"><div style="text-align:left"><b>'+esc(file.name)+'</b><div class="help">海报已加载，确认推送后会随批次信息一起记录。</div><button type="button" class="btn btn-small" id="removePoster" style="margin-top:7px">移除图片</button></div>';document.getElementById("removePoster").onclick=function(e){e.stopPropagation();pendingPoster="";pendingPosterName="";input.value="";document.getElementById("posterPreviewArea").innerHTML='<div class="upload-icon">▧</div><b>点击选择海报图片，或将图片拖放到此处</b><div class="help">Demo 仅在当前浏览器会话中预览与留存；真实环境需接入对象存储。</div>';};};
+      reader.readAsDataURL(file);
+    });
+    document.getElementById("confirmPush").onclick=function(){
+      var packName=document.getElementById("pushPackageName").value.trim();
+      var textValue=document.getElementById("pushContent").value.trim();
+      var channels=Array.from(document.querySelectorAll('input[name="pushChannel"]:checked')).map(function(c){return c.value;});
+      if(!packName){toast("请填写推送人群包名称");return;}
+      if(!textValue){toast("请填写推送文案");return;}
+      if(!channels.length){toast("至少选择一个触达渠道");return;}
+      var rec={id:"PUSH-"+new Date().toISOString().replace(/[-:T.Z]/g,"").slice(0,14)+"-"+String(pushRecords.length+1).padStart(3,"0"),packageName:packName,sender:"刘文琪",createdAt:nowText(),channels:channels,content:textValue,posterName:pendingPosterName||"未上传海报",posterData:pendingPoster,count:list.length,criteria:document.getElementById("pushCriteria").value.trim(),houseIds:list.map(function(h){return h.id;}),status:"模拟完成",detail:"这是前端演示批次：已保存文案与人群明细，但未调用短信、企微或其他真实触达接口。"};
+      pushRecords.unshift(rec);closeModal();navTo("records");toast("演示推送已记录： "+list.length+" 套房屋；未真实发送");
+    };
+  }
+  function showHouseDetail(id){
+    var h=houseById(id);if(!h)return;
+    var body='<div class="detail-block"><h4>房屋基本信息</h4><div class="detail-grid">'+
+      detailField("房屋名称",h.house)+detailField("项目 / 小区",h.project)+detailField("房屋编码",h.id.toUpperCase())+
+      detailField("业主姓名",h.owner)+detailField("联系电话（脱敏）",h.mobile)+detailField("入住状态",h.moveStatus)+
+      detailField("命中产品",h.product)+detailField("线索状态",h.leadStatus)+detailField("标签快照日期",h.sourceDate)+'</div></div>'+
+      '<div class="detail-block"><h4>房屋标签</h4><div style="padding:12px">'+h.labels.map(function(t){return '<span class="tag-mini">'+esc(t)+'</span>';}).join("")+'</div></div>'+
+      '<div class="rule-note">这里展示的是演示数据。真实系统应通过房屋编码关联满盘标签快照、既有线索和触达记录。</div>';
+    modal("房屋详情","房屋标签与线索核查",body,'<span class="foot-hint">Demo 数据仅用于验证交互逻辑。</span><button class="btn btn-primary" data-close-modal>关闭</button>');
+  }
+  function detailField(label,value){return '<div class="detail-field"><span>'+esc(label)+'</span><b>'+esc(value)+'</b></div>';}
+  function tagsView(){
+    var enabled=tags.filter(function(t){return t.status==="启用";}).length;
+    return '<div class="page-head"><div><h1 class="page-title">标签与映射维护</h1><p class="page-desc">由系统管理员或业务负责人统一维护标签口径、来源字段、枚举值与产品匹配规则；一线筛选页只消费已启用配置。</p></div><div class="head-actions"><button class="btn" data-action="go-audience">← 返回潜客挖掘</button><button class="btn btn-primary" id="addTagBtn">＋ 新增标签</button></div></div>'+
+      '<div class="tag-cards"><div class="panel tag-summary"><div class="tag-summary-head"><b>标签字典</b><span class="status-pill blue">系统维护</span></div><strong>'+tags.length+'</strong><small>总标签数 · 含停用项</small></div><div class="panel tag-summary"><div class="tag-summary-head"><b>启用标签</b><span class="status-pill green">可用于筛选</span></div><strong>'+enabled+'</strong><small>只将启用状态的标签展示给一线</small></div><div class="panel tag-summary"><div class="tag-summary-head"><b>产品映射规则</b><span class="status-pill orange">需审核口径</span></div><strong>'+rules.length+'</strong><small>规则变更应记录操作人和生效时间</small></div></div>'+
+      '<div class="rule-note"><b>职责拆分建议：</b>“标签字典”负责标签名、来源字段、类型和可选值；“产品映射规则”负责标签如何组合命中哪个产品、优先级和启停。新增上游物理字段仍需要数据开发接入，不能只在这里新建标签。</div>'+
+      '<div class="tab-switch"><button data-tag-tab="dictionary" class="'+(tagTab==="dictionary"?"active":"")+'">标签字典</button><button data-tag-tab="mapping" class="'+(tagTab==="mapping"?"active":"")+'">产品映射规则</button></div>'+
+      '<section class="panel list-panel" id="tagTablePanel">'+renderTagTable()+'</section>';
+  }
+  function renderTagTable(){
+    if(tagTab==="dictionary"){
+      return '<div class="list-toolbar"><div class="list-heading">标签清单 <span class="selected-hint">配置变更会影响后续筛选项</span></div><button class="btn btn-primary btn-small" id="addTagBtn2">＋ 新增标签</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>标签编码</th><th>标签名称</th><th>标签类别</th><th>上游来源字段</th><th>类型</th><th>可选值</th><th>状态</th><th>说明</th><th>操作</th></tr></thead><tbody>'+tags.map(function(t){return '<tr><td>'+esc(t.id)+'</td><td><b>'+esc(t.name)+'</b></td><td>'+esc(t.category)+'</td><td><code>'+esc(t.source)+'</code></td><td>'+esc(t.type)+'</td><td><div class="tag-value-list">'+t.values.map(function(v){return '<span class="tag-value">'+esc(v)+'</span>';}).join("")+'</div></td><td><span class="status-pill '+(t.status==="启用"?"green":"")+'">'+esc(t.status)+'</span></td><td>'+esc(t.note)+'</td><td><button class="link" data-edit-tag="'+esc(t.id)+'">编辑</button> <button class="link" data-toggle-tag="'+esc(t.id)+'">'+(t.status==="启用"?"停用":"启用")+'</button></td></tr>';}).join("")+'</tbody></table></div><div class="pagination"><span>共 '+tags.length+' 个标签；建议标签编码稳定、名称可调整，避免直接改动底层字段含义。</span><span>数据样例</span></div>';
+    }
+    return '<div class="list-toolbar"><div class="list-heading">产品映射规则 <span class="selected-hint">优先级数字越小，优先级越高</span></div><button class="btn btn-primary btn-small" id="addRuleBtn">＋ 新增映射规则</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>规则 ID</th><th>命中产品</th><th>映射标签 / 条件</th><th>组合逻辑</th><th>优先级</th><th>状态</th><th>最近更新</th><th>操作</th></tr></thead><tbody>'+rules.slice().sort(function(a,b){return a.priority-b.priority;}).map(function(r){return '<tr><td>'+esc(r.id)+'</td><td><b>'+esc(r.product)+'</b></td><td>'+r.required.map(function(t){return '<span class="tag-mini">'+esc(t)+'</span>';}).join("")+'</td><td>'+esc(r.logic)+'</td><td>'+esc(r.priority)+'</td><td><span class="status-pill '+(r.status==="启用"?"green":"")+'">'+esc(r.status)+'</span></td><td>'+esc(r.updated)+'</td><td><button class="link" data-edit-rule="'+esc(r.id)+'">编辑</button> <button class="link" data-toggle-rule="'+esc(r.id)+'">'+(r.status==="启用"?"停用":"启用")+'</button></td></tr>';}).join("")+'</tbody></table></div><div class="pagination"><span>共 '+rules.length+' 条映射规则；命中多条时由规则引擎按互斥与优先级收敛。</span><span>数据样例</span></div>';
+  }
+  function bindTags(){
+    document.querySelectorAll("[data-action=go-audience]").forEach(function(b){b.onclick=function(){navTo("audience");};});
+    document.querySelectorAll("[data-tag-tab]").forEach(function(b){b.onclick=function(){tagTab=b.getAttribute("data-tag-tab");renderView();};});
+    ["addTagBtn","addTagBtn2"].forEach(function(id){var b=document.getElementById(id);if(b)b.onclick=function(){openTagModal(null);};});
+    var addRule=document.getElementById("addRuleBtn");if(addRule)addRule.onclick=function(){openRuleModal(null);};
+    document.querySelectorAll("[data-edit-tag]").forEach(function(b){b.onclick=function(){openTagModal(b.getAttribute("data-edit-tag"));};});
+    document.querySelectorAll("[data-toggle-tag]").forEach(function(b){b.onclick=function(){var t=tags.find(function(x){return x.id===b.getAttribute("data-toggle-tag");});if(!t)return;t.status=t.status==="启用"?"停用":"启用";renderView();toast("标签状态已更新："+t.name+" / "+t.status);};});
+    document.querySelectorAll("[data-edit-rule]").forEach(function(b){b.onclick=function(){openRuleModal(b.getAttribute("data-edit-rule"));};});
+    document.querySelectorAll("[data-toggle-rule]").forEach(function(b){b.onclick=function(){var r=rules.find(function(x){return x.id===b.getAttribute("data-toggle-rule");});if(!r)return;r.status=r.status==="启用"?"停用":"启用";renderView();toast("映射规则状态已更新："+r.id);};});
+  }
+  function openTagModal(id){
+    var item=id?tags.find(function(t){return t.id===id;}):null;
+    var body='<div class="form-grid">'+
+      '<div class="field"><label>标签名称 *</label><input id="tagName" class="control" value="'+esc(item?item.name:"")+'" placeholder="例如：高频维修"></div>'+
+      '<div class="field"><label>标签类别 *</label><input id="tagCategory" class="control" value="'+esc(item?item.category:"房屋状态")+'" placeholder="例如：装修意向"></div>'+
+      '<div class="field full"><label>上游来源字段 *</label><input id="tagSource" class="control" value="'+esc(item?item.source:"house_tag_snapshot.new_tag_field")+'" placeholder="表名.字段名"></div>'+
+      '<div class="field"><label>数据类型</label><select id="tagType" class="control"><option '+(item&&item.type==="布尔"?"selected":"")+' >布尔</option><option '+(item&&item.type==="枚举"?"selected":"")+' >枚举</option><option '+(item&&item.type==="数值"?"selected":"")+' >数值</option><option '+(item&&item.type==="文本"?"selected":"")+' >文本</option></select></div>'+
+      '<div class="field"><label>标签状态</label><select id="tagStatus" class="control"><option '+(!item||item.status==="启用"?"selected":"")+'>启用</option><option '+(item&&item.status==="停用"?"selected":"")+'>停用</option></select></div>'+
+      '<div class="field full"><label>可选值（用中文逗号分隔）</label><input id="tagValues" class="control" value="'+esc(item?item.values.join("，"):"是，否")+'" placeholder="是，否"></div>'+
+      '<div class="field full"><label>业务说明</label><textarea id="tagNote" class="textarea" style="min-height:65px">'+esc(item?item.note:"说明这个标签的业务定义、来源口径和使用注意事项。")+'</textarea></div></div>';
+    modal(item?"编辑标签":"新增标签","标签字典决定筛选页可以选择哪些标签，不直接修改源数据。",body,'<span class="foot-hint">新增上游物理字段时，还需要同步补充数据抽取与字段映射。</span><div><button class="btn" data-close-modal>取消</button> <button class="btn btn-primary" id="saveTag">保存标签</button></div>');
+    document.getElementById("saveTag").onclick=function(){
+      var name=document.getElementById("tagName").value.trim(),category=document.getElementById("tagCategory").value.trim(),source=document.getElementById("tagSource").value.trim();
+      if(!name||!category||!source){toast("标签名称、类别和来源字段为必填项");return;}
+      var values=document.getElementById("tagValues").value.split(/[，,]/).map(function(x){return x.trim();}).filter(Boolean);
+      var obj={id:item?item.id:"T"+String(Date.now()).slice(-6),name:name,category:category,source:source,type:document.getElementById("tagType").value,values:values,status:document.getElementById("tagStatus").value,note:document.getElementById("tagNote").value.trim()};
+      if(item){Object.assign(item,obj);}else{tags.push(obj);}
+      closeModal();renderView();toast(item?"标签已更新":"新标签已添加到演示字典");
+    };
+  }
+  function openRuleModal(id){
+    var item=id?rules.find(function(r){return r.id===id;}):null;
+    var body='<div class="form-grid"><div class="field"><label>命中产品 *</label><select id="ruleProduct" class="control">'+products.map(function(p){return '<option '+(item&&item.product===p?"selected":"")+'>'+esc(p)+'</option>';}).join("")+'</select></div>'+
+      '<div class="field"><label>优先级 *</label><input id="rulePriority" type="number" min="1" class="control" value="'+esc(item?item.priority:(rules.length+1)*10)+'"></div>'+
+      '<div class="field full"><label>匹配标签（可多选）</label><div class="channel-row" id="ruleTagOptions">'+tags.map(function(t){return '<label class="channel-option"><input type="checkbox" name="ruleTag" value="'+esc(t.name)+'" '+(item&&item.required.indexOf(t.name)>=0?'checked':'')+'> '+esc(t.name)+'</label>';}).join("")+'</div></div>'+
+      '<div class="field"><label>组合逻辑</label><select id="ruleLogic" class="control"><option '+(item&&item.logic==="命中任一条件"?"selected":"")+'>命中任一条件</option><option '+(!item||item.logic==="必选条件全部满足"?"selected":"")+'>必选条件全部满足</option><option '+(item&&item.logic==="必选 + 组合条件"?"selected":"")+'>必选 + 组合条件</option></select></div>'+
+      '<div class="field"><label>规则状态</label><select id="ruleStatus" class="control"><option '+(!item||item.status==="启用"?"selected":"")+'>启用</option><option '+(item&&item.status==="停用"?"selected":"")+'>停用</option></select></div></div>'+
+      '<div class="rule-note" style="margin-top:12px">本 Demo 仅展示配置交互，不执行生产规则引擎。正式环境应对规则语法、字段合法性、互斥产品和规则优先级进行校验，并记录审计日志。</div>';
+    modal(item?"编辑产品映射规则":"新增产品映射规则","维护标签如何映射到产品；命中结果需与后端规则引擎保持一致。",body,'<span class="foot-hint">优先级数值越小，优先级越高。</span><div><button class="btn" data-close-modal>取消</button> <button class="btn btn-primary" id="saveRule">保存规则</button></div>');
+    document.getElementById("saveRule").onclick=function(){
+      var required=Array.from(document.querySelectorAll('input[name="ruleTag"]:checked')).map(function(x){return x.value;});
+      var priority=parseInt(document.getElementById("rulePriority").value,10);
+      if(!required.length){toast("至少选择一个匹配标签");return;}if(!priority||priority<1){toast("请输入大于 0 的优先级");return;}
+      var obj={id:item?item.id:"R"+String(Date.now()).slice(-6),product:document.getElementById("ruleProduct").value,required:required,logic:document.getElementById("ruleLogic").value,priority:priority,status:document.getElementById("ruleStatus").value,updated:new Date().toISOString().slice(0,10)};
+      if(item)Object.assign(item,obj);else rules.push(obj);
+      closeModal();tagTab="mapping";renderView();toast(item?"映射规则已更新":"新增映射规则已保存");
+    };
+  }
+  function recordsView(){
+    return '<div class="page-head"><div><h1 class="page-title">推送人群包记录</h1><p class="page-desc">每次推送形成独立批次，记录发起人、发送时间、海报与文案、目标人数及房屋明细，支持事后复盘。</p></div><div class="head-actions"><button class="btn" data-action="go-audience">← 返回潜客挖掘</button></div></div>'+
+      '<div class="metrics"><div class="metric"><span class="metric-icon">▤</span><div><div class="metric-label">推送批次</div><div class="metric-value">'+pushRecords.length+'</div><div class="metric-sub">保留每次操作快照</div></div></div><div class="metric"><span class="metric-icon">◉</span><div><div class="metric-label">覆盖房屋（批次累计）</div><div class="metric-value">'+pushRecords.reduce(function(a,r){return a+r.count;},0)+'</div><div class="metric-sub">同一房屋可能出现在多批次</div></div></div><div class="metric"><span class="metric-icon">▧</span><div><div class="metric-label">包含海报</div><div class="metric-value">'+pushRecords.filter(function(r){return r.posterData||r.posterName&&r.posterName!=="未上传海报";}).length+'</div><div class="metric-sub">留存素材名称及预览（Demo）</div></div></div><div class="metric"><span class="metric-icon">✓</span><div><div class="metric-label">模拟完成</div><div class="metric-value">'+pushRecords.filter(function(r){return r.status==="模拟完成"||r.status==="演示成功";}).length+'</div><div class="metric-sub">不是实际通道送达结果</div></div></div></div>'+
+      '<section class="panel list-panel"><div class="list-toolbar"><div class="list-heading">推送批次明细</div><input id="recordSearch" class="control" style="width:220px" placeholder="搜索批次 / 人群包 / 推送人"><button class="btn btn-small" id="recordSearchClear">清空</button></div>'+
+      '<div class="table-wrap"><table class="data-table"><thead><tr><th>推送批次号</th><th>人群包名称</th><th>推送发起人</th><th>发起时间</th><th>触达渠道</th><th>房屋数量</th><th>海报</th><th>文案摘要</th><th>状态</th><th>操作</th></tr></thead><tbody id="recordRows">'+recordRows(pushRecords)+'</tbody></table></div>'+
+      '<div class="pagination"><span>共 '+pushRecords.length+' 条推送批次。人群包明细为发起时快照，不随底账后续更新而变化。</span><span>演示数据</span></div></section>'+
+      '<div class="rule-note">正式系统建议持久化保存 package_id、push_batch_id、sender_id、copywriting_snapshot、poster_object_key、channel、每套房屋快照、触达回执和失败原因。当前 Demo 只在本次浏览器会话中保存，刷新页面会重置为样例数据。</div>';
+  }
+  function recordRows(list){
+    if(!list.length)return '<tr><td colspan="10"><div class="empty-state"><div class="empty-icon">▤</div>暂时没有符合条件的推送记录。</div></td></tr>';
+    return list.map(function(r){return '<tr><td><b>'+esc(r.id)+'</b></td><td>'+esc(r.packageName)+'</td><td>'+esc(r.sender)+'</td><td>'+esc(r.createdAt)+'</td><td>'+r.channels.map(function(c){return '<span class="tag-mini">'+esc(c)+'</span>';}).join("")+'</td><td>'+r.count+' 套</td><td>'+esc(r.posterName||"未上传")+'</td><td style="max-width:230px" title="'+esc(r.content)+'">'+esc(r.content)+'</td><td><span class="status-pill '+(r.status==="模拟完成"||r.status==="演示成功"?"green":"orange")+'">'+esc(r.status)+'</span></td><td><button class="link" data-record-detail="'+esc(r.id)+'">查看明细</button></td></tr>';}).join("");
+  }
+  function bindRecords(){
+    document.querySelectorAll("[data-action=go-audience]").forEach(function(b){b.onclick=function(){navTo("audience");};});
+    var search=document.getElementById("recordSearch");
+    search.addEventListener("input",function(){var key=search.value.trim().toLowerCase();var list=pushRecords.filter(function(r){return [r.id,r.packageName,r.sender].join(" ").toLowerCase().indexOf(key)>=0;});document.getElementById("recordRows").innerHTML=recordRows(list);bindRecordButtons();});
+    document.getElementById("recordSearchClear").onclick=function(){search.value="";search.dispatchEvent(new Event("input"));};
+    bindRecordButtons();
+  }
+  function bindRecordButtons(){
+    document.querySelectorAll("[data-record-detail]").forEach(function(b){b.onclick=function(){var r=pushRecords.find(function(x){return x.id===b.getAttribute("data-record-detail");});if(r)showRecordDetail(r);};});
+  }
+  function showRecordDetail(r){
+    var items=r.houseIds.map(houseById).filter(Boolean);
+    var body='<div class="detail-block"><h4>批次信息</h4><div class="detail-grid">'+
+      detailField("推送批次号",r.id)+detailField("人群包名称",r.packageName)+detailField("推送发起人",r.sender)+detailField("发起时间",r.createdAt)+detailField("触达渠道",r.channels.join("、"))+detailField("目标房屋数",r.count+" 套")+
+      detailField("批次状态",r.status)+detailField("海报文件",r.posterName||"未上传")+'</div></div>'+
+      '<div class="detail-block"><h4>推送内容快照</h4><div style="padding:12px"><div style="font-size:10px;color:#8b98a6;margin-bottom:6px">发送文案</div><div style="white-space:pre-wrap;line-height:1.8;color:#40576d;font-size:11px">'+esc(r.content)+'</div><div style="font-size:10px;color:#8b98a6;margin:12px 0 6px">人群包规则 / 来源</div><div style="white-space:pre-wrap;line-height:1.8;color:#526a80;font-size:10.5px">'+esc(r.criteria||"未填写")+'</div>'+(r.posterData?'<div style="margin-top:12px"><div style="font-size:10px;color:#8b98a6;margin-bottom:6px">海报预览</div><img class="poster-thumb" src="'+r.posterData+'" alt="推送海报"></div>':'')+'</div></div>'+
+      '<div class="detail-block"><h4>人群包明细（发起时快照） · '+items.length+' 套房屋</h4><div class="table-wrap"><table class="data-table"><thead><tr><th>房屋编码</th><th>房源名称</th><th>业主</th><th>脱敏手机号</th><th>命中产品</th><th>标签</th></tr></thead><tbody>'+items.map(function(h){return '<tr><td>'+esc(h.id.toUpperCase())+'</td><td>'+esc(h.house)+'</td><td>'+esc(h.owner)+'</td><td>'+esc(h.mobile)+'</td><td>'+esc(h.product)+'</td><td>'+h.labels.map(function(t){return '<span class="tag-mini">'+esc(t)+'</span>';}).join("")+'</td></tr>';}).join("")+'</tbody></table></div></div>'+
+      '<div class="rule-note">'+esc(r.detail||"记录已生成。正式环境应另行保存每个号码的发送状态、外部渠道消息 ID、失败原因和回执时间。")+'</div>';
+    modal("推送批次详情","查看推送人、推送内容与对应的人群包房屋明细。",body,'<span class="foot-hint">真实发送状态应以外部通道回执为准。</span><button class="btn btn-primary" data-close-modal>关闭详情</button>',true);
+  }
+  function packagesView(){
+    return '<div class="page-head"><div><h1 class="page-title">已保存人群包</h1><p class="page-desc">保存后的房屋列表作为固定快照，可以查看明细、重新推送；每次实际操作都会生成单独推送批次。</p></div><div class="head-actions"><button class="btn" data-action="go-audience">← 返回潜客挖掘</button><button class="btn" data-action="go-records">查看推送记录</button></div></div>'+
+      '<section class="panel saved-packages"><div class="list-heading">人群包清单</div><div class="saved-package-list" style="margin-top:13px">'+packageCards(audiencePackages.slice().reverse())+'</div></section>'+
+      '<div class="rule-note">人群包保存的是某个时间点的房屋明细快照。重新推送前建议再次进行退订、黑名单、频控和线索静默校验；真实推送不能直接复用过期的联系方式状态。</div>';
+  }
+  function bindPackages(){
+    document.querySelectorAll("[data-action=go-audience]").forEach(function(b){b.onclick=function(){navTo("audience");};});
+    document.querySelectorAll("[data-action=go-records]").forEach(function(b){b.onclick=function(){navTo("records");};});
+    bindPackageCards();
+  }
+  function showPackageDetail(p){
+    var items=p.houseIds.map(houseById).filter(Boolean);
+    var body='<div class="detail-block"><h4>人群包信息</h4><div class="detail-grid">'+detailField("人群包名称",p.name)+detailField("创建人",p.creator)+detailField("创建时间",p.createdAt)+detailField("房屋数量",items.length+" 套")+detailField("人群包编号",p.id)+detailField("快照类型","房屋明细快照")+'</div></div>'+
+      '<div class="detail-block"><h4>保存的筛选规则</h4><div style="padding:12px;font-size:10.5px;line-height:1.8;color:#536a80">'+esc(p.criteria||"未填写")+'</div></div>'+
+      '<div class="detail-block"><h4>人群包房屋明细</h4><div class="table-wrap"><table class="data-table"><thead><tr><th>房屋</th><th>业主</th><th>脱敏手机号</th><th>标签</th><th>产品</th></tr></thead><tbody>'+items.map(function(h){return '<tr><td>'+esc(h.house)+'</td><td>'+esc(h.owner)+'</td><td>'+esc(h.mobile)+'</td><td>'+h.labels.map(function(t){return '<span class="tag-mini">'+esc(t)+'</span>';}).join("")+'</td><td>'+esc(h.product)+'</td></tr>';}).join("")+'</tbody></table></div></div>';
+    modal("人群包详情","已保存的人群包是当前浏览器会话中保存的演示快照。",body,'<span class="foot-hint">从人群包再次推送时仍会重新生成一条批次记录。</span><div><button class="btn" data-close-modal>关闭</button><button class="btn btn-primary" id="pushSavedPackage">配置推送</button></div>',true);
+    document.getElementById("pushSavedPackage").onclick=function(){closeModal();openPushModal(items,p);};
+  }
+  function renderViewStats(){
+    var tagsCount=document.getElementById("metricTags");if(tagsCount)tagsCount.textContent=tags.filter(function(t){return t.status==="启用";}).length;
+    var packageCount=document.getElementById("metricPackages");if(packageCount)packageCount.textContent=audiencePackages.length;
+    var recordsCount=document.getElementById("metricRecords");if(recordsCount)recordsCount.textContent=pushRecords.length;
+  }
+  function updatePackageStrip(){
+    var panel=document.getElementById("savedPackagePanel"),list=document.getElementById("savedPackageList");
+    if(panel&&list){panel.style.display=audiencePackages.length?"":"none";list.innerHTML=packageCards(audiencePackages.slice(-3).reverse());bindPackageCards();}
+    renderViewStats();
+  }
+
+  document.querySelectorAll(".nav-item[data-view]").forEach(function(button){button.addEventListener("click",function(){navTo(button.getAttribute("data-view"));});});
+  renderView();
+  window.__marketingPushDemo={version:"1.0-demo",get tags(){return tags;},get rules(){return rules;},get packages(){return audiencePackages;},get records(){return pushRecords;}};
+})();
+</script>
+</body>
+</html>
