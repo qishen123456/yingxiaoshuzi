@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { App as AntApp, Button, Card, Descriptions, Modal, Space, Table, Tag, Typography } from 'antd';
+import { App as AntApp, Button, Card, Descriptions, Modal, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Eye, Send } from 'lucide-react';
 import { api, type AudiencePackageDetail, type AudiencePackageRow } from '../api';

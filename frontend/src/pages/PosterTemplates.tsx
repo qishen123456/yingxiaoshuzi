@@ -6,7 +6,7 @@ import { api, type PosterTemplateRow, type ProductPackageOption } from '../api';
 
 async function compressImage(file: File): Promise<string> {
   const original = await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||''));reader.onerror=()=>reject(new Error('读取图片失败'));reader.readAsDataURL(file);});
-  const img = await new Promise<HTMLImageElement>((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('图片无法解码'));image.src=original;});
+  const img = await new Promise<HTMLImageElement>((resolve,reject)=>{const image=new window.Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error('图片无法解码'));image.src=original;});
   const scale=Math.min(1,1200/img.width),canvas=document.createElement('canvas');
   canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('浏览器不支持图片压缩');

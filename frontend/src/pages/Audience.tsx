@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Key } from 'react';
-import { App as AntApp, Alert, Button, Card, Checkbox, Col, Divider, Input, Modal, Row, Select, Space, Statistic, Table, Tag, Typography } from 'antd';
+import { App as AntApp, Alert, Button, Card, Checkbox, Col, Divider, FileImage, Input, Modal, Row, Select, Space, Statistic, Table, Tag, Typography, Upload } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { Filter, Save, Send, Users } from 'lucide-react';
 import { api, type AudiencePackageRow, type HouseListItem, type HouseSearchResponse, type ProductPackageOption, type ProjectCatalogRow, type TagAdminRow } from '../api';
@@ -174,7 +174,7 @@ export default function Audience({ prefill, onClearPrefill, onNavigate }: Props)
     { title: '房屋名称', dataIndex: 'houseName', width: 240, render: (v: string | null, r) => <Typography.Text strong>{v || r.houseId}</Typography.Text> },
     { title: '城市', dataIndex: 'city', width: 80 },
     { title: '业主', dataIndex: 'ownerNameMasked', width: 100, render: (v: string | null) => v || '-' },
-    { title: '联系电话', dataIndex: 'mobileMasked', width: 130, render: (v: string | null, r) => v ? <Tag color="blue">{v}</Tag> : <Tag color="orange">无号码</Tag> },
+    { title: '联系电话', dataIndex: 'mobileMasked', width: 130, render: (v: string | null) => v ? <Tag color="blue">{v}</Tag> : <Tag color="orange">无号码</Tag> },
     { title: '标签命中', dataIndex: 'labels', width: 300, render: (v: Record<string, unknown>) => {
       const flat = labelText(v, tags).slice(0, 6);
       return <Space size={[3, 4]} wrap>{flat.map((label) => <Tag key={label}>{label}</Tag>)}{!flat.length && '-'}</Space>;
