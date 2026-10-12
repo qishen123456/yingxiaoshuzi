@@ -3511,7 +3511,8 @@ var HOUSES=[[0,"东莞金域松湖10栋1002","","墙面发霉","",0,0,"浴改淋
   window._reset = function () {
     RULES = JSON.parse(JSON.stringify(DEFAULT_RULES));
     TAG_DICT = JSON.parse(JSON.stringify(UPSTREAM_TAG_DICT || DEFAULT_TAG_DICT));
-    try { window.localStorage.removeItem(CONFIG_STORAGE_KEY); } catch (e) {}
+    try { window.localStorage.removeItem(CONFIG_STORAGE_KEY); window.localStorage.removeItem(TAG_ADMIN_STORAGE_KEY); } catch (e) {}
+    TAG_ADMIN_META = {}; TAG_CUSTOM_DEFS = {}; applyTagAdminOverrides();
     pushedPhones = {};
     window._clearFilter();
     flash("已恢复默认规则与标签，并清空筛选");
