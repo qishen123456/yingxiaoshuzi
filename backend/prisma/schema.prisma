@@ -207,15 +207,12 @@ model HouseLabelSnapshot {
   stationCode       String?  @map("station_code")
   ownerNameMasked   String?  @map("owner_name_masked")
   contactMobileEnc  String?  @map("contact_mobile_enc") // 无号码为 null -> NO_MOBILE
-  demoMobileMasked  String?  @map("demo_mobile_masked") @db.VarChar(32) // index-v3 样本脱敏显示号，不可用于触达
   customerKeyHash   String?  @map("customer_key_hash") @db.VarChar(128)
   labels            Json
   statDate          DateTime @map("stat_date") @db.Date
   syncedAt          DateTime @map("synced_at") @db.Timestamptz
   labelVersion      String?  @default("v1") @map("label_version") @db.VarChar(32)
   pushDetails       PushDetail[]
-  audiencePackageHouses AudiencePackageHouse[]
-  marketingBatchHouses MarketingPushBatchHouse[]
 
   @@index([statDate])
   @@index([region, city, branch, station])
@@ -377,7 +374,6 @@ model PosterTemplate {
   width            Int            @default(750)
   height           Int            @default(1600)
   backgroundOssKey String?        @map("background_oss_key")
-  previewData       String?        @map("preview_data") @db.Text
   svgSpec          Json           @map("svg_spec")
   status           String         @default("draft") @db.VarChar(16)
   package          ProductPackage? @relation(fields: [packageId], references: [id])
@@ -385,67 +381,6 @@ model PosterTemplate {
 
   @@index([packageId, status])
   @@map("poster_template")
-}
-
-
-model AudiencePackage {
-  id               BigInt                 @id @default(autoincrement())
-  name             String                 @db.VarChar(160)
-  criteria         String?                @db.Text
-  createdBy        String                 @default("未接入登录") @map("created_by") @db.VarChar(128)
-  status           String                 @default("saved") @db.VarChar(16)
-  houseCount       Int                    @default(0) @map("house_count")
-  uniquePhoneCount Int                    @default(0) @map("unique_phone_count")
-  createdAt        DateTime               @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
-  houses           AudiencePackageHouse[]
-  marketingBatches MarketingPushBatch[]
-  @@index([createdAt])
-  @@map("audience_package")
-}
-model AudiencePackageHouse {
-  id                BigInt             @id @default(autoincrement())
-  audiencePackageId BigInt             @map("audience_package_id")
-  houseId           String             @map("house_id") @db.VarChar(64)
-  houseSnapshot     Json               @map("house_snapshot")
-  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz
-  audiencePackage   AudiencePackage    @relation(fields: [audiencePackageId], references: [id], onDelete: Cascade)
-  house             HouseLabelSnapshot @relation(fields: [houseId], references: [houseId], onDelete: Cascade)
-  @@unique([audiencePackageId, houseId], map: "uq_audience_package_house")
-  @@index([houseId])
-  @@map("audience_package_house")
-}
-model MarketingPushBatch {
-  id                BigInt                     @id @default(autoincrement())
-  audiencePackageId BigInt?                    @map("audience_package_id")
-  packageName       String                     @map("package_name") @db.VarChar(160)
-  sender            String                     @default("未接入登录") @db.VarChar(128)
-  contentSnapshot   String                     @map("content_snapshot") @db.Text
-  posterName        String?                    @map("poster_name") @db.VarChar(255)
-  posterData        String?                    @map("poster_data") @db.Text
-  channels          Json
-  criteria          String?                    @db.Text
-  houseCount        Int                        @default(0) @map("house_count")
-  uniquePhoneCount  Int                        @default(0) @map("unique_phone_count")
-  status            String                     @default("recorded_demo") @db.VarChar(24)
-  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamptz
-  audiencePackage   AudiencePackage?           @relation(fields: [audiencePackageId], references: [id], onDelete: SetNull)
-  houses            MarketingPushBatchHouse[]
-  @@index([createdAt])
-  @@index([audiencePackageId])
-  @@map("marketing_push_batch")
-}
-model MarketingPushBatchHouse {
-  id                   BigInt             @id @default(autoincrement())
-  marketingPushBatchId BigInt             @map("marketing_push_batch_id")
-  houseId              String             @map("house_id") @db.VarChar(64)
-  houseSnapshot        Json               @map("house_snapshot")
-  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz
-  batch                MarketingPushBatch @relation(fields: [marketingPushBatchId], references: [id], onDelete: Cascade)
-  house                HouseLabelSnapshot @relation(fields: [houseId], references: [houseId], onDelete: Cascade)
-  @@unique([marketingPushBatchId, houseId], map: "uq_marketing_batch_house")
-  @@index([houseId])
-  @@map("marketing_push_batch_house")
 }
 
 model OperationAudit {

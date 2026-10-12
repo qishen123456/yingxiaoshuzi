@@ -18,8 +18,7 @@
     "db:push": "prisma db push",
     "seed:sql": "node --env-file=.env -r @swc-node/register scripts/run-sql-seeds.ts",
     "demo:data": "node --env-file=.env -r @swc-node/register scripts/load-demo-data.ts",
-    "test": "vitest run",
-    "demo:index-v3-sample": "node --env-file=.env -r @swc-node/register scripts/import-index-v3-sample.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.0",
